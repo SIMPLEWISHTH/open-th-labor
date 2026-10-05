@@ -742,6 +742,14 @@ const Viz = (() => {
       if (ts.getComputedTextLength() > maxW) { ts.setAttribute("textLength", maxW); ts.setAttribute("lengthAdjust", "spacingAndGlyphs"); }
     });
   }
+  // widest label (px) in a given class, measured off-screen in a throwaway svg
+  function maxLabelW(host, labels, cls = "lbl") {
+    const svg = el("svg", { width: 10, height: 10, style: "position:absolute;visibility:hidden" }, host);
+    let m = 0;
+    labels.forEach(t => { const n = el("text", { class: cls }, svg); n.textContent = t; m = Math.max(m, n.getComputedTextLength()); });
+    svg.remove();
+    return m;
+  }
   const niceMax = (v) => {
     const p = Math.pow(10, Math.floor(Math.log10(v)));
     const n = v / p;
@@ -754,7 +762,8 @@ const Viz = (() => {
     const unit = o.unit || "", dec = o.decimals ?? 1;
     mount(host, (h, W) => {
       const labelW = Math.min(o.labelWidth || 150, W * 0.38);
-      const rowH = o.rowH || 34, barH = Math.min(18, rowH - 12);
+      const wraps = maxLabelW(h, data.map(d => d.label)) > labelW - 2;
+      const rowH = Math.max(o.rowH || 34, wraps ? 40 : 0), barH = Math.min(18, rowH - 12);
       const top = 22, H = top + data.length * rowH + 6 + (o.refLine ? 18 : 0);
       const nt = niceTicks(o.max || Math.max(...data.map(d => d.value)) * 1.08, Math.max(2, Math.min(o.ticks || 4, Math.floor(W / 110))));
       const max = nt.max;
@@ -791,7 +800,8 @@ const Viz = (() => {
     const unit = o.unit || "", dec = o.decimals ?? 1;
     mount(host, (h, W) => {
       const labelW = Math.min(o.labelWidth || 130, W * 0.34);
-      const rowH = o.rowH || 36, barH = Math.min(20, rowH - 12);
+      const wraps = maxLabelW(h, rows.map(r => r.label)) > labelW - 2;
+      const rowH = Math.max(o.rowH || 36, wraps ? 40 : 0), barH = Math.min(20, rowH - 12);
       const top = 22, H = top + rows.length * rowH + 6;
       const tot = rows.map(r => r.parts.reduce((a, b) => a + b, 0));
       const nt = niceTicks(o.max || Math.max(...tot) * 1.05, Math.max(2, Math.min(o.ticks || 4, Math.floor(W / 110))));
