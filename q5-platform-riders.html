@@ -601,7 +601,7 @@ footer { padding: 48px 0 64px; color: var(--text-muted); font-size: 13.5px; }
 </section>
 </main>
 
-<footer><div class="wrap">โจทย์วิจัยย่อยที่ 5 จาก 8 · ดูอีกเรื่อง: <a href="q1-underutilization.html">โจทย์ที่ 1 ดัชนีการใช้แรงงานไม่เต็มศักยภาพ</a> · กลับไป<a href="index.html">หน้ารวมคำถามวิจัย</a></div></footer>
+<footer><div class="wrap">โจทย์วิจัยย่อยที่ 5 จาก 8 · เรื่องอื่น: <a href="q1-underutilization.html">โจทย์ 1</a> · <a href="q2-skills-verification.html">โจทย์ 2</a> · <a href="q4-spatial-matching.html">โจทย์ 4</a> · กลับไป<a href="index.html">หน้ารวมคำถามวิจัย</a></div></footer>
 
 <script>
 /* Minimal responsive SVG chart kit (no dependencies).
@@ -677,6 +677,7 @@ const Viz = (() => {
       let last = host.clientWidth;
       new ResizeObserver(() => { if (Math.abs(host.clientWidth - last) > 4) { last = host.clientWidth; render(); } }).observe(host);
     }
+    return render;
   }
   // theme changes repaint (colors come from CSS vars at draw time)
   const rerenderAll = () => mounts.forEach(r => r());

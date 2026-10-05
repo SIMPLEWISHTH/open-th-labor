@@ -641,6 +641,7 @@ const Viz = (() => {
       let last = host.clientWidth;
       new ResizeObserver(() => { if (Math.abs(host.clientWidth - last) > 4) { last = host.clientWidth; render(); } }).observe(host);
     }
+    return render;
   }
   // theme changes repaint (colors come from CSS vars at draw time)
   const rerenderAll = () => mounts.forEach(r => r());
