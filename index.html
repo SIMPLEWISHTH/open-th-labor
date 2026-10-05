@@ -1,0 +1,765 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ตลาดแรงงานไทย 2026</title>
+<meta name="description" content="คำตอบคำถามวิจัย 4 ข้อ พร้อมภาพข้อมูล: ปัญหาเชิงโครงสร้าง เสียงของผู้มีส่วนได้ส่วนเสีย และนวัตกรรมที่แก้ปัญหาตลาดแรงงานไทยเทียบกับโลก">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  color-scheme: light;
+  --page: #f9f9f7;
+  --surface-1: #fcfcfb;
+  --text-primary: #0b0b0b;
+  --text-secondary: #52514e;
+  --text-muted: #898781;
+  --grid: #e1e0d9;
+  --axis: #c3c2b7;
+  --border: rgba(11,11,11,0.10);
+  --series-1: #2a78d6;
+  --series-2: #eb6834;
+  --series-muted: #b5b3ab;
+  --wash: #f0efec;
+  --good: #006300;
+  --critical: #d03b3b;
+  --ord-1: #86b6ef;
+  --ord-2: #3987e5;
+  --ord-3: #1c5cab;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --page: #0d0d0d;
+    --surface-1: #1a1a19;
+    --text-primary: #ffffff;
+    --text-secondary: #c3c2b7;
+    --text-muted: #898781;
+    --grid: #2c2c2a;
+    --axis: #383835;
+    --border: rgba(255,255,255,0.10);
+    --series-1: #3987e5;
+    --series-2: #d95926;
+    --series-muted: #5d5c57;
+    --wash: #262624;
+    --good: #0ca30c;
+    --critical: #e66767;
+    --ord-1: #184f95;
+    --ord-2: #2a78d6;
+    --ord-3: #6da7ec;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #0d0d0d;
+  --surface-1: #1a1a19;
+  --text-primary: #ffffff;
+  --text-secondary: #c3c2b7;
+  --text-muted: #898781;
+  --grid: #2c2c2a;
+  --axis: #383835;
+  --border: rgba(255,255,255,0.10);
+  --series-1: #3987e5;
+  --series-2: #d95926;
+  --series-muted: #5d5c57;
+  --wash: #262624;
+  --good: #0ca30c;
+  --critical: #e66767;
+  --ord-1: #184f95;
+  --ord-2: #2a78d6;
+  --ord-3: #6da7ec;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--page);
+  color: var(--text-primary);
+  font-family: "Noto Sans Thai", system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 16px;
+  line-height: 1.7;
+}
+.wrap { max-width: 1040px; margin: 0 auto; padding: 32px 16px 64px; }
+header.hero { padding: 24px 0 8px; }
+.eyebrow { color: var(--text-secondary); font-size: 14px; margin: 0 0 8px; }
+h1 { font-size: clamp(26px, 4.4vw, 40px); line-height: 1.3; margin: 0 0 12px; font-weight: 700; }
+h2 { font-size: clamp(21px, 3vw, 28px); line-height: 1.35; margin: 0 0 8px; font-weight: 700; }
+h3 { font-size: 17px; line-height: 1.45; margin: 0 0 4px; font-weight: 600; }
+p { margin: 0 0 12px; }
+.lede { font-size: 18px; color: var(--text-secondary); max-width: 760px; }
+a { color: var(--series-1); }
+nav.toc { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0 8px; }
+nav.toc a {
+  text-decoration: none; color: var(--text-primary); font-size: 14px;
+  border: 1px solid var(--border); border-radius: 999px; padding: 4px 12px; background: var(--surface-1);
+}
+nav.toc a:hover { background: var(--wash); }
+section.q { margin-top: 56px; scroll-margin-top: 16px; }
+.qnum { color: var(--text-muted); font-size: 14px; font-weight: 600; margin: 0 0 4px; }
+.answer {
+  background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px;
+  padding: 16px 20px; margin: 16px 0 20px;
+}
+.answer strong.tag { display: inline-block; font-size: 13px; color: var(--text-secondary); margin-bottom: 4px; }
+.answer ul { margin: 8px 0 0; padding-left: 20px; }
+.answer li { margin-bottom: 4px; }
+.grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); }
+.grid.wide { grid-template-columns: 1fr; }
+.card {
+  background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px;
+  padding: 16px 16px 12px; min-width: 0;
+}
+.card .sub { color: var(--text-secondary); font-size: 14px; margin: 0 0 8px; }
+.card .src { color: var(--text-muted); font-size: 12px; margin: 8px 0 0; }
+.card .src a { color: var(--text-muted); }
+.chart { width: 100%; }
+.chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+.chart text { font-family: inherit; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 13px; color: var(--text-secondary); margin: 0 0 4px; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; }
+.legend i.dot { border-radius: 50%; }
+.legend i.line { height: 2px; width: 16px; border-radius: 1px; }
+details.tbl { margin-top: 8px; font-size: 13px; }
+details.tbl summary { cursor: pointer; color: var(--text-secondary); }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--grid); vertical-align: top; }
+th { color: var(--text-secondary); font-weight: 600; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.scroll { overflow-x: auto; }
+.scroll table { min-width: 640px; }
+.tiles { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); margin: 24px 0 8px; }
+.tile { background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; }
+.tile .label { font-size: 13px; color: var(--text-secondary); line-height: 1.4; }
+.tile .value { font-size: 30px; font-weight: 700; line-height: 1.25; margin-top: 4px; }
+.tile .delta { font-size: 13px; color: var(--text-secondary); line-height: 1.4; margin-top: 2px; }
+.delta .bad { color: var(--critical); font-weight: 600; }
+.chip {
+  display: inline-flex; align-items: center; gap: 6px; font-size: 13px; white-space: nowrap;
+  color: var(--text-primary);
+}
+.chip .bars { display: inline-flex; gap: 2px; }
+.chip .bars b { width: 6px; height: 14px; border-radius: 2px; background: var(--wash); display: inline-block; }
+.chip .bars b.on1 { background: var(--ord-1); }
+.chip .bars b.on2 { background: var(--ord-2); }
+.chip .bars b.on3 { background: var(--ord-3); }
+.gaps { counter-reset: g; display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.gaps .card h3::before { counter-increment: g; content: counter(g) ". "; color: var(--text-muted); }
+.stake { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); }
+.stake .card { padding: 14px 16px; }
+.stake .big { font-size: 19px; font-weight: 700; line-height: 1.3; }
+.stake .card p { font-size: 14px; color: var(--text-secondary); margin: 4px 0 0; }
+footer { margin-top: 64px; color: var(--text-muted); font-size: 13px; border-top: 1px solid var(--grid); padding-top: 16px; }
+#tip {
+  position: fixed; pointer-events: none; z-index: 10; opacity: 0; transition: opacity .08s;
+  background: var(--surface-1); color: var(--text-primary); border: 1px solid var(--border);
+  border-radius: 8px; padding: 8px 10px; font-size: 13px; line-height: 1.45;
+  box-shadow: 0 4px 16px rgba(0,0,0,.12); max-width: 260px;
+}
+#tip .v { font-weight: 700; font-size: 15px; }
+#tip .k { color: var(--text-secondary); }
+#tip .row { display: flex; align-items: center; gap: 6px; }
+#tip .row i { width: 12px; height: 2px; display: inline-block; border-radius: 1px; }
+.hit { cursor: default; outline: none; }
+.hit:focus-visible rect.bg { stroke: var(--text-secondary); stroke-width: 1; }
+.hit:hover .mark, .hit:focus .mark { filter: brightness(1.12); }
+@media (max-width: 560px) {
+  .wrap { padding-top: 16px; }
+  .answer { padding: 14px 16px; }
+  .tile .value { font-size: 26px; }
+}
+</style>
+</head>
+<body>
+<div id="tip" role="status" aria-live="polite"></div>
+<div class="wrap">
+
+<header class="hero">
+  <p class="eyebrow">open-th-labor · อ้างอิงรายงาน ต.ค. 2026 (ข้อมูล 2024–2026)</p>
+  <h1>ช่องว่างระหว่างคนกับงาน: ตลาดแรงงานไทยเทียบโลก 2026</h1>
+  <p class="lede">อัตราว่างงานไทยต่ำกว่า 1% แต่ปัญหาจริงอยู่ใต้ตัวเลขนั้น หน้านี้ตอบคำถามวิจัยทั้ง 4 ข้อจากรายงาน พร้อมกราฟที่ชี้ไปที่ตัวเลขสำคัญ</p>
+  <nav class="toc" aria-label="สารบัญ">
+    <a href="#q1">1 · ปัญหาเชิงโครงสร้าง</a>
+    <a href="#q2">2 · ผู้มีส่วนได้ส่วนเสีย</a>
+    <a href="#q3">3 · นวัตกรรมและหลักฐาน</a>
+    <a href="#q4">4 · ใช้กับไทยได้อย่างไร</a>
+    <a href="#next">โจทย์วิจัยย่อย</a>
+  </nav>
+
+  <div class="tiles" aria-label="ตัวชี้วัดหลักของไทย">
+    <div class="tile"><div class="label">อัตราว่างงาน Q2/2569</div><div class="value">0.95%</div><div class="delta">จาก 0.91% ใน Q2/2568 · สูงสุดในรอบ 7 ไตรมาส</div></div>
+    <div class="tile"><div class="label">ผู้ทำงานต่ำระดับ</div><div class="value">2.2 ล้านคน</div><div class="delta"><span class="bad">▲ +8%</span> เทียบปีก่อน</div></div>
+    <div class="tile"><div class="label">ค่าจ้างที่แท้จริง</div><div class="value">−2.88%</div><div class="delta">OECD เฉลี่ย +2.2%</div></div>
+    <div class="tile"><div class="label">แรงงานนอกระบบ (2568)</div><div class="value">52.4%</div><div class="delta">20.9 ล้านคนจากผู้มีงานทำ</div></div>
+    <div class="tile"><div class="label">แรงงานที่สัมผัส GenAI</div><div class="value">8.7 ล้านคน</div><div class="delta">2.2 ล้านคนเสี่ยงถูกแทนที่</div></div>
+  </div>
+</header>
+
+<!-- ================= Q1 ================= -->
+<section class="q" id="q1">
+  <p class="qnum">คำถามวิจัยข้อ 1</p>
+  <h2>ตลาดแรงงานไทยมีปัญหาเชิงโครงสร้างอะไร และเหมือนหรือต่างจากโลกอย่างไร</h2>
+  <div class="answer">
+    <strong class="tag">คำตอบ</strong>
+    <p>ไทยมีปัญหาซ้อนกันสี่ชั้นเหมือนโลก แต่หนักกว่าในสองเรื่อง คือ <b>"แก่ก่อนรวย"</b> และ <b>แรงงานนอกระบบเกินครึ่ง</b></p>
+    <ul>
+      <li><b>เหมือนโลก:</b> ปัญหาย้ายจาก "ไม่มีงาน" ไปเป็น "งานไม่ดีพอและไม่ตรงคน" ทักษะต้องเปลี่ยนเร็ว (โลก ~39% ภายใน 2030) และ AI กระทบงานระดับเริ่มต้นก่อน</li>
+      <li><b>อุปทาน:</b> วัยแรงงานคาดลดจาก 43.2 เหลือ 36.5 ล้านคน (2563→2583) และทักษะพื้นฐานต่ำ (64.7% ต่ำกว่าเกณฑ์การอ่าน, 74.1% ขาดทักษะดิจิทัล)</li>
+      <li><b>อุปสงค์:</b> โรงงานปิด 156 แห่ง มากกว่าเปิด 139 แห่ง (Q1/2569) และแรงงาน 8.7 ล้านคนสัมผัส GenAI</li>
+      <li><b>รายได้:</b> ค่าจ้างจริงไทย −2.88% ขณะที่ OECD +2.2% หนี้ครัวเรือน 85.9% ของ GDP</li>
+      <li><b>ต่างจากโลก:</b> อัตราว่างงานไทย (0.95%) ต่ำกว่าโลก (4.9%) มาก เพราะคนตกงานไหลกลับภาคเกษตรและงานนอกระบบ ตัวเลขนี้จึงซ่อนปัญหา ไม่ได้แปลว่าตลาดแข็งแรง</li>
+    </ul>
+  </div>
+
+  <div class="grid wide">
+    <div class="card">
+      <h3>ไทยว่างงานน้อยกว่าโลก แต่ค่าจ้างจริงติดลบ</h3>
+      <p class="sub">ร้อยละ · ไทยเทียบค่ากลางของโลกหรือ OECD</p>
+      <div class="legend"><span><i class="dot" style="background:var(--series-1)"></i>ไทย</span><span><i class="dot" style="background:var(--series-2)"></i>โลก / OECD</span></div>
+      <div class="chart" id="c-dumbbell"></div>
+      <p class="src">ที่มา: ILO 2026, ILO–NASK 2025, OECD Employment Outlook 2026, สศช. Q2/2569 · ค่าจ้างจริงเทียบกับ OECD (Q1/2026)</p>
+    </div>
+  </div>
+
+  <div class="grid" style="margin-top:16px">
+    <div class="card">
+      <h3>อัตราว่างงานนับคนได้แค่ส่วนน้อยของปัญหา</h3>
+      <p class="sub">ล้านคน · กลุ่มที่มีปัญหาแต่ไม่อยู่ในอัตราว่างงาน 0.95%</p>
+      <div class="legend"><span><i style="background:var(--series-muted)"></i>นับในอัตราว่างงาน</span><span><i style="background:var(--series-1)"></i>ไม่นับในอัตราว่างงาน</span></div>
+      <div class="chart" id="c-iceberg"></div>
+      <p class="src">ที่มา: สศช. Q2/2569 (ผ่าน The Standard, Thaiger, Thai PBS), สสช. 2568, สศช. ประเมิน GenAI · กลุ่มอาจซ้อนกัน ห้ามนำมารวมกัน</p>
+    </div>
+    <div class="card">
+      <h3>ทักษะพื้นฐานต่ำเป็นวงกว้าง</h3>
+      <p class="sub">ร้อยละของประชากรวัยทำงานที่ต่ำกว่าเกณฑ์</p>
+      <div class="chart" id="c-skills"></div>
+      <p class="src">ที่มา: <a href="https://en.eef.or.th/2025/10/28/thailand-is-facing-a-skills-crisis/">World Bank–EEF 2025</a>, RSIS อ้าง World Bank · ผู้สูงอายุ “มากกว่า 80%” แสดงที่ 80</p>
+    </div>
+    <div class="card">
+      <h3>งานใหม่มากกว่างานที่หายไป แต่คนต้องย้ายงาน</h3>
+      <p class="sub">ล้านตำแหน่งทั่วโลก ถึงปี 2030</p>
+      <div class="chart" id="c-wef"></div>
+      <p class="src">ที่มา: <a href="https://www.weforum.org/press/2025/01/future-of-jobs-report-2025-78-million-new-job-opportunities-by-2030-but-urgent-upskilling-needed-to-prepare-workforces/">WEF Future of Jobs 2025</a></p>
+    </div>
+    <div class="card">
+      <h3>สัญญาณอุปทานและอุปสงค์หดตัว</h3>
+      <p class="sub">วัยแรงงาน (ล้านคน) และโรงงาน (แห่ง, Q1/2569)</p>
+      <div class="chart" id="c-workforce"></div>
+      <div class="chart" id="c-factory" style="margin-top:8px"></div>
+      <p class="src">ที่มา: UN Thailand, Bangkok Post (กรมโรงงานฯ) · โรงงานปิดมากกว่าเปิดครั้งแรกในรอบ 10 ไตรมาส</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= Q2 ================= -->
+<section class="q" id="q2">
+  <p class="qnum">คำถามวิจัยข้อ 2</p>
+  <h2>ผู้มีส่วนได้ส่วนเสียแต่ละกลุ่มเจอปัญหาอะไรในชีวิตจริง</h2>
+  <div class="answer">
+    <strong class="tag">คำตอบ</strong>
+    <p>ทุกกลุ่มเจอปัญหาเดียวกันในคนละรูป คือ <b>ข้อมูลไม่พอ</b> และ <b>อำนาจต่อรองไม่เท่ากัน</b> แรงงานไม่รู้ว่างานไหนมีและต้องใช้ทักษะอะไร นายจ้างไม่รู้ว่าใครทำอะไรได้จริง รัฐเห็นภาพผ่านตัวเลขที่จับปัญหาใต้ผิวน้ำไม่ได้</p>
+    <ul>
+      <li>แรงงานนอกระบบ 6.1 ล้านคนรายงานปัญหาจากงาน ปัญหาอันดับหนึ่งคือค่าตอบแทน (70.9%)</li>
+      <li>ไรเดอร์คำนวณต้นทุนได้ 6.69 บาท/กม. แต่ค่ารอบราว 3.70 บาท/กม. และไม่อยู่ในประกันสังคม ม.33</li>
+      <li>ผู้จบอุดมศึกษาว่างงานสูงสุด 1.70% และนายจ้างเอเชียแปซิฟิก 71% บอกว่าหาคนยาก ทั้งสองฝั่งหากันไม่เจอ</li>
+    </ul>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h3>แรงงานนอกระบบ: ปัญหาเรื่องเงินมาก่อน</h3>
+      <p class="sub">ร้อยละของผู้ที่รายงานปัญหาจากงาน (6.1 ล้านคน) · ตอบได้หลายข้อ</p>
+      <div class="chart" id="c-informal-problems"></div>
+      <p class="src">ที่มา: <a href="https://www.nso.go.th/nsoweb/storage/survey_detail/2025/20251117142743_84154.pdf">สสช. การสำรวจแรงงานนอกระบบ 2568</a></p>
+    </div>
+    <div class="card">
+      <h3>อีสานและเหนือพึ่งงานนอกระบบสูงสุด</h3>
+      <p class="sub">สัดส่วนแรงงานนอกระบบต่อผู้มีงานทำในภาค (%)</p>
+      <div class="legend"><span><i style="background:var(--series-1)"></i>ภาค</span><span><i style="background:var(--series-muted)"></i>ทั้งประเทศ</span></div>
+      <div class="chart" id="c-region"></div>
+      <p class="src">ที่มา: สสช. 2568</p>
+    </div>
+    <div class="card">
+      <h3>ไรเดอร์: ค่ารอบต่ำกว่าต้นทุน</h3>
+      <p class="sub">บาทต่อกิโลเมตร · ตัวเลขฝ่ายไรเดอร์ แพลตฟอร์มโต้ว่าเป็นส่วนน้อย</p>
+      <div class="chart" id="c-rider"></div>
+      <p class="src">ที่มา: <a href="https://www.matichon.co.th/economy/news_5897514">มติชน</a></p>
+    </div>
+  </div>
+
+  <h3 style="margin-top:24px">ปัญหาหลักของแต่ละกลุ่ม</h3>
+  <div class="stake" id="stakeholders" style="margin-top:8px"></div>
+</section>
+
+<!-- ================= Q3 ================= -->
+<section class="q" id="q3">
+  <p class="qnum">คำถามวิจัยข้อ 3</p>
+  <h2>นวัตกรรมใดกำลังแก้ปัญหา และมีหลักฐานผลลัพธ์มากน้อยแค่ไหน</h2>
+  <div class="answer">
+    <strong class="tag">คำตอบ</strong>
+    <p>นวัตกรรมที่มีหลักฐานชัดที่สุดไม่ใช่แอปหางานที่ฉลาดขึ้น แต่เป็นการ <b>เปลี่ยน "หน่วย" ของระบบ</b> จากวุฒิเป็นทักษะที่พิสูจน์ได้ จากสถานะลูกจ้างเป็นตัวคนทำงาน และจากการศึกษาครั้งเดียวเป็นบัญชีเรียนรู้ตลอดชีวิตพร้อมเงินชดเชยรายได้</p>
+    <ul>
+      <li><b>หลักฐานแข็ง:</b> Harambee (แอฟริกาใต้) สร้างโอกาสหารายได้ 1.4 ล้านครั้งจากผู้หางาน 4.5 ล้านคน และรัฐรับไปเป็นระบบชาติ; การฝึกแรงงาน CLM ก่อนเดินทางลดความไม่ตรงทักษะจาก 70% เหลือ 40%</li>
+      <li><b>หลักฐานปานกลาง:</b> SkillsFuture Level-Up ผู้ว่างงานที่เปลี่ยนสายได้งานใน 6 เดือน 55% แต่คำขอเงินช่วยผู้หางานถูกปฏิเสธราว 60%</li>
+      <li><b>หลักฐานอ่อนหรือยังเร็วเกินไป:</b> การลบวุฒิออกจากประกาศงานแทบไม่เปลี่ยนผล (+3.5 จุด); e-Shram นับคนได้ 318.9 ล้านแต่ "ยังไม่ได้สิทธิ"; กฎหมายแรงงานแพลตฟอร์มและ portable benefits ยังไม่มีข้อมูลผลลัพธ์</li>
+    </ul>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h3>Skills-based hiring: ประกาศเยอะ เปลี่ยนจริงน้อย</h3>
+      <p class="sub">สหรัฐฯ 2026 · ร้อยละหรือจุดร้อยละ</p>
+      <div class="chart" id="c-sbh"></div>
+      <p class="src">ที่มา: <a href="https://www.forbes.com/sites/terdawn-deboe/2026/08/10/employers-are-hiring-for-skills-over-degrees-now-ai-is-why/">Forbes</a>, CTO Magazine · +3.5 จุด ≈ ไม่ถึง 1 ใน 700 ของการจ้าง</p>
+    </div>
+    <div class="card">
+      <h3>ฝึกก่อนเดินทางได้ผล: แรงงานกัมพูชา ลาว เมียนมา</h3>
+      <p class="sub">ร้อยละ · 2020 เทียบ 2025</p>
+      <div class="legend"><span><i class="line" style="background:var(--series-1)"></i>แรงงานที่ผ่านการฝึก</span><span><i class="line" style="background:var(--series-2)"></i>นายจ้างที่รายงานทักษะไม่ตรง</span></div>
+      <div class="chart" id="c-slope"></div>
+      <p class="src">ที่มา: <a href="https://rapid-asia.com/news/are-migrant-workers-in-thailand-on-a-positive-trajectory/">Rapid Asia</a> · ค่า 2020 “ต่ำกว่า 20%” แสดงที่ 20</p>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <h3>นวัตกรรม 8 แบบ: แก้อะไร หลักฐานแค่ไหน</h3>
+    <p class="sub">ระดับหลักฐานเป็นการจัดของผู้ทำหน้านี้ จากตัวเลขในรายงาน · <span class="chip"><span class="bars"><b class="on3"></b><b class="on3"></b><b class="on3"></b></span>แข็ง</span> &nbsp;<span class="chip"><span class="bars"><b class="on2"></b><b class="on2"></b><b></b></span>ปานกลาง</span> &nbsp;<span class="chip"><span class="bars"><b class="on1"></b><b></b><b></b></span>อ่อน / ยังไม่มีผล</span></p>
+    <div class="scroll"><table id="t-innov"></table></div>
+  </div>
+</section>
+
+<!-- ================= Q4 ================= -->
+<section class="q" id="q4">
+  <p class="qnum">คำถามวิจัยข้อ 4</p>
+  <h2>นวัตกรรมใดนำมาใช้ในไทยได้ และต้องปรับอะไร</h2>
+  <div class="answer">
+    <strong class="tag">คำตอบ</strong>
+    <p>ไทยมีชิ้นส่วนหลายชิ้นแล้ว แต่ <b>ทุกชิ้นยังผูกกับวุฒิการศึกษาหรือสถานะลูกจ้าง</b> จึงเข้าไม่ถึงแรงงานนอกระบบ คนต่างจังหวัด และคนที่มีทักษะแต่ไม่มีใบรับรอง นวัตกรรมที่ใช้ได้ต้องปรับสามอย่าง:</p>
+    <ul>
+      <li><b>ใกล้ไทยที่สุด:</b> โมเดล Harambee ประเมินศักยภาพแทนวุฒิ ใช้มือถือเป็นหลัก ฟรีค่าดาต้า และจับคู่งานใกล้บ้าน เหมาะกับเหนือและอีสาน</li>
+      <li><b>ต้องปรับเกณฑ์สิทธิ์:</b> บัญชีเรียนรู้แบบ SkillsFuture ต้องมีเงินชดเชยรายได้ระหว่างเรียน และเกณฑ์ต้องไม่ตัดแรงงานนอกระบบ (บทเรียนจากคำขอที่ถูกปฏิเสธ 60%)</li>
+      <li><b>ต้องให้สิทธิจับต้องได้ทันที:</b> ทะเบียนแรงงานนอกระบบแบบ e-Shram ต้องผูกสวัสดิการจริง และ portable benefits ต่อยอดประกันสังคม ม.40 ได้ แต่ต้องเป็นพื้นขั้นต่ำ ไม่ใช่เพดาน</li>
+      <li><b>แรงงานแพลตฟอร์ม:</b> เลือกได้ระหว่างประเภทที่สามแบบสิงคโปร์หรือข้อสันนิษฐานความเป็นลูกจ้างแบบ EU แต่สิทธิต่ออัลกอริทึม (ILO C193) ควรมีทุกทางเลือก</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>จับคู่ปัญหาไทยกับนวัตกรรม และสิ่งที่ต้องปรับ</h3>
+    <p class="sub">ความเคลื่อนไหวในไทยที่มีอยู่แล้ว และช่องว่างที่ยังเหลือ</p>
+    <div class="scroll"><table id="t-map"></table></div>
+  </div>
+
+  <h3 style="margin-top:24px">ช่องว่างร่วมสามข้อ</h3>
+  <div class="gaps" style="margin-top:8px">
+    <div class="card"><h3>ไม่มีชั้นทักษะที่เชื่อถือได้</h3><p class="sub">"ไทยมีงานทำ" ยังจับคู่ด้วยวุฒิ ประเภทงาน และจังหวัด ไม่ใช่ทักษะที่ทำได้จริง</p></div>
+    <div class="card"><h3>ความคุ้มครองผูกกับสถานะลูกจ้าง</h3><p class="sub">กองทุนสงเคราะห์ลูกจ้างครอบคลุม 5.7 ล้านคน ขณะที่แรงงานนอกระบบมี 20.9 ล้านคน</p></div>
+    <div class="card"><h3>ข้อมูลแรงงานไม่เชื่อมกัน</h3><p class="sub">จัดหางาน ฝีมือแรงงาน และประกันสังคมใช้รหัสอาชีพและทักษะคนละชุด</p></div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <h3>ขนาดของโครงการไทยเทียบกับขนาดของปัญหา</h3>
+    <p class="sub">พันคน (หรือพันตำแหน่ง)</p>
+    <div class="legend"><span><i style="background:var(--series-2)"></i>ขนาดปัญหา</span><span><i style="background:var(--series-1)"></i>ขนาดโครงการ</span></div>
+    <div class="chart" id="c-scale"></div>
+    <p class="src">ที่มา: Bangkok Insight (ตำแหน่งงานบน "ไทยมีงานทำ"), สศช. Q2/2569</p>
+  </div>
+</section>
+
+<!-- ================= Next ================= -->
+<section class="q" id="next">
+  <p class="qnum">ข้อเสนอ</p>
+  <h2>โจทย์วิจัยย่อย 8 ข้อ เรียงตามลำดับความสำคัญ</h2>
+  <p class="lede">โจทย์ที่ให้ผลเร็วที่สุดคือดัชนีที่มองเห็นปัญหาใต้อัตราว่างงาน และการทดลองชั้นยืนยันทักษะสำหรับคนไม่มีใบรับรอง</p>
+  <div class="card"><div class="scroll"><table id="t-next"></table></div></div>
+</section>
+
+<footer>
+  <p>สร้างจากรายงาน “สภาพตลาดแรงงานไทยและโลก 2026” (@Digital WRS, 5 ต.ค. 2026) ดูฉบับเต็มและลิงก์แหล่งข้อมูลทั้งหมดได้ที่ <a href="report-2026.md">report-2026.md</a> · ตัวเลขทุกตัวมาจากรายงาน ยกเว้นระดับหลักฐานในตารางนวัตกรรมซึ่งเป็นการจัดกลุ่มของผู้ทำหน้านี้</p>
+</footer>
+</div>
+
+<script>
+(() => {
+  const NS = 'http://www.w3.org/2000/svg';
+  const tip = document.getElementById('tip');
+  const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+
+  function s(tag, attrs, parent) {
+    const n = document.createElementNS(NS, tag);
+    for (const k in attrs) n.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(n);
+    return n;
+  }
+  function h(tag, text, parent, cls) {
+    const n = document.createElement(tag);
+    if (text != null) n.textContent = text;
+    if (cls) n.className = cls;
+    if (parent) parent.appendChild(n);
+    return n;
+  }
+  function svgText(parent, x, y, str, opts = {}) {
+    const t = s('text', {
+      x, y, 'font-size': opts.size || 13, fill: opts.fill || 'var(--text-secondary)',
+      'text-anchor': opts.anchor || 'start', 'dominant-baseline': 'middle',
+      'font-weight': opts.weight || 400
+    }, parent);
+    t.textContent = str;
+    return t;
+  }
+
+  // Tooltip: value leads, label follows. Built with textContent only.
+  function showTip(evt, rows, title) {
+    tip.replaceChildren();
+    if (title) h('div', title, tip, 'k');
+    rows.forEach(r => {
+      const row = h('div', null, tip, 'row');
+      if (r.color) { const i = h('i', null, row); i.style.background = r.color; }
+      h('span', r.value, row, 'v');
+      if (r.label) h('span', r.label, row, 'k');
+    });
+    let x, y;
+    if (evt && evt.clientX != null && evt.type !== 'focus') { x = evt.clientX; y = evt.clientY; }
+    else { const b = evt.currentTarget.getBoundingClientRect(); x = b.left + b.width / 2; y = b.top; }
+    tip.style.opacity = 1;
+    const tw = tip.offsetWidth, th = tip.offsetHeight;
+    let left = x + 14, top = y - th - 10;
+    if (left + tw > window.innerWidth - 8) left = x - tw - 14;
+    if (left < 8) left = 8;
+    if (top < 8) top = y + 18;
+    tip.style.left = left + 'px'; tip.style.top = top + 'px';
+  }
+  function hideTip() { tip.style.opacity = 0; }
+  function bindTip(g, rowsFn, title) {
+    g.setAttribute('tabindex', '0');
+    g.classList.add('hit');
+    const on = (e) => showTip(e, rowsFn(), title);
+    g.addEventListener('pointermove', on);
+    g.addEventListener('focus', on);
+    g.addEventListener('pointerleave', hideTip);
+    g.addEventListener('blur', hideTip);
+  }
+
+  const measureCtx = document.createElement('canvas').getContext('2d');
+  function textW(str, size = 13, weight = 400) {
+    measureCtx.font = `${weight} ${size}px ${getComputedStyle(document.body).fontFamily}`;
+    return measureCtx.measureText(str).width;
+  }
+  function niceTicks(min, max, count) {
+    const span = max - min;
+    const step0 = span / Math.max(1, count);
+    const mag = Math.pow(10, Math.floor(Math.log10(step0)));
+    const norm = step0 / mag;
+    const step = (norm >= 5 ? 10 : norm >= 2 ? 5 : norm >= 1.5 ? 2 : 1) * mag;
+    const ticks = [];
+    for (let v = Math.ceil(min / step) * step; v <= max + 1e-9; v += step) ticks.push(+v.toFixed(10));
+    return ticks;
+  }
+  // Bar path with 4px rounded data-end, square at the baseline.
+  function barPath(x0, x1, y, hgt) {
+    const r = Math.min(4, Math.abs(x1 - x0), hgt / 2);
+    if (x1 >= x0) {
+      return `M${x0},${y} H${x1 - r} Q${x1},${y} ${x1},${y + r} V${y + hgt - r} Q${x1},${y + hgt} ${x1 - r},${y + hgt} H${x0} Z`;
+    }
+    return `M${x0},${y} H${x1 + r} Q${x1},${y} ${x1},${y + r} V${y + hgt - r} Q${x1},${y + hgt} ${x1 + r},${y + hgt} H${x0} Z`;
+  }
+  function tableView(container, headers, rows) {
+    const d = h('details', null, container, 'tbl');
+    h('summary', 'ดูเป็นตาราง', d);
+    const t = h('table', null, d);
+    const tr = h('tr', null, h('thead', null, t));
+    headers.forEach((x, i) => h('th', x, tr, i ? 'num' : ''));
+    const tb = h('tbody', null, t);
+    rows.forEach(r => { const row = h('tr', null, tb); r.forEach((x, i) => h('td', x, row, i ? 'num' : '')); });
+  }
+
+  const charts = [];
+  function register(id, draw) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const holder = h('div', null, el);
+    const run = () => { holder.replaceChildren(); draw(holder, Math.max(260, el.clientWidth)); };
+    charts.push(run);
+    run();
+    return el;
+  }
+
+  // ---------- Horizontal bar ----------
+  // rows: {label, value, text, color}
+  function hbar(id, rows, opt = {}) {
+    const el = register(id, (root, W) => {
+      const longest = Math.max(...rows.map(r => textW(r.label, 13)));
+      const valuePad = Math.max(...rows.map(r => textW(r.text, 13, 600))) + 14;
+      // Labels sit beside the bars when they fit; otherwise above each bar.
+      const stacked = longest > W * 0.42;
+      const labelW = stacked ? 0 : Math.ceil(longest);
+      const barH = 20, rowH = stacked ? 50 : 34, top = 4, axisH = opt.noAxis ? 4 : 22;
+      const H = top + rows.length * rowH + axisH;
+      const vals = rows.map(r => r.value);
+      const min = Math.min(0, opt.min ?? Math.min(...vals));
+      const max = opt.max ?? Math.max(...vals);
+      const negPad = min < 0 ? valuePad : 0;
+      const x0 = (stacked ? 0 : labelW + 10) + negPad + 1, x1 = W - valuePad;
+      const sx = v => x0 + (v - min) / (max - min) * (x1 - x0);
+      const svg = s('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': opt.aria || '' }, root);
+      const ticks = opt.ticks && (x1 - x0) / (opt.ticks.length - 1) >= 44 ? opt.ticks
+        : niceTicks(min, max, Math.max(2, Math.floor((x1 - x0) / 70)));
+      if (!opt.noAxis) {
+        ticks.forEach(t => {
+          s('line', { x1: sx(t), x2: sx(t), y1: top, y2: H - axisH + 2, stroke: 'var(--grid)', 'stroke-width': 1 }, svg);
+          svgText(svg, sx(t), H - 9, (opt.tickFmt || (v => v.toLocaleString('th-TH')))(t), { size: 11, fill: 'var(--text-muted)', anchor: 'middle' });
+        });
+      }
+      s('line', { x1: sx(0), x2: sx(0), y1: top, y2: H - axisH + 2, stroke: 'var(--axis)', 'stroke-width': 1 }, svg);
+      rows.forEach((r, i) => {
+        const y = top + i * rowH + (stacked ? rowH - barH - 6 : (rowH - barH) / 2);
+        const g = s('g', { 'aria-label': `${r.label}: ${r.text}` }, svg);
+        s('rect', { class: 'bg', x: 0, y: top + i * rowH, width: W, height: rowH, fill: 'transparent' }, g);
+        if (stacked) svgText(g, 0, top + i * rowH + 11, r.label, { size: 13, fill: 'var(--text-primary)' });
+        else svgText(g, labelW, y + barH / 2, r.label, { anchor: 'end', size: 13, fill: 'var(--text-primary)' });
+        const a = sx(0), b = sx(r.value);
+        s('path', { class: 'mark', d: barPath(a, b, y, barH), fill: r.color || 'var(--series-1)' }, g);
+        const lx = r.value >= 0 ? b + 6 : b - 6;
+        svgText(g, lx, y + barH / 2, r.text, { anchor: r.value >= 0 ? 'start' : 'end', size: 13, fill: 'var(--text-primary)', weight: 600 });
+        bindTip(g, () => [{ value: r.text, label: r.tip || '', color: r.color || 'var(--series-1)' }], r.label);
+      });
+    });
+    if (el && !opt.noTable) tableView(el, [opt.colLabel || 'รายการ', opt.colValue || 'ค่า'], rows.map(r => [r.label, r.text]));
+  }
+
+  // ---------- Dumbbell: Thailand vs world ----------
+  function dumbbell(id, rows, opt) {
+    const el = register(id, (root, W) => {
+      const narrow = W < 520;
+      const labelW = narrow ? 0 : Math.min(Math.ceil(Math.max(...rows.map(r => textW(r.label, 13)))), Math.round(W * 0.34));
+      const rowH = narrow ? 58 : 46, top = 8, axisH = 24;
+      const H = top + rows.length * rowH + axisH;
+      const x0 = labelW + (narrow ? 52 : 64), x1 = W - 52;
+      const sx = v => x0 + (v - opt.min) / (opt.max - opt.min) * (x1 - x0);
+      const svg = s('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': 'ไทยเทียบโลก' }, root);
+      niceTicks(opt.min, opt.max, narrow ? 4 : 6).forEach(t => {
+        s('line', { x1: sx(t), x2: sx(t), y1: top, y2: H - axisH + 2, stroke: t === 0 ? 'var(--axis)' : 'var(--grid)', 'stroke-width': 1 }, svg);
+        svgText(svg, sx(t), H - 10, t + '%', { size: 11, fill: 'var(--text-muted)', anchor: 'middle' });
+      });
+      rows.forEach((r, i) => {
+        const cy = top + i * rowH + (narrow ? 38 : rowH / 2);
+        const g = s('g', { 'aria-label': `${r.label}: ไทย ${r.th}% ${r.wLabel} ${r.w}%` }, svg);
+        s('rect', { class: 'bg', x: 0, y: top + i * rowH, width: W, height: rowH, fill: 'transparent' }, g);
+        if (narrow) svgText(g, 0, top + i * rowH + 12, r.label, { size: 13, fill: 'var(--text-primary)' });
+        else svgText(g, labelW, cy, r.label, { anchor: 'end', size: 13, fill: 'var(--text-primary)' });
+        s('line', { x1: sx(r.th), x2: sx(r.w), y1: cy, y2: cy, stroke: 'var(--series-muted)', 'stroke-width': 2, 'stroke-linecap': 'round' }, g);
+        const thLeft = r.th < r.w;
+        [[r.th, 'var(--series-1)', thLeft], [r.w, 'var(--series-2)', !thLeft]].forEach(([v, c, left]) => {
+          s('circle', { class: 'mark', cx: sx(v), cy, r: 6, fill: c, stroke: 'var(--surface-1)', 'stroke-width': 2 }, g);
+          svgText(g, sx(v) + (left ? -11 : 11), cy, (v > 0 && r.signed ? '+' : '') + v + '%', { anchor: left ? 'end' : 'start', size: 12, fill: 'var(--text-primary)', weight: 600 });
+        });
+        bindTip(g, () => [
+          { value: (r.th > 0 && r.signed ? '+' : '') + r.th + '%', label: 'ไทย', color: 'var(--series-1)' },
+          { value: (r.w > 0 && r.signed ? '+' : '') + r.w + '%', label: r.wLabel, color: 'var(--series-2)' }
+        ], r.label);
+      });
+    });
+    tableView(el, ['ตัวชี้วัด', 'ไทย', 'เทียบ'], rows.map(r => [r.label, r.th + '%', `${r.w}% (${r.wLabel})`]));
+  }
+
+  // ---------- Slope chart ----------
+  function slope(id, series, years) {
+    const el = register(id, (root, W) => {
+      const H = 220, top = 16, bottom = 28, padL = 40, padR = Math.min(170, W * 0.42);
+      const xA = padL + 64, xB = W - padR;
+      const sy = v => top + (1 - v / 80) * (H - top - bottom);
+      const svg = s('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': 'ก่อนและหลังการฝึก' }, root);
+      [0, 20, 40, 60, 80].forEach(t => {
+        s('line', { x1: padL, x2: W - padR + 10, y1: sy(t), y2: sy(t), stroke: t ? 'var(--grid)' : 'var(--axis)', 'stroke-width': 1 }, svg);
+        svgText(svg, padL - 6, sy(t), t + '%', { size: 11, fill: 'var(--text-muted)', anchor: 'end' });
+      });
+      svgText(svg, xA, H - 10, years[0], { size: 12, anchor: 'middle', fill: 'var(--text-secondary)' });
+      svgText(svg, xB, H - 10, years[1], { size: 12, anchor: 'middle', fill: 'var(--text-secondary)' });
+      series.forEach(se => {
+        const g = s('g', { 'aria-label': `${se.label}: ${se.a.t} เป็น ${se.b.t}` }, svg);
+        s('line', { x1: xA, x2: xB, y1: sy(se.a.v), y2: sy(se.b.v), stroke: 'transparent', 'stroke-width': 24 }, g);
+        s('line', { class: 'mark', x1: xA, x2: xB, y1: sy(se.a.v), y2: sy(se.b.v), stroke: se.color, 'stroke-width': 2, 'stroke-linecap': 'round' }, g);
+        [[xA, se.a.v], [xB, se.b.v]].forEach(([x, v]) => s('circle', { cx: x, cy: sy(v), r: 5, fill: se.color, stroke: 'var(--surface-1)', 'stroke-width': 2 }, g));
+        svgText(g, xA - 10, sy(se.a.v), se.a.t, { anchor: 'end', size: 12, fill: 'var(--text-primary)', weight: 600 });
+        svgText(g, xB + 10, sy(se.b.v), se.b.t + ' ' + se.short, { size: 12, fill: 'var(--text-primary)', weight: 600 });
+        bindTip(g, () => [{ value: `${se.a.t} → ${se.b.t}`, label: '', color: se.color }], se.label);
+      });
+    });
+    tableView(el, ['ตัวชี้วัด', years[0], years[1]], series.map(se => [se.label, se.a.t, se.b.t]));
+  }
+
+  // ---------- Paired bars: problem size vs program size ----------
+  function paired(id, groups) {
+    const el = register(id, (root, W) => {
+      const narrow = W < 520;
+      const labelW = Math.min(Math.ceil(Math.max(...groups.map(g => textW(g.label, narrow ? 12 : 13)))), Math.round(W * 0.3));
+      const barH = 16, gap = 2, groupH = barH * 2 + gap + 18, top = 4, axisH = 22;
+      const H = top + groups.length * groupH + axisH;
+      const max = Math.max(...groups.flatMap(g => [g.problem.v, g.program.v]));
+      const x0 = labelW + 10, x1 = W - 64;
+      const sx = v => x0 + v / max * (x1 - x0);
+      const svg = s('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': 'ขนาดโครงการเทียบขนาดปัญหา' }, root);
+      niceTicks(0, max, narrow ? 3 : 4).forEach(t => {
+        s('line', { x1: sx(t), x2: sx(t), y1: top, y2: H - axisH + 2, stroke: t ? 'var(--grid)' : 'var(--axis)', 'stroke-width': 1 }, svg);
+        svgText(svg, sx(t), H - 9, t.toLocaleString('th-TH'), { size: 11, fill: 'var(--text-muted)', anchor: 'middle' });
+      });
+      groups.forEach((gr, i) => {
+        const y = top + i * groupH + 9;
+        svgText(svg, labelW, y + barH + gap / 2, gr.label, { anchor: 'end', size: narrow ? 12 : 13, fill: 'var(--text-primary)' });
+        [[gr.problem, 'var(--series-2)', 0], [gr.program, 'var(--series-1)', 1]].forEach(([d, c, k]) => {
+          const yy = y + k * (barH + gap);
+          const g = s('g', { 'aria-label': `${d.name}: ${d.t}` }, svg);
+          s('rect', { class: 'bg', x: x0, y: yy - 1, width: W - x0, height: barH + 2, fill: 'transparent' }, g);
+          s('path', { class: 'mark', d: barPath(sx(0), Math.max(sx(0) + 2, sx(d.v)), yy, barH), fill: c }, g);
+          svgText(g, Math.max(sx(0) + 2, sx(d.v)) + 6, yy + barH / 2, d.t, { size: 12, fill: 'var(--text-primary)', weight: 600 });
+          bindTip(g, () => [{ value: d.t, label: d.name, color: c }], gr.label);
+        });
+      });
+    });
+    tableView(el, ['เรื่อง', 'ขนาดปัญหา', 'ขนาดโครงการ'], groups.map(g => [g.label, `${g.problem.name} ${g.problem.t}`, `${g.program.name} ${g.program.t}`]));
+  }
+
+  // ================= DATA =================
+  dumbbell('c-dumbbell', [
+    { label: 'อัตราว่างงาน', th: 0.95, w: 4.9, wLabel: 'โลก (ILO)' },
+    { label: 'งานที่สัมผัส GenAI', th: 21.8, w: 25, wLabel: 'โลก (ILO–NASK)' },
+    { label: 'การเติบโตค่าจ้างจริง', th: -2.88, w: 2.2, wLabel: 'OECD', signed: true }
+  ], { min: -5, max: 30 });
+
+  hbar('c-iceberg', [
+    { label: 'ผู้ว่างงาน', value: 0.40, text: '0.40', color: 'var(--series-muted)', tip: 'ล้านคน · +9.7% YoY' },
+    { label: 'ผู้รับประโยชน์ว่างงาน ปกส.', value: 0.29, text: '0.29', tip: 'ล้านคน · อัตรา 2.37%' },
+    { label: 'ทำงานต่ำระดับ', value: 2.2, text: '2.2', tip: 'ล้านคน · +8% YoY' },
+    { label: 'เสี่ยงถูก AI แทนที่', value: 2.2, text: '2.2', tip: 'ล้านคน' },
+    { label: 'นอกระบบที่รายงานปัญหา', value: 6.1, text: '6.1', tip: 'ล้านคน' },
+    { label: 'สัมผัส GenAI', value: 8.7, text: '8.7', tip: 'ล้านคน · 21.8% ของผู้มีงานทำ' },
+    { label: 'แรงงานนอกระบบ', value: 20.9, text: '20.9', tip: 'ล้านคน · 52.4% ของผู้มีงานทำ' }
+  ], { valuePad: 44, colValue: 'ล้านคน', aria: 'กลุ่มที่มีปัญหาแรงงาน หน่วยล้านคน' });
+
+  hbar('c-skills', [
+    { label: 'ต่ำกว่าเกณฑ์การอ่าน', value: 64.7, text: '64.7%' },
+    { label: 'ขาดทักษะดิจิทัลพื้นฐาน', value: 74.1, text: '74.1%' },
+    { label: 'ผู้สูงอายุ ต่ำกว่าเกณฑ์ดิจิทัล', value: 80, text: '>80%' }
+  ], { max: 100, ticks: [0, 25, 50, 75, 100], tickFmt: v => v + '%', colValue: 'ร้อยละ' });
+
+  hbar('c-wef', [
+    { label: 'งานใหม่', value: 170, text: '+170', tip: 'ล้านตำแหน่ง' },
+    { label: 'งานที่หายไป', value: -92, text: '−92', color: 'var(--series-2)', tip: 'ล้านตำแหน่ง' },
+    { label: 'สุทธิ', value: 78, text: '+78', tip: 'ล้านตำแหน่ง' }
+  ], { labelW: 90, valuePad: 48, colValue: 'ล้านตำแหน่ง', tickFmt: v => (v > 0 ? '+' : '') + v });
+
+  hbar('c-workforce', [
+    { label: 'วัยแรงงาน 2563', value: 43.2, text: '43.2 ล้าน', color: 'var(--series-muted)' },
+    { label: 'คาดการณ์ 2583', value: 36.5, text: '36.5 ล้าน' }
+  ], { valuePad: 72, max: 50, noAxis: true, colValue: 'ล้านคน' });
+
+  hbar('c-factory', [
+    { label: 'โรงงานเปิดใหม่', value: 139, text: '139 แห่ง', color: 'var(--series-muted)' },
+    { label: 'โรงงานปิด', value: 156, text: '156 แห่ง', color: 'var(--series-2)' }
+  ], { valuePad: 72, max: 180, noAxis: true, colValue: 'แห่ง' });
+
+  hbar('c-informal-problems', [
+    { label: 'ค่าตอบแทน', value: 70.9, text: '70.9%' },
+    { label: 'สภาพแวดล้อม', value: 45.1, text: '45.1%' },
+    { label: 'ความไม่ปลอดภัย', value: 39.0, text: '39.0%' }
+  ], { max: 100, ticks: [0, 25, 50, 75, 100], tickFmt: v => v + '%', colValue: 'ร้อยละ' });
+
+  hbar('c-region', [
+    { label: 'ตะวันออกเฉียงเหนือ', value: 74.9, text: '74.9%' },
+    { label: 'เหนือ', value: 69.0, text: '69.0%' },
+    { label: 'ทั้งประเทศ', value: 52.4, text: '52.4%', color: 'var(--series-muted)' }
+  ], { max: 100, ticks: [0, 25, 50, 75, 100], tickFmt: v => v + '%', colValue: 'ร้อยละ' });
+
+  hbar('c-rider', [
+    { label: 'ต้นทุนที่ไรเดอร์คำนวณ', value: 6.69, text: '6.69 บาท', color: 'var(--series-2)' },
+    { label: 'ค่ารอบที่ได้รับ', value: 3.70, text: '≈3.70 บาท' }
+  ], { valuePad: 80, max: 8, colValue: 'บาท/กม.' });
+
+  hbar('c-sbh', [
+    { label: 'นายจ้างที่ใช้กับงานเริ่มต้น', value: 70, text: '70%' },
+    { label: 'บริษัทที่เปลี่ยนวิธีคัดเลือกจริง', value: 37, text: '37%' },
+    { label: 'คนไม่มีปริญญาได้งานเพิ่ม', value: 3.5, text: '+3.5 จุด', color: 'var(--series-2)' }
+  ], { max: 100, ticks: [0, 25, 50, 75, 100], valuePad: 72, colValue: 'ค่า' });
+
+  slope('c-slope', [
+    { label: 'แรงงาน CLM ที่ผ่านการฝึก', short: 'ฝึกแล้ว', color: 'var(--series-1)', a: { v: 20, t: '<20%' }, b: { v: 55, t: '55%' } },
+    { label: 'นายจ้างที่รายงานทักษะไม่ตรง', short: 'ทักษะไม่ตรง', color: 'var(--series-2)', a: { v: 70, t: '70%' }, b: { v: 40, t: '40%' } }
+  ], ['2020', '2025']);
+
+  paired('c-scale', [
+    { label: 'จับคู่งาน', problem: { name: 'ผู้ว่างงาน + ทำงานต่ำระดับ', v: 2600, t: '2,600' }, program: { name: 'ตำแหน่งบน "ไทยมีงานทำ"', v: 42, t: '42' } },
+    { label: 'ความคุ้มครอง', problem: { name: 'แรงงานนอกระบบ', v: 20900, t: '20,900' }, program: { name: 'กองทุนสงเคราะห์ลูกจ้าง', v: 5700, t: '5,700' } }
+  ]);
+
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => charts.forEach(f => f()));
+  window.addEventListener('resize', (() => { let t; return () => { clearTimeout(t); t = setTimeout(() => charts.forEach(f => f()), 120); }; })());
+
+  // ================= Tables & cards =================
+  const stake = [
+    ['แรงงานนอกระบบ', '20.9 ล้านคน', 'ค่าตอบแทนต่ำ จ่ายช้า ถูกโกง ไม่มีสวัสดิการและอำนาจต่อรอง'],
+    ['คนเพิ่งจบ', 'ว่างงาน 1.70%', 'หางานแรกยากขึ้น ทักษะการแก้ปัญหาและทักษะสังคมไม่ตรงที่นายจ้างต้องการ'],
+    ['คนถูกเลิกจ้าง', '2.9 แสนคน ขอรับประโยชน์ว่างงาน', 'ตกงานกลางอาชีพ ทักษะเดิมใช้ไม่ได้ ไหลลงงานรายได้ต่ำ'],
+    ['ผู้สูงอายุที่ยังต้องทำงาน', '>80% ต่ำกว่าเกณฑ์ดิจิทัล', 'ต้องทำงานเพราะรายได้ไม่พอ แต่ขาดทักษะและงานที่เหมาะกับวัย'],
+    ['ไรเดอร์ / แพลตฟอร์ม', 'ต้นทุน 6.69 / ได้ 3.70 บาท', 'ค่ารอบต่ำกว่าต้นทุน ถูกระงับบัญชีโดยอัลกอริทึม ไม่อยู่ใน ม.33'],
+    ['แรงงานข้ามชาติ', '3.1 ล้านคนที่ถูกกฎหมาย', 'ค่าธรรมเนียมเกินกฎหมาย สถานะผูกกับมติ ครม. ติดงานผลิตภาพต่ำ'],
+    ['นายจ้าง / SME', '71% หาคนยาก', 'หาคนทักษะตรงไม่ได้ ต้นทุนแรงงานและพลังงานสูง แข่งกับสินค้าจีน'],
+    ['สถาบันการศึกษา', 'ผู้เรียน STEM น้อย', 'หลักสูตรตามตลาดไม่ทัน ค่าจ้างสายอาชีพไม่จูงใจ แนะแนวอ่อน'],
+    ['รัฐ', 'กฎหมายแพลตฟอร์มยังไม่ผ่าน', 'ข้อมูลกระจายหลายหน่วยงาน ตัวเลขว่างงานไม่สะท้อนปัญหา กฎหมายตามไม่ทัน']
+  ];
+  const sw = document.getElementById('stakeholders');
+  stake.forEach(([g, n, p]) => { const c = h('div', null, sw, 'card'); h('h3', g, c); h('div', n, c, 'big'); h('p', p, c); });
+
+  function chip(level) {
+    const c = document.createElement('span'); c.className = 'chip';
+    const b = h('span', null, c, 'bars');
+    const cls = level === 3 ? 'on3' : level === 2 ? 'on2' : 'on1';
+    for (let i = 1; i <= 3; i++) { const x = h('b', null, b); if (i <= level) x.className = cls; }
+    h('span', level === 3 ? 'แข็ง' : level === 2 ? 'ปานกลาง' : 'อ่อน', c);
+    return c;
+  }
+  function fillTable(id, headers, rows, chipCol) {
+    const t = document.getElementById(id);
+    const tr = h('tr', null, h('thead', null, t));
+    headers.forEach(x => h('th', x, tr));
+    const tb = h('tbody', null, t);
+    rows.forEach(r => {
+      const row = h('tr', null, tb);
+      r.forEach((x, i) => { const td = h('td', null, row); if (i === chipCol) td.appendChild(chip(x)); else td.textContent = x; });
+    });
+  }
+  fillTable('t-innov', ['ปัญหาที่แก้', 'นวัตกรรม (ตัวอย่าง)', 'หลักฐานสำคัญ', 'ระดับ', 'บทเรียนสำหรับไทย'], [
+    ['เยาวชนเปราะบางเข้างานแรกไม่ได้', 'ประเมินศักยภาพ + จับคู่งานใกล้บ้าน (Harambee, แอฟริกาใต้)', 'โอกาสหารายได้ 1.4 ล้านครั้งจากผู้หางาน 4.5 ล้านคน รัฐรับไปเป็นระบบชาติ', 3, 'ใกล้โจทย์แรงงานต่างจังหวัดที่สุด'],
+    ['แรงงานข้ามชาติติดงานผลิตภาพต่ำ', 'Skills partnership ฝึกก่อนเดินทาง', 'ผ่านการฝึก <20% → 55%; ทักษะไม่ตรง 70% → 40%', 3, 'ข้อตกลงทักษะทวิภาคีกับ CLM'],
+    ['คนกลางอาชีพถูกเปลี่ยนงาน', 'บัญชีเรียนรู้ + เงินชดเชยระหว่างเรียน (SkillsFuture, สิงคโปร์)', 'ได้งานใน 6 เดือน 55%; แต่คำขอเงินช่วยถูกปฏิเสธ ~60%', 2, 'เงินระหว่างเรียนสำคัญกว่าคูปองคอร์ส'],
+    ['แรงงานนอกระบบมองไม่เห็น', 'ทะเบียนดิจิทัล (e-Shram, อินเดีย)', 'ลงทะเบียน 318.9 ล้านคน เชื่อม 15 สวัสดิการ แต่ "นับได้แต่ยังไม่ได้สิทธิ"', 2, 'ต้องแปลงเป็นสิทธิจับต้องได้ทันที'],
+    ['วุฒิบังโอกาส', 'Skills-based hiring', 'ใช้ 70% แต่คนไม่มีปริญญาได้งานเพิ่มแค่ 3.5 จุด', 1, 'ลบวุฒิไม่พอ ต้องมีกลไกยืนยันทักษะ'],
+    ['แรงงานแพลตฟอร์มไม่มีความคุ้มครอง', 'สถานะกลาง + สิทธิต่ออัลกอริทึม (สิงคโปร์, EU, ILO C193)', 'กฎหมายเพิ่งบังคับใช้ 2025–2026 ยังไม่มีข้อมูลผลลัพธ์', 1, 'สิทธิต่ออัลกอริทึมควรมีทุกทางเลือก'],
+    ['คนทำงานอิสระไม่มีสวัสดิการ', 'Portable benefits (4 รัฐในสหรัฐฯ)', 'โครงการนำร่อง DoorDash สมทบ 4%; สหภาพเตือนความเสี่ยง', 1, 'ต่อยอด ม.40 เป็นพื้นขั้นต่ำ'],
+    ['สังคมสูงวัย', 'ขยายอายุเกษียณและจ้างต่อ (สิงคโปร์ 64/69)', 'นโยบายเริ่ม 1 ก.ค. 2026 ยังไม่มีผลประเมิน', 1, 'ใช้ได้กับแรงงานในระบบเท่านั้น']
+  ], 3);
+
+  fillTable('t-map', ['ปัญหาไทย', 'นวัตกรรมที่ใช้ได้', 'สิ่งที่ไทยมีแล้ว', 'ต้องปรับให้เข้ากับนอกระบบ / ต่างจังหวัด'], [
+    ['จับคู่ด้วยวุฒิ ไม่ใช่ทักษะ', 'ประเมินศักยภาพ + ยืนยันทักษะ (Harambee)', '"ไทยมีงานทำ" ~42,000 ตำแหน่ง', 'ใช้มือถือเป็นหลัก ฟรีค่าดาต้า จับคู่งานใกล้บ้าน'],
+    ['ไม่มีความคุ้มครองนอกสถานะลูกจ้าง', 'Portable benefits + ทะเบียนดิจิทัล', 'แพลตฟอร์ม "คนทำงานอิสระ" (ก.ย. 2569)', 'ผูกสวัสดิการ ม.40 กับงานทันทีที่ลงทะเบียน'],
+    ['ไรเดอร์ไม่มีสถานะ', 'Platform worker / ข้อสันนิษฐาน EU / C193', 'ร่าง พ.ร.บ. 160+ มาตรา; ไรเดอร์เข้าประกันสังคมได้', 'สิทธิขอคำอธิบายเมื่อถูกระงับบัญชี'],
+    ['AI และอุตสาหกรรมเปลี่ยนงานกลางอาชีพ', 'บัญชีเรียนรู้ + เงินชดเชยรายได้', 'โครงการ upskill/reskill ของรัฐ', 'เกณฑ์สิทธิ์ไม่ตัดคนนอกระบบ มีเงินระหว่างเรียน'],
+    ['กำลังคนกระจุกในภาคตะวันออก', 'Demand-driven education', 'โมเดล EEC', 'ขยายไปเหนือและอีสาน'],
+    ['ผู้สูงอายุต้องทำงาน', 'จ้างงานต่อหลังเกษียณ + จับคู่งานตามวัย', 'จัดหางานผู้สูงอายุ บรรจุ 554 จาก 632 คน', 'ขยายฐานให้ถึงผู้สูงอายุนอกระบบ'],
+    ['แรงงานข้ามชาติสถานะเปราะบาง', 'Skills partnership ฝึกก่อนเดินทาง', 'ต่อใบอนุญาตถึง ธ.ค. 2570', 'เส้นทางพัฒนาทักษะและเลื่อนระดับงาน']
+  ]);
+
+  fillTable('t-next', ['#', 'โจทย์วิจัย', 'คำถามหลัก', 'ผลที่ใช้ได้'], [
+    ['1', 'ดัชนีการใช้แรงงานไม่เต็มศักยภาพรายจังหวัด', 'อัตราว่างงาน 0.95% ซ่อนปัญหาไว้เท่าไร กระจุกที่จังหวัดไหน', 'แผนที่ปัญหาจริงสำหรับจัดสรรงบ'],
+    ['2', 'ชั้นยืนยันทักษะสำหรับคนไม่มีใบรับรอง', 'การประเมินทักษะแทนวุฒิเพิ่มโอกาสได้งานเท่าไร (RCT)', 'หลักฐานว่าลดอคติวุฒิได้จริงในไทย'],
+    ['3', 'AI กับงานระดับเริ่มต้นของไทย', 'การรับคนอายุ 22–25 ในอาชีพที่สัมผัส AI ลดลงหรือยัง', 'สัญญาณเตือนล่วงหน้า'],
+    ['4', 'การจับคู่งานเชิงพื้นที่ในเหนือและอีสาน', 'ระยะทางและค่าเดินทางเป็นอุปสรรคแค่ไหน', 'ฐานคิดการจับคู่งานใกล้บ้าน'],
+    ['5', 'ทางเลือกความคุ้มครองแรงงานแพลตฟอร์ม', 'ลูกจ้าง ประเภทที่สาม หรือ ม.40 ทางไหนดีที่สุด', 'ข้อเสนอเชิงตัวเลขต่อร่าง พ.ร.บ.'],
+    ['6', 'บัญชีเรียนรู้ที่แรงงานนอกระบบใช้ได้จริง', 'ออกแบบเกณฑ์สิทธิ์อย่างไรไม่ให้ตัดคนนอกระบบ', 'ต้นแบบนโยบายเชื่อม ม.40'],
+    ['7', 'มาตรฐานข้อมูลอาชีพและทักษะร่วม', 'หน่วยงานใช้รหัสชุดเดียวกันได้หรือไม่ (ESCO, O*NET)', 'โครงสร้างพื้นฐานข้อมูลให้โจทย์ 1–6'],
+    ['8', 'Skills partnership กับประเทศเพื่อนบ้าน', 'ฝึกก่อนเดินทางคุ้มค่าแค่ไหน', 'ข้อเสนอข้อตกลงทักษะทวิภาคี']
+  ]);
+})();
+</script>
+</body>
+</html>
