@@ -1,0 +1,1038 @@
+<!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"></head><body>
+<title>การเดินทางของแรงงาน</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Trirong:ital,wght@0,600;0,700;1,500&display=swap">
+<style>
+/* Layout: one era = one full-screen panel. Desktop: vertical scroll drives a horizontal track (left→right).
+   Mobile: panels stack top→bottom. A fixed layer behind everything crossfades each era's mood colour and motif. */
+:root {
+  --bg: #e8e1d3;              /* live background, interpolated by script between era mood colours */
+  --chrome-bg: #e8e1d3;
+  --chrome-ink: #221c15;
+  --paper: #e8e1d3;           /* intro / fallback ground */
+  --paper-ink: #221c15;
+  --f-display: "Trirong", "Noto Serif Thai", Georgia, serif;
+  --f-body: "Anuphan", "Noto Sans Thai", system-ui, sans-serif;
+  --f-data: "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
+  --rail-h: 64px;
+  color-scheme: light;
+}
+html { overflow-x: clip; }
+body {
+  background: var(--bg);
+  color: var(--paper-ink);
+  font-family: var(--f-body);
+  font-size: 16px;
+  line-height: 1.7;
+}
+a { color: inherit; }
+#bgfx { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+
+/* ---------- track ---------- */
+.wrap { position: relative; z-index: 1; }
+.sticky { position: relative; }
+.track { display: flex; flex-direction: column; }
+.snap { display: none; }
+
+.panel {
+  --pbg: #e8e1d3; --pink: #221c15; --pacc: #8a5a2b;
+  color: var(--pink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100svh;
+  padding: 72px 16px calc(var(--rail-h) + 32px);
+  box-sizing: border-box;
+}
+.panel-in {
+  width: 100%;
+  max-width: 1180px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 28px;
+  padding: 28px 22px;
+  box-sizing: border-box;
+  border-radius: 28px;
+  background: color-mix(in srgb, var(--pbg) 80%, transparent);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+}
+
+@media (min-width: 900px) and (min-height: 560px) {
+  html { scroll-snap-type: y proximity; }
+  .wrap { height: calc(var(--n, 13) * 100vh); }
+  .sticky { position: sticky; top: 0; height: 100vh; overflow: hidden; }
+  .track { flex-direction: row; height: 100%; will-change: transform; }
+  .panel { flex: 0 0 100%; height: 100%; min-height: 0; padding: 5vh 5vw calc(var(--rail-h) + 4vh); }
+  .panel-in {
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    gap: 4vw;
+    align-items: center;
+    padding: clamp(28px, 4vh, 48px) clamp(28px, 3.5vw, 56px);
+    max-height: 100%;
+    overflow-y: auto;
+  }
+  .snap { display: block; position: absolute; left: 0; width: 1px; height: 100vh; scroll-snap-align: start; }
+}
+
+/* ---------- era header ---------- */
+.era-head { display: grid; gap: 14px; align-content: start; min-width: 0; }
+.era-years {
+  margin: 0;
+  font-family: var(--f-data);
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+.era-title {
+  margin: 0;
+  font-family: var(--f-display);
+  font-weight: 700;
+  font-size: clamp(2.1rem, 4.4vw, 4.2rem);
+  line-height: 1.15;
+  text-wrap: balance;
+}
+.mood { display: grid; gap: 4px; padding-top: 6px; border-top: 1px solid color-mix(in srgb, var(--pink) 30%, transparent); }
+.mood-label {
+  margin: 0;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  opacity: 0.8;
+}
+.mood-words {
+  margin: 0;
+  font-family: var(--f-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(1.25rem, 2vw, 1.7rem);
+  line-height: 1.4;
+  color: var(--pacc);
+  text-wrap: balance;
+}
+.why { margin: 0; font-size: 0.95rem; opacity: 0.92; max-width: 46ch; }
+.tech { margin: 0; font-size: 0.85rem; opacity: 0.85; }
+.tech b { font-weight: 600; }
+
+/* ---------- era body ---------- */
+.era-body { display: grid; gap: 18px; min-width: 0; align-content: start; }
+.facts { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.facts li { margin: 0; padding-left: 16px; position: relative; max-width: 68ch; }
+.facts li::before {
+  content: ""; position: absolute; left: 0; top: 0.72em;
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--pacc);
+}
+.facts p { margin: 0; }
+.quote {
+  margin: 0;
+  font-family: var(--f-display);
+  font-weight: 700;
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  line-height: 1.1;
+  color: var(--pacc);
+}
+.life {
+  margin: 0;
+  padding: 14px 0 0;
+  border-top: 1px dashed color-mix(in srgb, var(--pink) 35%, transparent);
+  max-width: 68ch;
+}
+.life-label, .th-label {
+  display: block;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  opacity: 0.8;
+  margin-bottom: 2px;
+}
+.life p { margin: 0; font-size: 0.97rem; }
+.th-note {
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--pink) 9%, transparent);
+  font-size: 0.93rem;
+  max-width: 68ch;
+}
+
+/* evidence chips */
+.ev {
+  display: inline-block;
+  vertical-align: 0.1em;
+  margin-left: 4px;
+  padding: 0 7px;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  line-height: 1.6;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.ev.v { background: var(--pink); color: var(--pbg); }
+.ev.s { border: 1px solid currentColor; }
+.ev.b { border: 1px dashed currentColor; opacity: 0.8; }
+.src { font-size: 0.78rem; opacity: 0.8; white-space: nowrap; }
+.src a { text-underline-offset: 2px; }
+
+/* ---------- mini charts ---------- */
+.viz { margin: 0; display: grid; gap: 7px; max-width: 560px; }
+.viz figcaption { font-size: 0.82rem; font-weight: 600; margin-bottom: 2px; }
+.bar-row {
+  display: grid;
+  grid-template-columns: minmax(84px, 9.5em) minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  font-size: 0.84rem;
+}
+.bl { min-width: 0; }
+.bt {
+  position: relative; height: 14px; border-radius: 3px;
+  background: color-mix(in srgb, var(--pink) 13%, transparent);
+}
+.bt i {
+  position: absolute; top: 0; bottom: 0;
+  left: var(--l, 0%); width: max(var(--w), 3px);
+  border-radius: 3px;
+  background: var(--pacc);
+}
+.bt .tick {
+  position: absolute; top: -4px; bottom: -4px; width: 0;
+  border-left: 1.5px dashed var(--pink); opacity: 0.7;
+}
+.bv { font-family: var(--f-data); font-variant-numeric: tabular-nums; font-size: 0.82rem; white-space: nowrap; }
+.viz-note { margin: 0; font-size: 0.76rem; opacity: 0.8; }
+
+.stack { display: flex; height: 26px; border-radius: 4px; overflow: hidden; }
+.stack span { display: flex; align-items: center; padding: 0 8px; font-size: 0.75rem; font-weight: 600; white-space: nowrap; min-width: 0; overflow: hidden; }
+.stack .a { background: var(--pacc); color: var(--pbg); }
+.stack .b { background: color-mix(in srgb, var(--pink) 16%, transparent); }
+
+.polar { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; align-items: end; height: 120px; max-width: 360px; }
+.polar div { display: grid; gap: 4px; justify-items: center; align-content: end; height: 100%; font-size: 0.78rem; text-align: center; }
+.polar b { display: block; width: 100%; border-radius: 3px 3px 0 0; background: var(--pacc); }
+.polar .down b { background: color-mix(in srgb, var(--pink) 25%, transparent); }
+.polar em { font-style: normal; font-family: var(--f-data); font-size: 0.9rem; }
+
+/* ---------- intro & finale ---------- */
+.intro .panel-in, .finale .panel-in { grid-template-columns: minmax(0, 1fr); max-width: 1040px; gap: 22px; }
+.eyebrow { margin: 0; font-family: var(--f-data); font-size: 0.82rem; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.85; }
+.hero-title {
+  margin: 0;
+  font-family: var(--f-display);
+  font-weight: 700;
+  font-size: clamp(2.6rem, 6vw, 5.2rem);
+  line-height: 1.1;
+  text-wrap: balance;
+}
+.lede { margin: 0; font-size: clamp(1rem, 1.4vw, 1.2rem); max-width: 60ch; }
+.spectrum { display: grid; gap: 8px; }
+.spectrum-bar { display: flex; height: 40px; border-radius: 6px; overflow: hidden; outline: 1px solid color-mix(in srgb, var(--pink) 25%, transparent); }
+.spectrum-bar button {
+  flex: 1 1 0; min-width: 0; border: 0; padding: 0; cursor: pointer;
+  background: var(--c);
+  transition: flex-grow .3s ease;
+}
+.spectrum-bar button:hover, .spectrum-bar button:focus-visible { flex-grow: 1.8; }
+.spectrum-bar button:focus-visible { outline: 3px solid var(--pink); outline-offset: -3px; }
+.spectrum-labels { display: flex; gap: 0; font-size: 0.7rem; line-height: 1.3; }
+.spectrum-labels span { flex: 1 1 0; min-width: 0; text-align: center; padding: 0 2px; overflow-wrap: anywhere; opacity: 0.85; }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 0.85rem; align-items: center; }
+.legend .ev { margin-left: 0; margin-right: 6px; }
+.hint { margin: 0; font-size: 0.9rem; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+.hint .arrow { display: inline-block; font-family: var(--f-data); animation: nudge 1.6s ease-in-out infinite; }
+.hint .h-desk { display: none; }
+@media (min-width: 900px) and (min-height: 560px) {
+  .hint .h-desk { display: inline; }
+  .hint .h-mob { display: none; }
+}
+@keyframes nudge { 0%,100% { transform: translateX(0); } 50% { transform: translateX(6px); } }
+
+.lessons { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 18px 28px; }
+.lessons li { display: grid; gap: 4px; align-content: start; min-width: 0; }
+.lessons h3 { margin: 0; font-family: var(--f-display); font-weight: 600; font-size: 1.2rem; line-height: 1.35; color: var(--pacc); }
+.lessons p { margin: 0; font-size: 0.92rem; }
+.foot { margin: 0; font-size: 0.82rem; opacity: 0.85; max-width: 80ch; }
+
+/* ---------- rail ---------- */
+.rail {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 5;
+  padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
+  background: color-mix(in srgb, var(--chrome-bg) 86%, transparent);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  color: var(--chrome-ink);
+  display: grid; gap: 6px;
+}
+.rail-top { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; font-size: 0.82rem; min-width: 0; }
+.rail-now { font-weight: 600; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rail-count { font-family: var(--f-data); font-variant-numeric: tabular-nums; opacity: 0.8; white-space: nowrap; }
+.rail-segs { position: relative; display: flex; gap: 3px; height: 12px; }
+.rail-segs button {
+  flex: 1 1 0; min-width: 0; padding: 0; border: 0; border-radius: 2px; cursor: pointer;
+  background: var(--c);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--chrome-ink) 22%, transparent);
+}
+.rail-segs button:focus-visible { outline: 2px solid var(--chrome-ink); outline-offset: 2px; }
+.rail-mark {
+  position: absolute; top: -5px; bottom: -5px; width: 3px; margin-left: -1.5px;
+  border-radius: 2px; background: var(--chrome-ink);
+  pointer-events: none;
+}
+@media (min-width: 900px) and (min-height: 560px) {
+  .rail { padding-inline: 5vw; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hint .arrow { animation: none; }
+  .spectrum-bar button { transition: none; }
+}
+</style>
+
+<canvas id="bgfx" aria-hidden="true"></canvas>
+
+<main class="wrap" id="wrap">
+  <div class="sticky" id="sticky">
+    <div class="track" id="track">
+
+      <!-- 0 · intro -->
+      <section class="panel intro" id="intro" data-short="เริ่มต้น" data-years="หมื่นปีของการทำงาน" data-motif="intro"
+        style="--pbg:#e8e1d3;--pink:#221c15;--pacc:#8a5a2b">
+        <div class="panel-in">
+          <p class="eyebrow">หมื่นปีของการทำงาน · 11 ยุค</p>
+          <h1 class="hero-title">การเดินทางของแรงงาน</h1>
+          <p class="lede">จากนักล่าสัตว์หาของป่าถึงไรเดอร์ในยุค AI สีพื้นหลังของแต่ละยุคคือการตีความบรรยากาศความรู้สึกของคนทำงานในยุคนั้น ยิ่งเดินทางไปข้างหน้า สีจะค่อย ๆ เปลี่ยนตามเวลา</p>
+          <div class="spectrum">
+            <div class="spectrum-bar" id="spectrumBar" role="group" aria-label="แถบสีบรรยากาศทุกยุค กดเพื่อไปยังยุคนั้น"></div>
+            <div class="spectrum-labels" id="spectrumLabels" aria-hidden="true"></div>
+          </div>
+          <div class="legend">
+            <span><span class="ev v">ตรวจสอบแล้ว</span>ผ่านการตรวจสอบแบบหักล้าง 3 เสียง</span>
+            <span><span class="ev s">มีแหล่งอ้าง</span>มีแหล่งแต่ยังไม่ผ่านการตรวจสอบ</span>
+            <span><span class="ev b">ความรู้พื้นฐาน</span>ความรู้ทั่วไป ควรตรวจซ้ำก่อนอ้างอิง</span>
+          </div>
+          <p class="hint"><span class="h-desk">เลื่อนลงหรือกดลูกศรขวาเพื่อเดินทาง</span><span class="h-mob">เลื่อนลงเพื่อเดินทาง</span><span class="arrow" aria-hidden="true">→</span></p>
+        </div>
+      </section>
+
+      <!-- 1 · hunter-gatherers -->
+      <section class="panel" id="hunter" data-short="นักล่าสัตว์หาของป่า" data-years="ก่อนราว 10,000 ปีก่อน" data-motif="hunter"
+        style="--pbg:#d4a868;--pink:#2a1a0a;--pacc:#8c3b1a">
+        <div class="panel-in">
+          <header class="era-head">
+            <p class="era-years">ก่อนราว 10,000 ปีก่อน</p>
+            <h2 class="era-title">นักล่าสัตว์หาของป่า</h2>
+            <div class="mood">
+              <p class="mood-label">บรรยากาศ · สีดินเทศ</p>
+              <p class="mood-words">อิสระ · ผูกพันกลุ่ม · ไม่แน่นอน</p>
+            </div>
+            <p class="why">สีดินเทศของภาพเขียนในถ้ำและแสงกองไฟ ชีวิตขึ้นกับฤดูกาลและกลุ่ม ไม่มีนายจ้าง ไม่มีค่าจ้าง</p>
+            <p class="tech"><b>เทคโนโลยี:</b> เครื่องมือหิน ไฟ ความรู้เรื่องพืชและสัตว์</p>
+          </header>
+          <div class="era-body">
+            <ul class="facts">
+              <li><p>งานกับชีวิตไม่แยกจากกัน ทุกคนหาอาหาร แบ่งงานตามเพศและวัย และแบ่งปันอาหารกันในกลุ่ม <span class="ev b">ความรู้พื้นฐาน</span></p></li>
+              <li><p>Marshall Sahlins (1966) เรียกสังคมแบบนี้ว่า "original affluent society" เพราะใช้เวลาหาอาหารไม่มาก แต่ยังถกเถียงกัน เพราะไม่นับเวลาแปรรูปอาหารและงานบ้าน <span class="ev b">ความรู้พื้นฐาน</span></p></li>
+            </ul>
+            <blockquote class="life">
+              <span class="life-label">ชีวิตคนทำงาน</span>
+              <p>ตื่นมาไม่มีใครสั่งงาน แต่ถ้าฝนไม่ตกหรือฝูงสัตว์ย้ายถิ่น ทั้งกลุ่มก็หิวพร้อมกัน ความมั่นคงมาจากการแบ่งปัน ไม่ได้มาจากการสะสม</p>
+            </blockquote>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2 · neolithic -->
+      <section class="panel" id="neolithic" data-short="ยุคหินใหม่" data-years="ราว 10,000 ปีก่อน" data-motif="neolithic"
+        style="--pbg:#b7b06d;--pink:#222010;--pacc:#5b4a12">
+        <div class="panel-in">
+          <header class="era-head">
+            <p class="era-years">ราว 10,000 ปีก่อน</p>
+            <h2 class="era-title">การปฏิวัติยุคหินใหม่</h2>
+            <div class="mood">
+              <p class="mood-label">บรรยากาศ · สีเขียวรวงข้าว</p>
+              <p class="mood-words">มั่นคงขึ้น · เหนื่อยซ้ำซาก · เริ่มมีชนชั้น</p>
+            </div>
+            <p class="why">ทุ่งข้าวสาลีที่ต้องดูแลทุกวัน อาหารมีพอเก็บ แต่ร่างกายต้องแลกด้วยงานหนักแบบเดิมซ้ำ ๆ</p>
+            <p class="tech"><b>เทคโนโลยี:</b> เมล็ดพันธุ์ปรับปรุงพันธุ์ เครื่องมือเกษตร ภาชนะดินเผา</p>
+          </header>
+          <div class="era-body">
+            <ul class="facts">
+              <li><p>Robert Allen วัดผลิตภาพแรงงานเป็น "แคลอรีต่อชั่วโมงทำงาน" และวัดส่วนเกินทางการเกษตรเป็นแคลอรีที่ผลิตได้ลบด้วยแคลอรีที่ผู้ผลิตต้องใช้ยังชีพ โดยใช้การทดลองด้วยเครื่องมือยุคหินใหม่ที่จำลองขึ้นใหม่ <span class="ev v">ตรวจสอบแล้ว</span> <span class="src"><a href="https://onlinelibrary.wiley.com/doi/10.1111/ehr.13307" target="_blank" rel="noopener">Allen 2024</a></span></p></li>
+              <li><p>Allen โยงส่วนเกินไปถึงการเกิดงานหัตถกรรม ความเหลื่อมล้ำ รัฐ และสงคราม เกษตรกรรมเกิดขึ้นเองหลายแห่งหลังยุคน้ำแข็งสิ้นสุดราว 15,000 ปีก่อน <span class="ev s">มีแหล่งอ้าง</span></p></li>
+            </ul>
+            <blockquote class="life">
+              <span class="life-label">ชีวิตคนทำงาน</span>
+              <p>หลักฐานโครงกระดูกหลายพื้นที่ชี้ว่าชาวนายุคแรกตัวเตี้ยลง และมีร่องรอยการทำงานหนักซ้ำ ๆ มากขึ้น ส่วนเกินไม่ได้ทำให้ชีวิตชาวนาดีขึ้นเสมอไป แต่ทำให้เกิดคนที่ไม่ต้องผลิตอาหารเอง เช่น นักบวช นักรบ และผู้ปกครอง <span class="ev b">ความรู้พื้นฐาน</span></p>
+            </blockquote>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3 · ancient -->
+      <section class="panel" id="ancient" data-short="อารยธรรมโบราณ" data-years="ราว 1750–1159 ปีก่อน ค.ศ." data-motif="ancient"
+        style="--pbg:#c47f4f;--pink:#26110a;--pacc:#5a1a08">
+        <div class="panel-in">
+          <header class="era-head">
+            <p class="era-years">ราว 1750–1159 ปีก่อน ค.ศ. และกรีก-โรมัน</p>
+            <h2 class="era-title">อารยธรรมโบราณ</h2>
+            <div class="mood">
+              <p class="mood-label">บรรยากาศ · สีหินทรายร้อน</p>
+              <p class="mood-words">ภาคภูมิในฝีมือ · หิว · กล้าต่อรอง</p>
+            </div>
+            <p class="why">แดดทะเลทรายบนหินทรายของสุสานหลวง ช่างฝีมือภูมิใจในงาน แต่เมื่อรัฐจ่ายค่าจ้างช้า ความหิวก็กลายเป็นเสียงประท้วง</p>
+            <p class="tech"><b>เทคโนโลยีทางสังคม:</b> การเขียน การทำบัญชี กฎหมาย การจ่ายค่าจ้างเป็นปันส่วน</p>
+          </header>
+          <div class="era-body">
+            <p class="quote">"เราหิว"</p>
+            <ul class="facts">
+              <li><p>1159 ปีก่อน ค.ศ. ช่างสร้างสุสานหลวงที่หมู่บ้านเดียร์เอลเมดีนาได้ค่าจ้างช้าไปเกือบเดือน จึงนั่งประท้วงที่วิหารของฟาโรห์รามเสสที่ 3 และตะโกนว่าหิว นี่คือการนัดหยุดงานครั้งแรกที่มีบันทึก ช่างกลุ่มนี้ได้ค่าจ้างดีและไม่ใช่ทาส <span class="ev s">มีแหล่งอ้าง</span> <span class="src"><a href="https://www.worldhistory.org/article/1089/the-first-labor-strike-in-history/" target="_blank" rel="noopener">World History</a></span></p></li>
+              <li><p>ประมวลกฎหมายฮัมมูราบี (ราว 1750 ปีก่อน ค.ศ.) ถือว่าทาสเป็นสถาบันที่มีอยู่แล้ว <span class="ev s">มีแหล่งอ้าง</span> ส่วนกรีกและโรมันพึ่งทาสในเหมืองและไร่ขนาดใหญ่ ควบคู่กับแรงงานรับจ้างเสรีในเมือง <span class="ev b">ความรู้พื้นฐาน</span></p></li>
+            </ul>
+            <blockquote class="life">
+              <span class="life-label">ชีวิตคนทำงาน</span>
+              <p>ค่าจ้างของช่างหลวงคือข้าวสาลี ข้าวบาร์เลย์สำหรับทำขนมปังและเบียร์ ปลา และน้ำมัน เมื่อสงคราม การทุจริต และพืชผลล้มเหลวทำให้ปันส่วนไม่มา พวกเขาใช้วิธีเดียวกับสหภาพแรงงานในอีกสามพันปีต่อมา คือหยุดงานพร้อมกัน <span class="ev b">ความรู้พื้นฐาน</span></p>
+            </blockquote>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4 · medieval -->
+      <section class="panel" id="medieval" data-short="ยุคกลาง" data-years="ราว ค.ศ. 1000–1347" data-motif="medieval"
+        style="--pbg:#5f5b4b;--pink:#efe8d8;--pacc:#d9c48f">
+        <div class="panel-in">
+          <header class="era-head">
+            <p class="era-years">ราว ค.ศ. 1000–1347</p>
+            <h2 class="era-title">ยุคกลาง: ทาสติดที่ดินและกิลด์</h2>
+            <div class="mood">
+              <p class="mood-label">บรรยากาศ · สีโคลนนาและหินคฤหาสน์</p>
+              <p class="mood-words">ถูกผูกมัด · จำยอม · อยู่กับที่</p>
+            </div>
+            <p class="why">ทุ่งนาแบ่งเป็นแถบยาวของคฤหาสน์ ฟ้าครึ้ม ดินหนัก ชีวิตถูกกำหนดตั้งแต่เกิดว่าเป็นของใคร</p>
+            <p class="tech"><b>เทคโนโลยีทางสังคม:</b> ระบบคฤหาสน์ สัญญาจ้างรายปี กิลด์ในเมือง</p>
+          </header>
+          <div class="era-body">
+            <ul class="facts">
+              <li><p>ราว ค.ศ. 1300 ประชากรชนบทของอังกฤษราวครึ่งหนึ่งเป็นทาสติดที่ดิน ต้องทำงานบนที่ดินของเจ้าที่ดินและย้ายถิ่นเองไม่ได้ <span class="ev v">ตรวจสอบแล้ว</span> <span class="src"><a href="https://www2.gwu.edu/~iiep/assets/docs/papers/2020WP/JedwabIIEP2020-14.pdf" target="_blank" rel="noopener">Jedwab et al.</a></span></p></li>
+              <li><p>ลูกจ้างเกษตรรายปีที่ผูกติดคฤหาสน์ (famuli) ได้ค่าจ้างเป็นเงินแทบคงที่ 19–29 ชิลลิงต่อปี ตั้งแต่ทศวรรษ 1270 ถึง 1370 ค่าจ้างส่วนใหญ่จ่ายเป็นธัญพืช <span class="ev v">ตรวจสอบแล้ว</span> <span class="src"><a href="https://www.lse.ac.uk/asset-library/information/wp360.pdf" target="_blank" rel="noopener">LSE WP 360</a></span></p></li>
+              <li><p>ในเมือง กิลด์คุมการเข้าอาชีพผ่านขั้นฝึกงาน ช่างรับจ้าง และนายช่าง กิลด์รักษามาตรฐานฝีมือ แต่ก็กีดกันคนนอก ผู้หญิง และชนกลุ่มน้อย <span class="ev b">ความรู้พื้นฐาน</span></p></li>
+            </ul>
+            <blockquote class="life">
+              <span class="life-label">ชีวิตคนทำงาน</span>
+              <p>ก่อนปลายทศวรรษ 1360 บันทึกของคฤหาสน์ระบุชื่อคนงานไม่ถึง 20% คนงานส่วนใหญ่จึงไม่มีชื่อในบันทึกของนายจ้าง <span class="ev s">มีแหล่งอ้าง</span></p>
+            </blockquote>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5 · black death -->
+      <section class="panel" id="plague" data-short="กาฬโรค" data-years="ค.ศ. 1348–1450" data-motif="plague"
+        style="--pbg:#2a1315;--pink:#f2e1dc;--pacc:#d0564a">
+        <div class="panel-in">
+          <header class="era-head">
+            <p class="era-years">ค.ศ. 1348–1450</p>
+            <h2 class="era-title">กาฬโรคพลิกดุลอำนาจ</h2>
+            <div class="mood">
+              <p class="mood-label">บรรยากาศ · สีเลือดหมูในความมืด</p>
+              <p class="mood-words">หวาดกลัว · สูญเสีย · แล้วกล้าต่อรอง</p>
+            </div>
+            <p class="why">ความตายครอบหมู่บ้าน แต่คนที่รอดกลายเป็นของหายาก และเป็นครั้งแรกที่แรงงานเลือกนายจ้างได้</p>
+            <p class="tech"><b>เทคโนโลยีทางสังคม:</b> Ordinance of Labourers (1349) กฎหมายเพดานค่าจ้าง</p>
+          </header>
+          <div class="era-body">
+            <ul class="facts">
+              <li><p>กาฬโรคฆ่าประชากรอังกฤษราว 45–65% ระยะสั้นค่าจ้างจริงลดลง แล้วพุ่งขึ้นจนถึงกลางศตวรรษที่ 15 <span class="ev v">ตรวจสอบแล้ว</span></p></li>
+              <li><p>อังกฤษออกกฎหมายจำกัดค่าจ้างในปี 1349 ได้ผลในทศวรรษ 1350 แล้วค่อย ๆ อ่อนลง ส่วนยุโรปตะวันออกกลับเกิดระบบทาสติดที่ดินรอบสองหลัง ค.ศ. 1500 <span class="ev v">ตรวจสอบแล้ว</span></p></li>
+            </ul>
+            <figure class="viz">
+              <figcaption>ค่าจ้างลูกจ้างรายวันในอังกฤษ (ชิลลิงต่อวัน)</figcaption>
+              <div class="bar-row"><span class="bl">ค.ศ. 1349</span><span class="bt"><i style="--w:52%"></i></span><span class="bv">0.13</span></div>
+              <div class="bar-row"><span class="bl">ค.ศ. 1350</span><span class="bt"><i style="--w:100%"></i></span><span class="bv">0.25</span></div>
+              <p class="viz-note">ลูกจ้างรายปีที่ผูกติดคฤหาสน์ต้องรอราว 80 ปี จึงได้ค่าจ้างเพิ่มเท่าที่ลูกจ้างรายวันได้ในปีเดียว · <a href="https://www.lse.ac.uk/asset-library/information/wp360.pdf" target="_blank" rel="noopener">LSE WP 360</a> <span class="ev v">ตรวจสอบแล้ว</span></p>
+            </figure>
+            <figure class="viz">
+              <figcaption>จำนวนทาสติดที่ดินในอังกฤษ</figcaption>
+              <div class="bar-row"><span class="bl">ค.ศ. 1300</span><span class="bt"><i style="--w:100%"></i></span><span class="bv">~2 ล้าน</span></div>
+              <div class="bar-row"><span class="bl">ค.ศ. 1400</span><span class="bt"><i style="--w:50%"></i></span><span class="bv">~1 ล้าน</span></div>
+              <div class="bar-row"><span class="bl">ค.ศ. 1500</span><span class="bt"><i style="--w:0.3%"></i></span><span class="bv">หลักพัน</span></div>
+              <p class="viz-note"><a href="https://www2.gwu.edu/~iiep/assets/docs/papers/2020WP/JedwabIIEP2020-14.pdf" target="_blank" rel="noopener">Jedwab, Johnson &amp; Koyama</a> อ้าง Bailey 2014</p>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6 · early modern & colonial -->
+      <section class="panel" id="colonial" data-short="ต้นสมัยใหม่และอาณานิคม" data-years="ค.ศ. 1500–1800" data-motif="colonial"
+        style="--pbg:#1b3147;--pink:#e4edf3;--pacc:#d9a441">
+        <div class="panel-in">
+          <header class="era-head">
+            <p class="era-years">ค.ศ. 1500–1800</p>
+            <h2 class="era-title">ต้นสมัยใหม่และอาณานิคม</h2>
+            <div class="mood">
+              <p class="mood-label">บรรยากาศ · สีน้ำเงินมหาสมุทรลึก</p>
+              <p class="mood-words">แตกขั้ว · อิ่มในลอนดอน · สิ้นหวังบนเรือทาส</p>
+            </div>
+            <p class="why">ทะเลที่พาทั้งเครื่องเทศ ทองคำ และคนที่ถูกจับเป็นทาส ความมั่งคั่งของฝั่งหนึ่งผูกกับแรงงานบังคับของอีกฝั่ง</p>
+            <p class="tech"><b>เทคโนโลยี:</b> เรือเดินสมุทร การค้าโลก ไร่อาณานิคม</p>
+          </header>
+          <div class="era-body">
+            <figure class="viz">
+              <figcaption>รายได้ของแรงงานเต็มปี เทียบกับตะกร้ายังชีพขั้นต่ำ (เท่า)</figcaption>
+              <div class="bar-row"><span class="bl">ลอนดอน / Low Countries</span><span class="bt"><i style="--l:60%;--w:40%"></i><span class="tick" style="left:20%"></span></span><span class="bv">3–5</span></div>
+              <div class="bar-row"><span class="bl">ฟลอเรนซ์ / เวียนนา</span><span class="bt"><i style="--w:20%"></i><span class="tick" style="left:20%"></span></span><span class="bv">~1</span></div>
+              <p class="viz-note">เส้นประ = พอยังชีพพอดี · ศตวรรษที่ 18 สมมติทำงาน 250 วันต่อปี · <a href="https://users.nber.org/~confer/2006/SEGs06/allen.pdf" target="_blank" rel="noopener">Allen 2006</a> <span class="ev v">ตรวจสอบแล้ว</span></p>
+            </figure>
+            <ul class="facts">
+              <li><p>ชาวแอฟริกันราว 12–20 ล้านคนถูกส่งข้ามมหาสมุทรแอตแลนติกในฐานะทาส ราว 15% ตายระหว่างทาง <span class="ev s">มีแหล่งอ้าง</span></p></li>
+            </ul>
+            <p class="th-note"><span class="th-label">ขณะเดียวกันในสยาม</span>ทาสอยู่ชั้นล่างสุดของระบบศักดินา บางคนทำมาหากินเองแล้วส่งเงินให้นายปีละ 4–8 บาท (บันทึกของ La Loubère ปี 1687) และบางพื้นที่ของไทยและพม่ามีทาสหนึ่งในสี่ถึงหนึ่งในสามของประชากร <span class="ev s">มีแหล่งอ้าง</span> ส่วนไพร่ต้องสังกัดมูลนายและถูกเกณฑ์แรงงานหลายเดือนต่อปี <span class="ev b">ความรู้พื้นฐาน</span></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7 · industrial revolution -->
+      <section class="panel" id="industrial" data-short="ปฏิวัติอุตสาหกรรม" data-years="ค.ศ. 1760–1850" data-motif="industrial"
+        style="--pbg:#34332f;--pink:#eee7d4;--pacc:#e3c547">
+        <div class="panel-in">
+          <header class="era-head">
+            <p class="era-years">ค.ศ. 1760–1850</p>
+            <h2 class="era-title">การปฏิวัติอุตสาหกรรม</h2>
+            <div class="mood">
+              <p class="mood-label">บรรยากาศ · สีเขม่าถ่านหินกับควันกำมะถัน</p>
+              <p class="mood-words">เหนื่อยล้า · แออัด · ถูกทิ้งไว้ข้างหลัง</p>
+            </div>
+            <p class="why">ปล่องควันแมนเชสเตอร์ ประเทศรวยขึ้นทุกปี แต่ค่าจ้างของคนในโรงงานแทบไม่ขยับไปทั้งชั่วอายุคน</p>
+            <p class="tech"><b>เทคโนโลยี:</b> ถ่านหิน เครื่องจักรไอน้ำ เครื่องปั่นด้าย spinning jenny</p>
+          </header>
+          <div class="era-body">
+            <figure class="viz">
+              <figcaption>Engels' pause ในอังกฤษ ราว ค.ศ. 1780–1840 (การเติบโตสะสม)</figcaption>
+              <div class="bar-row"><span class="bl">ผลผลิตต่อแรงงาน</span><span class="bt"><i style="--w:100%"></i></span><span class="bv">+46%</span></div>
+              <div class="bar-row"><span class="bl">ค่าจ้างจริง</span><span class="bt"><i style="--w:26%"></i></span><span class="bv">+12%</span></div>
+              <p class="viz-note">อัตรากำไรเพิ่มเท่าตัว ค่าจ้างเพิ่งไล่ทันหลังกลางศตวรรษที่ 19 · <a href="https://www.sciencedirect.com/science/article/abs/pii/S0014498309000199" target="_blank" rel="noopener">Allen 2009</a> <span class="ev v">ตรวจสอบแล้ว</span></p>
+            </figure>
+            <figure class="viz">
+              <figcaption>ราคา spinning jenny คิดเป็นค่าแรงกี่วัน</figcaption>
+              <div class="bar-row"><span class="bl">อังกฤษ</span><span class="bt"><i style="--w:37.5%"></i></span><span class="bv">140 วัน</span></div>
+              <div class="bar-row"><span class="bl">ฝรั่งเศส</span><span class="bt"><i style="--w:100%"></i></span><span class="bv">373 วัน</span></div>
+              <p class="viz-note">ค่าแรงแพงทำให้เครื่องจักรคุ้มในอังกฤษ เป็นสมมติฐานของ Allen ที่ยังถกเถียงกันมาก <span class="ev v">ตรวจสอบแล้ว</span></p>
+            </figure>
+            <blockquote class="life">
+              <span class="life-label">ชีวิตคนทำงาน</span>
+              <p>ปี 1788 ราวสองในสามของคนงานในโรงงานฝ้ายพลังน้ำ 143 แห่งเป็นเด็ก กฎหมายปี 1819 ห้ามจ้างเด็กอายุต่ำกว่า 9 ขวบ และสหภาพที่ถูกห้ามในปี 1799 เพิ่งถูกรับรองตามกฎหมายในปี 1871 <span class="ev s">มีแหล่งอ้าง</span></p>
+            </blockquote>
+          </div>
+        </div>
+      </section>
+
+      <!-- 8 · taylor, ford, labour movement -->
+      <section class="panel" id="fordism" data-short="Taylor, Ford และสหภาพ" data-years="ค.ศ. 1870–1970" data-motif="ford"
+        style="--pbg:#4f6a80;--pink:#f3f6f8;--pacc:#f6d06b">
+        <div class="panel-in">
+          <header class="era-head">
+            <p class="era-years">ค.ศ. 1870–1970</p>
+            <h2 class="era-title">สายพาน นาฬิกาจับเวลา และสหภาพ</h2>
+            <div class="mood">
+              <p class="mood-label">บรรยากาศ · สีเหล็กกล้ากับไฟโรงงาน</p>
+              <p class="mood-words">มีความหวัง · ค่าจ้างดี · แต่ซ้ำซากจนเบื่อ</p>
+            </div>
+            <p class="why">เหล็กสีฟ้าเทาของสายพานที่ไม่เคยหยุด ค่าจ้างพอซื้อรถที่ตัวเองประกอบ แต่จังหวะชีวิตเป็นของเครื่องจักร</p>
+            <p class="tech"><b>เทคโนโลยีทางสังคม:</b> การจัดการเชิงวิทยาศาสตร์ สายพานการผลิต สหภาพ ILO (1919) <span class="ev b">ความรู้พื้นฐาน</span></p>
+          </header>
+          <div class="era-body">
+            <figure class="viz">
+              <figcaption>เวลาตัดกระบอกปืนใหญ่ที่คลังแสง Watertown ด้วยวิธีของ Taylor (ชั่วโมง)</figcaption>
+              <div class="bar-row"><span class="bl">ก่อน</span><span class="bt"><i style="--w:100%"></i></span><span class="bv">72</span></div>
+              <div class="bar-row"><span class="bl">หลัง</span><span class="bt"><i style="--w:30.6%"></i></span><span class="bv">22</span></div>
+              <p class="viz-note">ปี 1911 คนงานผละงานจนรัฐสภาสหรัฐฯ ต้องเปิดไต่สวน · <a href="https://www.encyclopedia.com/history/encyclopedias-almanacs-transcripts-and-maps/taylor-and-scientific-management" target="_blank" rel="noopener">Encyclopedia.com</a> <span class="ev s">มีแหล่งอ้าง</span></p>
+            </figure>
+            <ul class="facts">
+              <li><p>Ford ขึ้นค่าจ้างเพราะการลาออกสูงถึงราว 400% ต่อปี ค่าจ้างที่สูงขึ้นยังทำให้คนงานกลายเป็นลูกค้า รถ Model T กินส่วนแบ่งสูงสุด 60% ของการผลิตรถยนต์สหรัฐฯ <span class="ev s">มีแหล่งอ้าง</span></p></li>
+            </ul>
+            <p class="th-note"><span class="th-label">ขณะเดียวกันในสยาม</span>รัชกาลที่ 5 เลิกทาสแบบค่อยเป็นค่อยไป กฎหมายปี 1874 ให้ลูกทาสเป็นอิสระเมื่ออายุ 21 ปี พ.ร.บ. ปี 1905 ลดค่าตัวทาสลงเรื่อย ๆ และทาสหมดไปตามกฎหมายภายในปี 1915 <span class="ev s">มีแหล่งอ้าง</span></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 9 · post-fordism & globalisation -->
+      <section class="panel" id="global" data-short="หลังฟอร์ดและโลกาภิวัตน์" data-years="ค.ศ. 1970–2000s" data-motif="global"
+        style="--pbg:#23605f;--pink:#edf5f3;--pacc:#f08a3c">
+        <div class="panel-in">
+          <header class="era-head">
+            <p class="era-years">ค.ศ. 1970–2000s</p>
+            <h2 class="era-title">หลังฟอร์ดและโลกาภิวัตน์</h2>
+            <div class="mood">
+              <p class="mood-label">บรรยากาศ · สีเขียวหัวเป็ดของท่าเรือกับตู้คอนเทนเนอร์สีส้ม</p>
+              <p class="mood-words">ยืดหยุ่น · ไม่มั่นคง · งานย้ายข้ามโลก</p>
+            </div>
+            <p class="why">งานถูกบรรจุใส่ตู้คอนเทนเนอร์และย้ายไปที่ที่ค่าแรงต่ำกว่า คนไม่ทำงานที่เดียวตลอดชีวิตอีกต่อไป</p>
+            <p class="tech"><b>เทคโนโลยี:</b> IT การผลิตแบบทันเวลา ห่วงโซ่อุปทานโลก</p>
+          </header>
+          <div class="era-body">
+            <ul class="facts">
+              <li><p>โรงงาน Nissan ที่เจนไนใช้คนประกอบรถในงานที่โรงงาน Oppama ในญี่ปุ่นใช้หุ่นยนต์ เพราะค่าจ้างในอินเดียราวหนึ่งในสิบของญี่ปุ่น ตรรกะเดียวกับ spinning jenny เมื่อ 200 ปีก่อน <span class="ev s">มีแหล่งอ้าง</span> <span class="src"><a href="https://www.nber.org/system/files/working_papers/w18711/w18711.pdf" target="_blank" rel="noopener">Autor 2013</a></span></p></li>
+              <li><p>เศรษฐกิจหลังฟอร์ดมีภาคบริการใหญ่กว่าภาคการผลิต ผู้หญิงเข้าตลาดแรงงานมากขึ้น และในสหรัฐฯ แรงงานยืดหยุ่นมักไม่มีประกันสุขภาพหรือประกันทุพพลภาพ <span class="ev s">มีแหล่งอ้าง</span></p></li>
+            </ul>
+            <p class="th-note"><span class="th-label">ขณะเดียวกันในไทย</span>ไทยกลายเป็นฐานผลิตเพื่อส่งออก แรงงานจากอีสานและเหนือย้ายเข้าโรงงานในกรุงเทพฯ และภาคตะวันออก หลังวิกฤตปี 2540 มี พ.ร.บ.คุ้มครองแรงงาน พ.ศ. 2541 และเริ่มพึ่งแรงงานข้ามชาติจากเมียนมา กัมพูชา และลาว <span class="ev b">ความรู้พื้นฐาน</span></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 10 · computer era -->
+      <section class="panel" id="computer" data-short="ยุคคอมพิวเตอร์" data-years="ค.ศ. 1980–2015" data-motif="computer"
+        style="--pbg:#d3ddd5;--pink:#15211b;--pacc:#2f7a52">
+        <div class="panel-in">
+          <header class="era-head">
+            <p class="era-years">ค.ศ. 1980–2015</p>
+            <h2 class="era-title">ยุคคอมพิวเตอร์: ตรงกลางหายไป</h2>
+            <div class="mood">
+              <p class="mood-label">บรรยากาศ · สีเขียวซีดของไฟนีออนออฟฟิศ</p>
+              <p class="mood-words">กังวล · ต้องเลือกขึ้นหรือลง</p>
+            </div>
+            <p class="why">ไฟนีออนเหนือโต๊ะเสมียน งานที่ทำตามกฎชัดเจนถูกโปรแกรมรับไปทีละงาน</p>
+            <p class="tech"><b>เทคโนโลยี:</b> คอมพิวเตอร์ส่วนบุคคล ตารางคำนวณ ATM อีเมล</p>
+          </header>
+          <div class="era-body">
+            <figure class="viz">
+              <figcaption>งานแบ่งสองขั้ว (polarization) · แผนภาพแนวคิด ไม่ใช่ตัวเลขจริง</figcaption>
+              <div class="polar">
+                <div><b style="height:70%"></b><em>↑</em>งานบริการตัวต่อตัว</div>
+                <div class="down"><b style="height:28%"></b><em>↓</em>เสมียน ธุรการ ขาย ผลิต</div>
+                <div><b style="height:88%"></b><em>↑</em>งานวิเคราะห์ทักษะสูง</div>
+              </div>
+            </figure>
+            <ul class="facts">
+              <li><p>คอมพิวเตอร์แทนแรงงานในงานประจำที่ทำตามกฎ แต่เสริมงานแก้ปัญหาและการสื่อสารที่ซับซ้อน ในสหรัฐฯ และยุโรป อาชีพเสมียน ธุรการ งานขาย และงานผลิตหดเร็วที่สุด <span class="ev v">ตรวจสอบแล้ว</span> <span class="src"><a href="https://www.nber.org/system/files/working_papers/w18711/w18711.pdf" target="_blank" rel="noopener">Autor 2013</a></span></p></li>
+              <li><p>ในสหรัฐฯ ปี 1987–2017 การแทนที่งาน (displacement) เร่งตัว ขณะที่การเกิดงานใหม่ (reinstatement) อ่อนลง <span class="ev v">ตรวจสอบแล้ว</span> <span class="src"><a href="https://www.aeaweb.org/articles?id=10.1257%2Fjep.33.2.3" target="_blank" rel="noopener">Acemoglu &amp; Restrepo 2019</a></span></p></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 11 · platform & GenAI -->
+      <section class="panel" id="ai" data-short="แพลตฟอร์มและ GenAI" data-years="ค.ศ. 2010–2026" data-motif="ai"
+        style="--pbg:#2a2340;--pink:#ece8f6;--pacc:#f2b33d">
+        <div class="panel-in">
+          <header class="era-head">
+            <p class="era-years">ค.ศ. 2010–2026</p>
+            <h2 class="era-title">แพลตฟอร์มและ GenAI</h2>
+            <div class="mood">
+              <p class="mood-label">บรรยากาศ · สีม่วงพลบค่ำกับไฟเสื้อไรเดอร์</p>
+              <p class="mood-words">ประตูแคบลง · ถูกอัลกอริทึมคุม · ยังมีทางใหม่</p>
+            </div>
+            <p class="why">ฟ้ายามค่ำของเมืองที่ไรเดอร์ยังวิ่งรับงาน ไม่มีหัวหน้าให้ต่อรอง มีแต่แอปที่กำหนดค่ารอบ</p>
+            <p class="tech"><b>เทคโนโลยี:</b> แอปแพลตฟอร์ม การจัดการด้วยอัลกอริทึม Generative AI</p>
+          </header>
+          <div class="era-body">
+            <figure class="viz">
+              <figcaption>การจ้างงานอายุ 22–25 ในอาชีพที่สัมผัส AI สูง ต่ำกว่าระดับที่ควรเป็น (สหรัฐฯ)</figcaption>
+              <div class="bar-row"><span class="bl">ฉบับ 2025</span><span class="bt"><i style="--w:68%"></i></span><span class="bv">−13%</span></div>
+              <div class="bar-row"><span class="bl">ฉบับ ส.ค. 2026</span><span class="bt"><i style="--w:100%"></i></span><span class="bv">−19%</span></div>
+              <p class="viz-note">มาจากการรับคนใหม่น้อยลง ไม่ใช่การเลิกจ้าง และยังไม่พบการแทนที่งานทั้งระบบเศรษฐกิจ · <a href="https://digitaleconomy.stanford.edu/publication/canaries-in-the-coal-mine-six-facts-about-the-recent-employment-effects-of-artificial-intelligence/" target="_blank" rel="noopener">Stanford 2026</a> <span class="ev v">ตรวจสอบแล้ว</span></p>
+            </figure>
+            <ul class="facts">
+              <li><p>ILO และธนาคารโลก (135 ประเทศ) พบว่าในประเทศรายได้ต่ำ งานที่เสี่ยงถูก AI แทนมักเป็นงานในระบบคุณภาพดี ซึ่งเคยเป็นทางเข้าสู่งานที่มีคุณค่าของผู้หญิงและคนหนุ่มสาว <span class="ev v">ตรวจสอบแล้ว</span></p></li>
+              <li><p>มิ.ย. 2026 ILO รับรองอนุสัญญาฉบับที่ 193 มาตรฐานแรกสำหรับงานแพลตฟอร์ม ระบบอัลกอริทึมต้องโปร่งใสและคนงานต้องขอทบทวนได้ <span class="ev s">มีแหล่งอ้าง</span></p></li>
+            </ul>
+            <div class="th-note">
+              <span class="th-label">ขณะเดียวกันในไทย</span>
+              <div class="stack" role="img" aria-label="แรงงานนอกระบบ 52.4 เปอร์เซ็นต์ของผู้มีงานทำ"><span class="a" style="width:52.4%">นอกระบบ 52.4%</span><span class="b" style="width:47.6%">ในระบบ</span></div>
+              <p style="margin:8px 0 0">แรงงานนอกระบบ 20.9 ล้านคน แรงงาน 8.7 ล้านคนสัมผัส GenAI ไรเดอร์ยังไม่ใช่ลูกจ้างและเข้าประกันสังคมได้แค่มาตรา 40 แบบสมัครใจ <span class="ev s">มีแหล่งอ้าง</span></p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 12 · lessons -->
+      <section class="panel finale" id="lessons" data-short="บทเรียนข้ามยุค" data-years="จากอดีตถึงวันพรุ่งนี้" data-motif="dawn"
+        style="--pbg:#f0d9b5;--pink:#2a1c10;--pacc:#a4481f">
+        <div class="panel-in">
+          <p class="eyebrow">ปลายทางของการเดินทาง</p>
+          <h2 class="hero-title" style="font-size:clamp(2.2rem,5vw,4.4rem)">บทเรียนข้ามยุค</h2>
+          <p class="lede">บรรยากาศ · สีรุ่งสาง ความหวังที่ต้องสร้างด้วยสถาบัน ไม่ได้มาเองพร้อมเทคโนโลยี</p>
+          <ul class="lessons">
+            <li><h3>ผลประโยชน์ถึงค่าจ้างช้า</h3><p>ผลผลิตต่อแรงงาน +46% แต่ค่าจ้างจริง +12% ในช่วง Engels' pause ต้องรอเกือบชั่วอายุคน</p></li>
+            <li><h3>การย้ายงานได้คืออำนาจต่อรอง</h3><p>หลังกาฬโรค ลูกจ้างรายวันได้ค่าจ้างเพิ่มในปีเดียว เท่ากับที่ลูกจ้างผูกติดคฤหาสน์ต้องรอราว 80 ปี</p></li>
+            <li><h3>สถาบันกำหนดผลลัพธ์</h3><p>แรงกระแทกเดียวกัน ยุโรปตะวันตกเลิกทาสติดที่ดิน ยุโรปตะวันออกกลับมีรอบสอง</p></li>
+            <li><h3>คนที่อ่อนแอที่สุดรับแรงกระแทกก่อน</h3><p>เด็กในโรงงานฝ้ายปี 1788 และคนอายุ 22–25 ในอาชีพที่ AI แทนได้ในปี 2026</p></li>
+            <li><h3>เทคโนโลยีทั้งทำลายและสร้างงาน</h3><p>ผลสุทธิขึ้นกับว่างานใหม่เกิดเร็วพอชดเชยงานที่ถูกแทนหรือไม่</p></li>
+            <li><h3>ต้นทุนตัดสินว่าจะใช้เครื่องจักรไหม</h3><p>spinning jenny คุ้มในอังกฤษ ไม่คุ้มในฝรั่งเศส Nissan ใช้คนในอินเดีย ใช้หุ่นยนต์ในญี่ปุ่น</p></li>
+          </ul>
+          <p class="foot">สีของแต่ละยุคเป็นการตีความบรรยากาศความรู้สึกของคนทำงานโดยผู้จัดทำ ไม่ใช่ข้อมูลที่วัดได้ ตัวเลขในกราฟมาจากแหล่งที่อ้างไว้ใต้กราฟ รายงานฉบับเต็มพร้อมแหล่งอ้างอิงอยู่ที่ <a href="https://github.com/SIMPLEWISHTH/open-th-labor" target="_blank" rel="noopener">open-th-labor</a> (history-labor-evolution.md) · ต.ค. 2026</p>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</main>
+
+<nav class="rail" id="rail" aria-label="เลือกยุค">
+  <div class="rail-top"><span class="rail-now" id="railNow">เริ่มต้น</span><span class="rail-count" id="railCount">00 / 11</span></div>
+  <div class="rail-segs" id="railSegs"><span class="rail-mark" id="railMark"></span></div>
+</nav>
+
+<script>
+(() => {
+  const wrap = document.getElementById('wrap');
+  const track = document.getElementById('track');
+  const panels = [...document.querySelectorAll('.panel')];
+  const N = panels.length;
+  const ERAS = N - 2; // intro and lessons are not eras
+  const root = document.documentElement;
+  root.style.setProperty('--n', N);
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+  const mqH = matchMedia('(min-width: 900px) and (min-height: 560px)');
+  const isH = () => mqH.matches;
+
+  const hexToRgb = h => { h = h.trim().replace('#', ''); return [0, 2, 4].map(i => parseInt(h.slice(i, i + 2), 16)); };
+  const meta = panels.map(p => ({
+    el: p,
+    bg: hexToRgb(p.style.getPropertyValue('--pbg')),
+    ink: hexToRgb(p.style.getPropertyValue('--pink')),
+    hex: p.style.getPropertyValue('--pbg').trim(),
+    short: p.dataset.short,
+    years: p.dataset.years,
+    motif: p.dataset.motif
+  }));
+  const mix = (a, b, t) => a.map((v, i) => Math.round(v + (b[i] - v) * t));
+  const rgb = c => `rgb(${c[0]},${c[1]},${c[2]})`;
+  const lum = c => { const f = v => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); }; return 0.2126 * f(c[0]) + 0.7152 * f(c[1]) + 0.0722 * f(c[2]); };
+  const smooth = (e0, e1, x) => { const t = Math.min(1, Math.max(0, (x - e0) / (e1 - e0))); return t * t * (3 - 2 * t); };
+
+  /* snap anchors for the horizontal mode */
+  for (let i = 0; i < N; i++) {
+    const s = document.createElement('div');
+    s.className = 'snap'; s.style.top = (i * 100) + 'vh';
+    wrap.appendChild(s);
+  }
+
+  /* spectrum (intro) and rail */
+  const spectrumBar = document.getElementById('spectrumBar');
+  const spectrumLabels = document.getElementById('spectrumLabels');
+  const railSegs = document.getElementById('railSegs');
+  const railMark = document.getElementById('railMark');
+  meta.forEach((m, i) => {
+    if (i > 0 && i < N - 1) {
+      const b = document.createElement('button');
+      b.type = 'button'; b.style.setProperty('--c', m.hex);
+      b.setAttribute('aria-label', `ไปยังยุค ${m.short} (${m.years})`);
+      b.title = `${m.short} · ${m.years}`;
+      b.addEventListener('click', () => goTo(i));
+      spectrumBar.appendChild(b);
+      const l = document.createElement('span'); l.textContent = m.short; spectrumLabels.appendChild(l);
+    }
+    const r = document.createElement('button');
+    r.type = 'button'; r.style.setProperty('--c', m.hex);
+    r.setAttribute('aria-label', `${m.short} (${m.years})`);
+    r.title = `${m.short} · ${m.years}`;
+    r.addEventListener('click', () => goTo(i));
+    railSegs.insertBefore(r, railMark);
+  });
+  const railNow = document.getElementById('railNow');
+  const railCount = document.getElementById('railCount');
+
+  /* position → continuous era index p in [0, N-1] */
+  let wrapTop = 0, dist = 1, stepX = 0, centers = [];
+  function measure() {
+    if (isH()) {
+      track.style.transform = '';
+      wrapTop = wrap.getBoundingClientRect().top + scrollY;
+      dist = Math.max(1, wrap.offsetHeight - innerHeight);
+      stepX = track.clientWidth;
+    } else {
+      track.style.transform = '';
+      centers = panels.map(p => { const r = p.getBoundingClientRect(); return r.top + scrollY + r.height / 2; });
+    }
+  }
+  function targetP() {
+    if (isH()) {
+      const prog = Math.min(1, Math.max(0, (scrollY - wrapTop) / dist));
+      track.style.transform = `translate3d(${-prog * stepX * (N - 1)}px,0,0)`;
+      return prog * (N - 1);
+    }
+    const mid = scrollY + innerHeight / 2;
+    if (mid <= centers[0]) return 0;
+    for (let i = 0; i < N - 1; i++) {
+      if (mid < centers[i + 1]) return i + (mid - centers[i]) / (centers[i + 1] - centers[i]);
+    }
+    return N - 1;
+  }
+  function goTo(i) {
+    i = Math.max(0, Math.min(N - 1, i));
+    const behavior = reduce.matches ? 'auto' : 'smooth';
+    if (isH()) scrollTo({ top: wrapTop + i * innerHeight, behavior });
+    else panels[i].scrollIntoView({ behavior, block: 'start' });
+  }
+
+  /* ---------- background motifs ---------- */
+  const cv = document.getElementById('bgfx');
+  const ctx = cv.getContext('2d');
+  let W = 0, H = 0, DPR = 1;
+  const cache = new Map();
+  function rng(seed) { return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  const MOTIFS = {
+    intro(g, w, h, r) {
+      g.lineWidth = 1;
+      const y = h * 0.86;
+      g.beginPath(); g.moveTo(0, y); g.lineTo(w, y); g.stroke();
+      for (let x = 0; x < w; x += 24) { const big = (x / 24) % 10 === 0; g.beginPath(); g.moveTo(x, y); g.lineTo(x, y - (big ? 18 : 7)); g.stroke(); }
+    },
+    hunter(g, w, h, r) {
+      for (let k = 0; k < 160; k++) { g.globalAlpha = 0.25 + r() * 0.6; g.beginPath(); g.arc(r() * w, r() * h, 1.5 + r() * 4, 0, 7); g.fill(); }
+      g.globalAlpha = 0.55; g.lineCap = 'round';
+      const hands = Math.max(5, Math.round(w / 260));
+      for (let k = 0; k < hands; k++) {
+        const x = r() * w, y = r() * h, a = r() * Math.PI * 2, s = 0.9 + r() * 0.7;
+        g.save(); g.translate(x, y); g.rotate(a); g.scale(s, s);
+        g.beginPath(); g.ellipse(0, 0, 20, 24, 0, 0, 7); g.fill();
+        g.lineWidth = 9;
+        [[-16, -42, -14], [-6, -50, -5], [5, -50, 5], [15, -44, 14], [24, -6, 40]].forEach(([fx, fy, sx], j) => {
+          g.beginPath(); g.moveTo(j === 4 ? 16 : sx, j === 4 ? 6 : -16); g.lineTo(fx, fy); g.stroke();
+        });
+        g.restore();
+      }
+    },
+    neolithic(g, w, h, r) {
+      g.lineWidth = 1.4;
+      for (let y = h * 0.12; y < h + 40; y += 46) {
+        const ph = r() * 6, amp = 6 + r() * 6;
+        g.beginPath();
+        for (let x = -10; x <= w + 10; x += 12) { const yy = y + Math.sin(x / 140 + ph) * amp; x < 0 ? g.moveTo(x, yy) : g.lineTo(x, yy); }
+        g.stroke();
+        for (let x = r() * 20; x < w; x += 20 + r() * 8) {
+          const yy = y + Math.sin(x / 140 + ph) * amp, hh = 10 + r() * 8, lean = (r() - 0.5) * 4;
+          g.beginPath(); g.moveTo(x, yy); g.lineTo(x + lean, yy - hh); g.stroke();
+          g.beginPath(); g.ellipse(x + lean, yy - hh - 3, 1.6, 4, 0, 0, 7); g.fill();
+        }
+      }
+    },
+    ancient(g, w, h, r) {
+      g.lineWidth = 2;
+      for (let y = 70; y < h * 0.7; y += 110) {
+        g.beginPath(); g.moveTo(0, y); g.lineTo(w, y); g.stroke();
+        g.lineWidth = 1.6;
+        for (let x = 10 + r() * 20; x < w; x += 16 + r() * 22) {
+          const t = r();
+          g.beginPath();
+          if (t < 0.4) { g.moveTo(x, y + 18); g.lineTo(x, y + 56 + r() * 30); }
+          else if (t < 0.7) { g.arc(x, y + 40, 6 + r() * 6, 0, 7); }
+          else { g.moveTo(x - 7, y + 60); g.lineTo(x, y + 30); g.lineTo(x + 7, y + 60); }
+          g.stroke();
+        }
+        g.lineWidth = 2;
+      }
+      const base = h * 0.98;
+      [[0.18, 0.28], [0.42, 0.42], [0.72, 0.34]].forEach(([cx, s]) => {
+        const half = w * s * 0.5, top = base - half * 0.9;
+        g.beginPath(); g.moveTo(w * cx - half, base); g.lineTo(w * cx, top); g.lineTo(w * cx + half, base); g.stroke();
+        for (let k = 1; k < 9; k++) { const yy = top + (base - top) * k / 9, hw = half * k / 9; g.beginPath(); g.moveTo(w * cx - hw, yy); g.lineTo(w * cx + hw, yy); g.globalAlpha = 0.4; g.stroke(); g.globalAlpha = 1; }
+      });
+    },
+    medieval(g, w, h, r) {
+      const cols = Math.max(3, Math.round(w / 360)), rows = Math.max(3, Math.round(h / 300));
+      const cw = w / cols, ch = h / rows;
+      g.lineWidth = 1.2;
+      for (let i = 0; i < cols; i++) for (let j = 0; j < rows; j++) {
+        const x = i * cw, y = j * ch;
+        g.save(); g.beginPath(); g.rect(x + 6, y + 6, cw - 12, ch - 12); g.clip();
+        g.translate(x + cw / 2, y + ch / 2); g.rotate((r() < 0.5 ? 0 : Math.PI / 2) + (r() - 0.5) * 0.25);
+        const span = Math.max(cw, ch);
+        for (let k = -span; k < span; k += 9 + r() * 3) { g.beginPath(); g.moveTo(-span, k); g.bezierCurveTo(-span / 3, k + 8, span / 3, k - 8, span, k); g.stroke(); }
+        g.restore();
+        g.strokeRect(x + 6, y + 6, cw - 12, ch - 12);
+      }
+    },
+    plague(g, w, h, r) {
+      g.lineWidth = 1.2;
+      for (let k = 0; k < Math.round(w * h / 2600); k++) {
+        const x = r() * w, y = r() * h, l = 8 + r() * 22;
+        g.globalAlpha = 0.15 + r() * 0.75;
+        g.beginPath(); g.moveTo(x, y); g.lineTo(x - l * 0.25, y + l); g.stroke();
+      }
+      g.globalAlpha = 0.5;
+      for (let k = 0; k < 9; k++) { g.beginPath(); g.arc(r() * w, r() * h, 30 + r() * 120, 0, 7); g.stroke(); }
+    },
+    colonial(g, w, h, r) {
+      g.lineWidth = 1.3;
+      for (let y = h * 0.28; y < h + 30; y += 22) {
+        const ph = r() * 6, amp = 4 + (y / h) * 8, fq = 70 + r() * 50;
+        g.beginPath();
+        for (let x = -10; x <= w + 10; x += 8) { const yy = y + Math.sin(x / fq + ph) * amp; x < 0 ? g.moveTo(x, yy) : g.lineTo(x, yy); }
+        g.stroke();
+      }
+      for (let k = 0; k < 4; k++) {
+        const x = w * (0.1 + r() * 0.8), y = h * (0.12 + r() * 0.1), s = 22 + r() * 18;
+        g.beginPath(); g.moveTo(x - s, y + s * 0.9); g.lineTo(x + s, y + s * 0.9); g.lineTo(x + s * 0.7, y + s * 1.2); g.lineTo(x - s * 0.7, y + s * 1.2); g.closePath(); g.fill();
+        g.beginPath(); g.moveTo(x, y - s); g.lineTo(x, y + s * 0.8); g.lineTo(x + s * 0.8, y + s * 0.7); g.closePath(); g.fill();
+      }
+    },
+    industrial(g, w, h, r) {
+      const base = h;
+      let x = -20;
+      while (x < w) {
+        const bw = 60 + r() * 120, bh = h * (0.08 + r() * 0.12);
+        g.fillRect(x, base - bh, bw, bh);
+        for (let sx = x; sx < x + bw - 10; sx += 22) { g.beginPath(); g.moveTo(sx, base - bh); g.lineTo(sx + 22, base - bh - 16); g.lineTo(sx + 22, base - bh); g.fill(); }
+        if (r() < 0.75) {
+          const cx = x + bw * (0.2 + r() * 0.6), chH = h * (0.18 + r() * 0.22), cw2 = 12 + r() * 8;
+          g.fillRect(cx, base - bh - chH, cw2, chH + bh);
+          let sy = base - bh - chH - 10, sr = 8, sxp = cx + cw2 / 2, a = 0.55;
+          while (sy > -40 && a > 0.04) { g.globalAlpha = a; g.beginPath(); g.arc(sxp, sy, sr, 0, 7); g.fill(); sy -= sr * 1.1; sr *= 1.13; sxp += sr * 0.45; a *= 0.86; }
+          g.globalAlpha = 1;
+        }
+        x += bw + 8 + r() * 30;
+      }
+      g.lineWidth = 3;
+      [[0.82, 0.22, 46], [0.12, 0.3, 30]].forEach(([gx, gy, R]) => {
+        const cx = w * gx, cy = h * gy;
+        g.beginPath(); g.arc(cx, cy, R, 0, 7); g.stroke();
+        g.beginPath(); g.arc(cx, cy, R * 0.3, 0, 7); g.stroke();
+        for (let k = 0; k < 12; k++) { const a = k / 12 * Math.PI * 2; g.beginPath(); g.moveTo(cx + Math.cos(a) * R, cy + Math.sin(a) * R); g.lineTo(cx + Math.cos(a) * (R + 10), cy + Math.sin(a) * (R + 10)); g.stroke(); }
+      });
+    },
+    ford(g, w, h, r) {
+      g.lineWidth = 1.5;
+      for (let y = h * 0.16; y < h; y += h * 0.22) {
+        g.beginPath(); g.moveTo(0, y); g.lineTo(w, y); g.moveTo(0, y + 14); g.lineTo(w, y + 14); g.stroke();
+        for (let x = 0; x < w; x += 34) { g.beginPath(); g.arc(x, y + 7, 5, 0, 7); g.stroke(); }
+        for (let x = 12; x < w; x += 92) { g.globalAlpha = 0.9; g.fillRect(x, y - 30, 40, 26); g.globalAlpha = 1; }
+      }
+    },
+    global(g, w, h, r) {
+      const cw = 118, ch = 46;
+      const cols = Math.ceil(w / (cw + 6)) + 1;
+      for (let c = 0; c < cols; c++) {
+        const stack = 2 + Math.floor(r() * 6);
+        for (let s = 0; s < stack; s++) {
+          if (r() < 0.12) continue;
+          const x = c * (cw + 6) - 20, y = h - (s + 1) * (ch + 5);
+          g.globalAlpha = 0.35 + r() * 0.65;
+          g.strokeRect(x, y, cw, ch);
+          for (let k = x + 8; k < x + cw - 4; k += 8) { g.beginPath(); g.moveTo(k, y + 4); g.lineTo(k, y + ch - 4); g.stroke(); }
+        }
+      }
+      g.globalAlpha = 0.6; g.lineWidth = 2;
+      const cx = w * 0.7; g.beginPath(); g.moveTo(cx, h * 0.08); g.lineTo(cx, h * 0.55); g.moveTo(cx - w * 0.2, h * 0.1); g.lineTo(cx + w * 0.12, h * 0.1); g.stroke();
+      g.lineWidth = 1; g.beginPath(); g.moveTo(cx - w * 0.15, h * 0.1); g.lineTo(cx - w * 0.15, h * 0.3); g.stroke();
+    },
+    computer(g, w, h, r) {
+      const s = 18;
+      g.lineWidth = 1; g.globalAlpha = 0.35;
+      for (let x = 0; x < w; x += s * 6) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x, h); g.stroke(); }
+      for (let y = 0; y < h; y += s * 2) { g.beginPath(); g.moveTo(0, y); g.lineTo(w, y); g.stroke(); }
+      g.globalAlpha = 1;
+      for (let x = 0; x < w; x += s) for (let y = 0; y < h; y += s) {
+        if (r() < 0.07) { g.globalAlpha = 0.3 + r() * 0.7; g.fillRect(x + 2, y + 2, s - 4, s - 4); }
+      }
+    },
+    ai(g, w, h, r) {
+      const n = Math.round(w * h / 22000) + 20;
+      const pts = Array.from({ length: n }, () => [r() * w, r() * h]);
+      g.lineWidth = 1;
+      pts.forEach((p, i) => {
+        const near = pts.map((q, j) => [j, (q[0] - p[0]) ** 2 + (q[1] - p[1]) ** 2]).sort((a, b) => a[1] - b[1]).slice(1, 3);
+        near.forEach(([j]) => { g.globalAlpha = 0.6; g.beginPath(); g.moveTo(p[0], p[1]); g.lineTo(pts[j][0], pts[j][1]); g.stroke(); });
+      });
+      g.globalAlpha = 1;
+      pts.forEach(p => { g.beginPath(); g.arc(p[0], p[1], 2.5 + r() * 2.5, 0, 7); g.fill(); });
+      g.setLineDash([3, 7]); g.lineWidth = 1.6;
+      for (let k = 0; k < 3; k++) {
+        g.beginPath(); let x = r() * w * 0.2, y = h * (0.2 + r() * 0.6); g.moveTo(x, y);
+        while (x < w) { if (r() < 0.5) x += 40 + r() * 120; else y += (r() - 0.5) * 160; g.lineTo(x, y); }
+        g.stroke();
+      }
+      g.setLineDash([]);
+    },
+    dawn(g, w, h, r) {
+      const cx = w * 0.5, cy = h * 1.05;
+      g.lineWidth = 1.4;
+      for (let R = 60; R < Math.max(w, h) * 1.2; R += 34) { g.globalAlpha = Math.max(0.15, 1 - R / (Math.max(w, h) * 1.2)); g.beginPath(); g.arc(cx, cy, R, Math.PI, 2 * Math.PI); g.stroke(); }
+      g.globalAlpha = 1;
+      for (let k = 0; k < 24; k++) { const a = Math.PI + (k + 0.5) / 24 * Math.PI; g.beginPath(); g.moveTo(cx + Math.cos(a) * 80, cy + Math.sin(a) * 80); g.lineTo(cx + Math.cos(a) * Math.max(w, h), cy + Math.sin(a) * Math.max(w, h)); g.globalAlpha = 0.25; g.stroke(); }
+      g.globalAlpha = 1;
+    }
+  };
+  function motif(i) {
+    if (cache.has(i)) return cache.get(i);
+    const m = meta[i];
+    const off = document.createElement('canvas');
+    off.width = Math.max(1, Math.round(W * DPR)); off.height = Math.max(1, Math.round(H * DPR));
+    const g = off.getContext('2d');
+    g.scale(DPR, DPR);
+    const ink = rgb(m.ink);
+    g.strokeStyle = ink; g.fillStyle = ink;
+    try { (MOTIFS[m.motif] || MOTIFS.intro)(g, W, H, rng(1000 + i * 7919)); } catch (e) { /* motif is decoration only */ }
+    cache.set(i, off);
+    if (cache.size > 5) cache.delete(cache.keys().next().value);
+    return off;
+  }
+  let lastSize = '';
+  function sizeCanvas() {
+    const w = innerWidth, h = innerHeight;
+    const key = `${w}x${Math.round(h / 140)}`;
+    if (key === lastSize) return;
+    lastSize = key;
+    W = w; H = h; DPR = Math.min(1.5, devicePixelRatio || 1);
+    cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR);
+    cache.clear();
+  }
+
+  /* ---------- render ---------- */
+  let shown = 0, target = 0, raf = 0, lastIdx = -1;
+  const MOTIF_ALPHA = 0.14;
+  function paint(p) {
+    const i = Math.min(N - 2, Math.max(0, Math.floor(p)));
+    const t = smooth(0.2, 0.8, p - i);
+    const bg = mix(meta[i].bg, meta[i + 1].bg, t);
+    root.style.setProperty('--bg', rgb(bg));
+    root.style.setProperty('--chrome-bg', rgb(bg));
+    root.style.setProperty('--chrome-ink', lum(bg) > 0.28 ? '#1c1712' : '#f4efe6');
+
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    if (t < 0.999) { ctx.globalAlpha = MOTIF_ALPHA * (1 - t); ctx.drawImage(motif(i), 0, 0); }
+    if (t > 0.001) { ctx.globalAlpha = MOTIF_ALPHA * t; ctx.drawImage(motif(i + 1), 0, 0); }
+    ctx.globalAlpha = 1;
+
+    railMark.style.left = `calc(${(p + 0.5) / N * 100}%)`;
+    const idx = Math.round(p);
+    if (idx !== lastIdx) {
+      lastIdx = idx;
+      const m = meta[idx];
+      railNow.textContent = `${m.short} · ${m.years}`;
+      railCount.textContent = idx === 0 ? `00 / ${ERAS}` : idx === N - 1 ? 'บทเรียน' : `${String(idx).padStart(2, '0')} / ${ERAS}`;
+    }
+  }
+  function tick() {
+    raf = 0;
+    target = targetP();
+    if (reduce.matches) shown = target;
+    else shown += (target - shown) * 0.12;
+    if (Math.abs(target - shown) < 0.0015) shown = target;
+    paint(shown);
+    if (shown !== target) raf = requestAnimationFrame(tick);
+  }
+  const kick = () => { if (!raf) raf = requestAnimationFrame(tick); };
+
+  function relayout() { sizeCanvas(); measure(); target = targetP(); kick(); }
+  addEventListener('scroll', kick, { passive: true });
+  addEventListener('resize', relayout);
+  mqH.addEventListener('change', () => { relayout(); });
+  addEventListener('wheel', e => {
+    if (isH() && Math.abs(e.deltaX) > Math.abs(e.deltaY)) scrollBy(0, e.deltaX);
+  }, { passive: true });
+  addEventListener('keydown', e => {
+    if (e.target.closest && e.target.closest('input,textarea,select')) return;
+    if (e.key === 'ArrowRight') { e.preventDefault(); goTo(Math.round(target) + 1); }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); goTo(Math.round(target) - 1); }
+  });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(relayout);
+
+  sizeCanvas(); measure();
+  shown = target = targetP();
+  paint(shown);
+})();
+</script>
+
+</body></html>
