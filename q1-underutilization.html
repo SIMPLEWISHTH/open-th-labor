@@ -1,0 +1,1172 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ใต้ภูเขาน้ำแข็ง 0.95%</title>
+<meta name="description" content="โจทย์วิจัยย่อยที่ 1: ดัชนีการใช้แรงงานไม่เต็มศักยภาพรายจังหวัด อัตราว่างงาน 0.95% ซ่อนปัญหาไว้เท่าไร และกระจุกที่จังหวัดไหน บันทึกแบบ 5 บท พร้อมภาพข้อมูล">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=Noto+Serif+Thai:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  color-scheme: light;
+  --page: #eef4f7;
+  --page-deep: #d6e6ee;
+  --surface-1: #fbfdfe;
+  --surface-2: #f2f7fa;
+  --text-primary: #0b2233;
+  --text-secondary: #3e5768;
+  --text-muted: #6a8292;
+  --grid: #dfe8ee;
+  --axis: #b9c9d3;
+  --border: rgba(11,34,51,0.12);
+  --accent-ink: #a8391f;
+  --link: #135d8c;
+  --series-1: #2a78d6;
+  --series-2: #eb6834;
+  --series-3: #1baf7a;
+  --tip: #eb6834;
+  --ice-0: #f7fbfd;
+  --ice-1: #70b3d3;
+  --ice-2: #4596bd;
+  --ice-3: #2b7aa6;
+  --ice-4: #1d577f;
+  --sea-top: #2d7099;
+  --sea-bottom: #08263b;
+  --sky: #f4f9fb;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --page: #071520;
+    --page-deep: #030b12;
+    --surface-1: #0d2131;
+    --surface-2: #10283a;
+    --text-primary: #e6f1f7;
+    --text-secondary: #a7bfcc;
+    --text-muted: #7d96a5;
+    --grid: #1a3345;
+    --axis: #2a4a60;
+    --border: rgba(230,241,247,0.12);
+    --accent-ink: #f08a6c;
+    --link: #7cc4ea;
+    --series-1: #3987e5;
+    --series-2: #d95926;
+    --series-3: #199e70;
+    --tip: #d95926;
+    --ice-0: #dcebf2;
+    --ice-1: #1f5e86;
+    --ice-2: #2f7fae;
+    --ice-3: #4f9fcc;
+    --ice-4: #7dbede;
+    --sea-top: #0e3048;
+    --sea-bottom: #020a11;
+    --sky: #0a1a27;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #071520;
+  --page-deep: #030b12;
+  --surface-1: #0d2131;
+  --surface-2: #10283a;
+  --text-primary: #e6f1f7;
+  --text-secondary: #a7bfcc;
+  --text-muted: #7d96a5;
+  --grid: #1a3345;
+  --axis: #2a4a60;
+  --border: rgba(230,241,247,0.12);
+  --accent-ink: #f08a6c;
+  --link: #7cc4ea;
+  --series-1: #3987e5;
+  --series-2: #d95926;
+  --series-3: #199e70;
+  --tip: #d95926;
+  --ice-0: #dcebf2;
+  --ice-1: #1f5e86;
+  --ice-2: #2f7fae;
+  --ice-3: #4f9fcc;
+  --ice-4: #7dbede;
+  --sea-top: #0e3048;
+  --sea-bottom: #020a11;
+  --sky: #0a1a27;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0;
+  background-color: var(--page);
+  background-image: linear-gradient(180deg, var(--page) 0%, var(--page) 35%, var(--page-deep) 100%);
+  color: var(--text-primary);
+  font-family: "IBM Plex Sans Thai", system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 16.5px;
+  line-height: 1.75;
+}
+a { color: var(--link); text-underline-offset: 2px; }
+h1, h2, h3 { font-family: "Noto Serif Thai", "IBM Plex Sans Thai", serif; letter-spacing: -0.005em; }
+h1 { font-size: clamp(30px, 5.4vw, 54px); line-height: 1.22; margin: 0 0 14px; font-weight: 800; }
+h2 { font-size: clamp(24px, 3.4vw, 34px); line-height: 1.3; margin: 0 0 6px; font-weight: 700; }
+h3 { font-size: 20px; line-height: 1.45; margin: 36px 0 8px; font-weight: 700; }
+h4 { font-size: 16.5px; margin: 20px 0 4px; font-weight: 600; }
+p { margin: 0 0 14px; }
+.wrap { max-width: 980px; margin: 0 auto; padding: 0 16px; }
+
+/* ---------- hero ---------- */
+.hero { position: relative; overflow: hidden; }
+.sky { background: var(--sky); padding: 40px 0 28px; }
+.sky h1, .sky .lede { max-width: 640px; }
+.sea { position: relative; background: linear-gradient(180deg, var(--sea-top) 0%, var(--sea-bottom) 100%); color: #eaf5fb; }
+.sea-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px; align-items: start; padding-bottom: 40px; }
+.eyebrow { display: inline-flex; gap: 8px; align-items: center; font-size: 13.5px; font-weight: 600; letter-spacing: .02em; color: var(--text-secondary); margin: 0 0 14px; flex-wrap: wrap; }
+.eyebrow .pill { background: var(--tip); color: #fff; border-radius: 999px; padding: 1px 10px; font-weight: 700; }
+.sky .lede { font-size: 18px; color: var(--text-secondary); margin: 0; }
+.under { padding-top: 34px; }
+.under .big { font-size: clamp(60px, 10vw, 104px); font-weight: 700; line-height: 1; letter-spacing: -0.02em; color: #fff; }
+.under .big small { font-size: .36em; font-weight: 600; letter-spacing: 0; margin-left: 8px; }
+.under p { color: #d7e9f2; max-width: 460px; font-size: 15.5px; margin-top: 12px; }
+.under .meta { font-size: 13px; color: #b8d3e2; margin-top: 18px; }
+.under .meta a { color: inherit; }
+.berg-wrap { position: relative; }
+.berg { width: 100%; height: auto; display: block; margin-top: -7.6%; }
+@media (prefers-reduced-motion: no-preference) {
+  .berg-float { animation: bob 7s ease-in-out infinite; transform-origin: 50% 10%; }
+  @keyframes bob { 0%,100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(4px) rotate(.4deg); } }
+  .wave { animation: drift 9s linear infinite; }
+  @keyframes drift { from { transform: translateX(0); } to { transform: translateX(-120px); } }
+  .rise { opacity: 0; transform: translateY(12px); animation: rise .8s cubic-bezier(.2,.7,.2,1) forwards; }
+  .rise.d2 { animation-delay: .15s; } .rise.d3 { animation-delay: .3s; } .rise.d4 { animation-delay: .5s; }
+  @keyframes rise { to { opacity: 1; transform: none; } }
+}
+.layers { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 6px; max-width: 460px; }
+.layers li { display: grid; grid-template-columns: 14px 1fr auto; gap: 10px; align-items: baseline; font-size: 14px; color: #dcecf4; line-height: 1.45; }
+.layers li i { width: 14px; height: 14px; border-radius: 4px; display: inline-block; transform: translateY(2px); box-shadow: 0 0 0 1px rgba(255,255,255,.4); }
+.layers li b { font-weight: 600; color: #fff; }
+@media (max-width: 760px) {
+  .sea-grid { grid-template-columns: 1fr; gap: 0; }
+  .berg-wrap { order: -1; max-width: 420px; margin: 0 auto; width: 100%; }
+  .under { padding-top: 8px; }
+}
+
+/* ---------- nav / gauge ---------- */
+.topbar { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--page) 88%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); }
+.topbar .wrap { display: flex; gap: 6px; align-items: center; overflow-x: auto; padding-top: 8px; padding-bottom: 8px; scrollbar-width: none; }
+.topbar a { flex: none; text-decoration: none; color: var(--text-secondary); font-size: 13.5px; padding: 4px 11px; border-radius: 999px; border: 1px solid transparent; }
+.topbar a.on { color: var(--text-primary); border-color: var(--border); background: var(--surface-1); font-weight: 600; }
+.topbar a.skip { opacity: .55; text-decoration: line-through; }
+.topbar .sp { flex: 1; }
+.theme-btn { flex: none; border: 1px solid var(--border); background: var(--surface-1); color: var(--text-primary); border-radius: 999px; font: inherit; font-size: 13px; padding: 4px 12px; cursor: pointer; }
+.depth { position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; }
+.depth i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--ice-1), var(--ice-4)); }
+
+/* ---------- chapters ---------- */
+.chapter { padding: 64px 0 8px; scroll-margin-top: 56px; }
+.ch-head { display: grid; grid-template-columns: auto 1fr; gap: 18px; align-items: center; margin-bottom: 18px; }
+.ch-no { position: relative; width: 74px; height: 74px; border-radius: 50%; display: grid; place-items: center; text-align: center; background: var(--surface-1); border: 1px solid var(--border); box-shadow: 0 6px 24px -14px rgba(11,34,51,.5); }
+.ch-no small { display: block; font-size: 11px; color: var(--text-muted); line-height: 1; margin-bottom: 2px; }
+.ch-no b { display: block; font-family: "Noto Serif Thai", serif; font-size: 30px; line-height: 1; }
+.ch-no::after { content: attr(data-depth); position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%); font-size: 11px; color: var(--text-muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.ch-head .kicker { font-size: 13px; font-weight: 600; color: var(--accent-ink); letter-spacing: .04em; margin: 0 0 2px; }
+.prose { max-width: 760px; }
+.prose ul, .prose ol { padding-left: 22px; margin: 0 0 14px; }
+.prose li { margin-bottom: 6px; }
+.callout { border-left: 3px solid var(--tip); background: var(--surface-1); border-radius: 0 12px 12px 0; padding: 14px 18px; margin: 18px 0; }
+.callout b.t { display: block; font-size: 13px; color: var(--accent-ink); letter-spacing: .03em; margin-bottom: 2px; }
+.callout.ice { border-left-color: var(--ice-3); }
+.callout.ice b.t { color: var(--link); }
+.def { display: grid; grid-template-columns: minmax(130px, 210px) 1fr; gap: 0; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: var(--surface-1); margin: 12px 0 18px; }
+.def > div { padding: 10px 14px; border-bottom: 1px solid var(--grid); }
+.def > div:nth-child(odd) { font-weight: 600; background: var(--surface-2); }
+.def > div:nth-last-child(-n+2) { border-bottom: 0; }
+@media (max-width: 560px) { .def { grid-template-columns: 1fr; } .def > div:nth-child(odd) { border-bottom: 0; padding-bottom: 0; } }
+.formula { font-family: "IBM Plex Sans Thai", sans-serif; background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; margin: 8px 0 14px; font-size: 15px; overflow-x: auto; }
+.formula code { font-family: inherit; font-weight: 600; white-space: nowrap; }
+
+/* skipped chapter */
+.skipped { margin: 56px 0 0; border-radius: 16px; padding: 22px 22px; background:
+  repeating-linear-gradient(135deg, transparent 0 14px, color-mix(in srgb, var(--ice-1) 18%, transparent) 14px 15px), var(--surface-1);
+  border: 1px solid var(--border); display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: center; scroll-margin-top: 56px; }
+.skipped .ch-no { opacity: .7; }
+.skipped h2 { font-size: 22px; margin: 0; color: var(--text-secondary); }
+.skipped p { margin: 4px 0 0; color: var(--text-muted); font-size: 14.5px; }
+.stamp { display: inline-block; transform: rotate(-4deg); border: 2px solid var(--accent-ink); color: var(--accent-ink); font-weight: 700; font-size: 12px; letter-spacing: .08em; padding: 0 8px; border-radius: 6px; margin-left: 8px; vertical-align: middle; }
+
+/* ---------- figures ---------- */
+.fig { background: var(--surface-1); border: 1px solid var(--border); border-radius: 16px; padding: 18px 18px 12px; margin: 22px 0; min-width: 0; box-shadow: 0 10px 30px -24px rgba(11,34,51,.45); }
+.fig .fno { font-size: 12.5px; font-weight: 600; color: var(--text-muted); letter-spacing: .03em; margin: 0; }
+.fig h4 { font-family: "IBM Plex Sans Thai", sans-serif; font-size: 17px; margin: 2px 0 2px; }
+.fig .sub { color: var(--text-secondary); font-size: 14px; margin: 0 0 12px; }
+.fig .src { color: var(--text-muted); font-size: 12.5px; margin: 10px 0 0; line-height: 1.55; }
+.fig .src a { color: var(--text-muted); }
+.grid2 { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr)); }
+.grid2 .fig { margin: 0; }
+.chart { width: 100%; }
+.chart svg { display: block; overflow: visible; max-width: 100%; }
+.chart text { font-family: inherit; }
+.chart .tick { font-size: 11.5px; fill: var(--text-muted); font-variant-numeric: tabular-nums; }
+.chart .lbl { font-size: 13px; fill: var(--text-secondary); }
+.chart .lbl.strong { fill: var(--text-primary); font-weight: 600; }
+.chart .val { font-size: 12.5px; fill: var(--text-primary); font-weight: 600; font-variant-numeric: tabular-nums; }
+.chart .val.sm { font-size: 11.5px; }
+.chart .ref { font-size: 11.5px; fill: var(--text-secondary); }
+.chart .hit { cursor: default; outline: none; }
+.chart .hit:hover path, .chart .hit:focus path { filter: brightness(1.08); }
+.chart .hit:focus-visible { outline: 2px solid var(--link); }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 13px; color: var(--text-secondary); margin: 0 0 8px; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; }
+.legend i.line { height: 3px; width: 16px; border-radius: 2px; }
+.legend i.dot { border-radius: 50%; }
+details.tbl { margin-top: 10px; font-size: 13.5px; }
+details.tbl summary { cursor: pointer; color: var(--text-secondary); font-size: 13px; }
+.scroll { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; padding: 7px 9px; border-bottom: 1px solid var(--grid); vertical-align: top; }
+th { color: var(--text-secondary); font-weight: 600; font-size: 13px; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.viz-tip { position: fixed; left: 0; top: 0; z-index: 50; pointer-events: none; opacity: 0; transition: opacity .12s; background: var(--surface-1); color: var(--text-primary); border: 1px solid var(--border); border-radius: 10px; padding: 8px 11px; font-size: 13px; line-height: 1.5; box-shadow: 0 12px 28px -12px rgba(0,0,0,.35); max-width: 280px; }
+.viz-tip .sw { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 6px; }
+
+.tiles { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); margin: 22px 0; }
+.tile { background: var(--surface-1); border: 1px solid var(--border); border-radius: 14px; padding: 14px 16px; position: relative; overflow: hidden; }
+.tile::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--c, var(--ice-3)); }
+.tile .label { font-size: 13px; color: var(--text-secondary); line-height: 1.45; }
+.tile .value { font-size: 32px; font-weight: 700; line-height: 1.2; margin-top: 4px; }
+.tile .delta { font-size: 13px; color: var(--text-secondary); line-height: 1.45; margin-top: 2px; }
+
+.seg { display: inline-flex; border: 1px solid var(--border); border-radius: 999px; padding: 3px; background: var(--surface-2); margin: 0 0 12px; flex-wrap: wrap; }
+.seg button { font: inherit; font-size: 13.5px; border: 0; background: transparent; color: var(--text-secondary); padding: 5px 14px; border-radius: 999px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--surface-1); color: var(--text-primary); font-weight: 600; box-shadow: 0 1px 4px rgba(0,0,0,.12); }
+.controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 10px; }
+.controls select { font: inherit; font-size: 14px; padding: 5px 10px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface-1); color: var(--text-primary); }
+.ptable { max-height: 460px; overflow: auto; border: 1px solid var(--border); border-radius: 12px; }
+.ptable table { min-width: 680px; }
+.ptable th { position: sticky; top: 0; background: var(--surface-2); cursor: pointer; user-select: none; white-space: nowrap; }
+.ptable th[aria-sort]::after { content: " ↕"; color: var(--text-muted); font-size: 11px; }
+.ptable th[aria-sort="descending"]::after { content: " ↓"; color: var(--text-primary); }
+.ptable th[aria-sort="ascending"]::after { content: " ↑"; color: var(--text-primary); }
+.ptable tr.robust td:first-child { font-weight: 700; }
+.ptable tr.robust td:first-child::before { content: "◆ "; color: var(--tip); }
+
+.robust-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 14px 0; padding: 0; list-style: none; }
+.robust-list li { background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 10px 14px; }
+.robust-list b { display: block; font-size: 17px; }
+.robust-list span { font-size: 12.5px; color: var(--text-secondary); }
+
+.frame { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); margin: 14px 0 20px; }
+.frame .box { background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; font-size: 14.5px; line-height: 1.55; position: relative; }
+.frame .box b { display: block; font-size: 13px; color: var(--text-muted); font-weight: 600; margin-bottom: 4px; }
+.frame .box.out { background: color-mix(in srgb, var(--ice-1) 16%, var(--surface-1)); }
+.frame-arrow { text-align: center; color: var(--text-muted); font-size: 22px; line-height: 1; margin: -4px 0; }
+.refs { font-size: 14px; }
+.refs li { margin-bottom: 6px; }
+footer { padding: 48px 0 64px; color: var(--text-muted); font-size: 13.5px; }
+.findings { counter-reset: f; list-style: none; padding: 0; margin: 14px 0; }
+.findings li { counter-increment: f; position: relative; padding: 12px 14px 12px 54px; background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 10px; }
+.findings li::before { content: counter(f); position: absolute; left: 14px; top: 12px; width: 28px; height: 28px; border-radius: 50%; background: var(--ice-3); color: #fff; font-weight: 700; display: grid; place-items: center; font-size: 14px; }
+@media print { .topbar, .theme-btn { display: none; } .fig { break-inside: avoid; } }
+</style>
+</head>
+<body>
+
+<header class="hero" id="top">
+  <div class="sky"><div class="wrap">
+    <p class="eyebrow rise"><span class="pill">โจทย์วิจัยย่อยที่ 1</span> จาก 8 · บันทึกการวิจัย 5 บท</p>
+    <h1 class="rise d2">ใต้ภูเขาน้ำแข็ง 0.95%</h1>
+    <p class="lede rise d3">ดัชนีการใช้แรงงานไม่เต็มศักยภาพรายจังหวัด: อัตราว่างงานของไทยซ่อนปัญหาไว้เท่าไร และปัญหากระจุกอยู่ที่จังหวัดไหน</p>
+  </div></div>
+  <div class="sea"><div class="wrap sea-grid">
+    <div class="under rise d4">
+      <div class="big">7.1<small>เท่า</small></div>
+      <p>เมื่อนับคนที่รอฤดูกาลและคนที่ทำงานชั่วโมงน้อยมากรวมด้วย ปัญหาการใช้แรงงานไม่เต็มศักยภาพใหญ่กว่าอัตราว่างงานทางการราว 2 ถึง 7 เท่า และ 9 ใน 10 จังหวัดที่อัตราว่างงานสูงสุดไม่ใช่จังหวัดที่ปัญหาหนักที่สุด</p>
+      <ul class="layers" id="berg-legend"></ul>
+      <p class="meta">5 ต.ค. 2569 · @Digital WRS · ต่อยอดจาก<a href="report-2026.md">รายงานตลาดแรงงานไทยและโลก 2026</a></p>
+    </div>
+    <div class="berg-wrap">
+      <svg class="berg" id="berg" viewBox="0 60 420 560" role="img" aria-label="ภาพภูเขาน้ำแข็ง: ส่วนเหนือน้ำคือผู้ว่างงาน 4 แสนคน ส่วนใต้น้ำคือชั้นที่อัตราว่างงานไม่นับ ความสูงแต่ละชั้นเป็นสัดส่วนกับจำนวนคน"></svg>
+    </div>
+  </div></div>
+</header>
+
+<nav class="topbar" aria-label="สารบัญ">
+  <div class="wrap">
+    <a href="#ch1">บทที่ 1 บทนำ</a>
+    <a href="#ch2">บทที่ 2 แนวคิด</a>
+    <a href="#ch3" class="skip">บทที่ 3 วิธีวิจัย</a>
+    <a href="#ch4">บทที่ 4 ผล</a>
+    <a href="#ch5">บทที่ 5 สรุป</a>
+    <a href="#refs">อ้างอิง</a>
+    <span class="sp"></span>
+    <button class="theme-btn" id="themeBtn" type="button" aria-label="สลับโหมดสว่างหรือมืด">◐ โหมด</button>
+  </div>
+  <div class="depth"><i id="depthBar"></i></div>
+</nav>
+
+<main class="wrap">
+
+<!-- ======================= CHAPTER 1 ======================= -->
+<section class="chapter" id="ch1">
+  <div class="ch-head">
+    <div class="ch-no" data-depth="ผิวน้ำ"><div><small>บทที่</small><b>1</b></div></div>
+    <div><p class="kicker">INTRODUCTION</p><h2>บทนำ</h2></div>
+  </div>
+  <div class="prose">
+    <h3>1.1 ความเป็นมาและความสำคัญของปัญหา</h3>
+    <p>ไตรมาส 2/2569 ไทยมีอัตราว่างงาน 0.95% หรือผู้ว่างงานราว 4 แสนคนจากกำลังแรงงาน 42.2 ล้านคน ตัวเลขนี้ต่ำที่สุดกลุ่มหนึ่งของโลก (ค่าเฉลี่ยโลก 4.9%) แต่ตัวชี้วัดอื่นในไตรมาสเดียวกันแย่ลงพร้อมกัน ค่าจ้างที่แท้จริงลด 2.88% ผู้ว่างงานเกิน 1 ปีเพิ่ม 11.3% และอัตราว่างงานของผู้ประกันตนในระบบประกันสังคมขึ้นเป็น 2.37% จาก 2.07% ปีก่อน</p>
+    <p>อีกสัญญาณหนึ่งคือการจ้างงานภาคเกษตรเพิ่ม 7.1 แสนคน (+6.5%) ในไตรมาสที่ GDP โตเพียง 1.9% ภาพนี้เข้ากับคำอธิบายเดิมของตลาดแรงงานไทย คนที่หลุดจากงานในเมืองไม่ได้กลายเป็น "ผู้ว่างงาน" แต่กลับไปทำงานในไร่นาหรืองานนอกระบบที่ชั่วโมงน้อยและรายได้ต่ำ อัตราว่างงานจึงเหมือนยอดภูเขาน้ำแข็ง เห็นเฉพาะส่วนที่โผล่พ้นน้ำ</p>
+    <p>ปัญหาเชิงนโยบายคือ งบประมาณและโครงการด้านแรงงานมักอ้างอัตราว่างงานรายจังหวัดในการเลือกพื้นที่ ถ้าอัตรานี้ชี้ผิดจังหวัด ทรัพยากรก็จะไปผิดที่ตามไปด้วย</p>
+
+    <h3>1.2 คำถามการวิจัย</h3>
+    <p><b>คำถามหลัก:</b> อัตราว่างงาน 0.95% ซ่อนปัญหาการใช้แรงงานไม่เต็มศักยภาพไว้เท่าไร และปัญหากระจุกอยู่ที่จังหวัดไหน</p>
+    <ol>
+      <li>เมื่อรวมผู้รอฤดูกาลและผู้ที่ทำงานชั่วโมงไม่พอ ขนาดปัญหาจริงใหญ่กว่าอัตราว่างงานกี่เท่า</li>
+      <li>จังหวัดที่อัตราว่างงานสูงสุดเป็นจังหวัดเดียวกับที่การใช้แรงงานไม่เต็มศักยภาพสูงสุดหรือไม่</li>
+      <li>ภูมิภาคใดมีสัญญาณแรงงานไหลกลับภาคเกษตรชัดที่สุด และระบบข้อมูลใดมองไม่เห็นภูมิภาคนั้น</li>
+    </ol>
+
+    <h3>1.3 วัตถุประสงค์การวิจัย</h3>
+    <ol>
+      <li>เพื่อประมาณขนาดการใช้แรงงานไม่เต็มศักยภาพของไทยในระดับประเทศ เทียบกับอัตราว่างงานทางการและกรอบ LU1–LU4 ของ ILO</li>
+      <li>เพื่อสร้างดัชนีการใช้แรงงานไม่เต็มศักยภาพรายจังหวัด 76 จังหวัด จากข้อมูลที่เผยแพร่แล้ว</li>
+      <li>เพื่อเปรียบเทียบลำดับจังหวัดตามดัชนีกับลำดับตามอัตราว่างงาน และเสนอพื้นที่นำร่องสำหรับโจทย์วิจัยย่อยข้ออื่น</li>
+    </ol>
+
+    <h3>1.4 ขอบเขตการวิจัย</h3>
+    <ul>
+      <li><b>ข้อมูล:</b> การสำรวจภาวะการทำงานของประชากร (สสช.) ไตรมาส 1 และ 2/2569 รายจังหวัดและรายภาค, ILOSTAT 2562–2568, การสำรวจแรงงานนอกระบบ พ.ศ. 2568, รายงานดัชนีชี้วัดภาวะแรงงานระดับภาค ปี 2568 (กระทรวงแรงงาน) และภาวะสังคมไตรมาส 2/2569 (สศช.)</li>
+      <li><b>พื้นที่:</b> 76 จังหวัด กรุงเทพมหานครอยู่ในตารางระดับภาคเท่านั้น จึงไม่อยู่ในการจัดลำดับรายจังหวัด</li>
+      <li><b>ช่วงเวลา:</b> ครึ่งแรกปี 2569 (เฉลี่ยไตรมาส 1 และ 2 เพื่อลดผลของฤดูกาล)</li>
+    </ul>
+
+    <h3>1.5 นิยามศัพท์เฉพาะ</h3>
+  </div>
+  <div class="def">
+    <div>ผู้ว่างงาน</div><div>ผู้ที่ไม่ได้ทำงานแม้แต่ 1 ชั่วโมงในสัปดาห์สำรวจ และกำลังหางานหรือพร้อมทำงาน (นิยามสากล)</div>
+    <div>ผู้รอฤดูกาล</div><div>ผู้ที่ไม่ได้ทำงานเพราะรอทำงานตามฤดูกาล ส่วนใหญ่คือเกษตรกรนอกฤดูเพาะปลูก สสช. ไม่นับเป็นผู้ว่างงาน</div>
+    <div>ผู้ทำงานต่ำระดับ</div><div>ผู้ทำงาน 1–34 ชั่วโมงต่อสัปดาห์ ที่ต้องการและพร้อมทำงานเพิ่ม (time-related underemployment)</div>
+    <div>ผู้เสมือนว่างงาน</div><div>นิยามของ สศช.: ทำงาน 0–20 ชั่วโมงต่อสัปดาห์ในภาคเกษตร หรือ 0–24 ชั่วโมงนอกภาคเกษตร ไม่ว่าจะต้องการทำงานเพิ่มหรือไม่</div>
+    <div>LU1–LU4</div><div>ชุดตัวชี้วัดการใช้แรงงานไม่เต็มศักยภาพของ ILO (มติ ICLS ครั้งที่ 19) ไล่จากอัตราว่างงาน (LU1) ไปจนถึงตัวชี้วัดรวม (LU4)</div>
+    <div>ดัชนีแคบ / ดัชนีกว้าง</div><div>ดัชนีรายจังหวัดที่งานนี้สร้างขึ้น (นิยามในบทที่ 2) หน่วยเป็นร้อยละของกำลังแรงงาน</div>
+  </div>
+  <div class="prose">
+    <h3>1.6 ประโยชน์ที่คาดว่าจะได้รับ</h3>
+    <ul>
+      <li>แผนที่ปัญหาจริงรายจังหวัด สำหรับจัดสรรงบประมาณและเลือกพื้นที่นำร่อง</li>
+      <li>รายชื่อจังหวัดนำร่องที่หลักฐานแข็ง สำหรับโจทย์ย่อยที่ 2 (ชั้นยืนยันทักษะ) และที่ 4 (การจับคู่งานเชิงพื้นที่)</li>
+      <li>ข้อเสนอต่อ สสช. และ สศช. ให้เผยแพร่ตัวชี้วัด LU2–LU4 ในระดับพื้นที่</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ======================= CHAPTER 2 ======================= -->
+<section class="chapter" id="ch2">
+  <div class="ch-head">
+    <div class="ch-no" data-depth="−10 ม."><div><small>บทที่</small><b>2</b></div></div>
+    <div><p class="kicker">LITERATURE &amp; CONCEPTS</p><h2>แนวคิด ทฤษฎี และงานวิจัยที่เกี่ยวข้อง</h2></div>
+  </div>
+  <div class="prose">
+    <h3>2.1 กรอบการใช้แรงงานไม่เต็มศักยภาพของ ILO</h3>
+    <p>มติการประชุมนักสถิติแรงงานระหว่างประเทศ (ICLS) ครั้งที่ 19 ปี 2556 เปลี่ยนคำถามจาก "ใครไม่มีงาน" เป็น "ใครมีความต้องการทำงานที่ยังไม่ได้รับการตอบสนอง" และกำหนดตัวชี้วัด 4 ระดับ:</p>
+  </div>
+  <div class="fig">
+    <p class="fno">ตาราง 2.1</p>
+    <h4>ตัวชี้วัด LU1–LU4</h4>
+    <div class="scroll"><table>
+      <thead><tr><th>ตัวชี้วัด</th><th>สูตร</th><th>สิ่งที่เพิ่มเข้ามา</th></tr></thead>
+      <tbody>
+        <tr><td>LU1</td><td>U / LF</td><td>อัตราว่างงานทั่วไป</td></tr>
+        <tr><td>LU2</td><td>(U + TRU) / LF</td><td>ผู้ทำงานต่ำระดับ: ทำงานแล้วแต่ชั่วโมงไม่พอ</td></tr>
+        <tr><td>LU3</td><td>(U + PLF) / (LF + PLF)</td><td>กำลังแรงงานศักยภาพ: อยากทำงานแต่ไม่ได้หางาน หรือหางานแต่ยังไม่พร้อม</td></tr>
+        <tr><td>LU4</td><td>(U + TRU + PLF) / (LF + PLF)</td><td>รวมทุกชั้น</td></tr>
+      </tbody>
+    </table></div>
+    <p class="src">U = ผู้ว่างงาน, LF = กำลังแรงงาน, TRU = ผู้ทำงานต่ำระดับ, PLF = กำลังแรงงานศักยภาพ · ที่มา: ILOSTAT, Labour underutilization indicators</p>
+  </div>
+  <div class="prose">
+    <h3>2.2 ทำไมอัตราว่างงานของไทยจึงต่ำ</h3>
+    <p>งานศึกษาเรื่องตลาดแรงงานไทยอธิบายตรงกันว่าอัตราว่างงานต่ำเพราะโครงสร้าง ไม่ใช่เพราะตลาดแรงงานตึงตัว มีสามกลไกหลัก:</p>
+    <ol>
+      <li><b>นิยามที่กว้าง:</b> ทำงาน 1 ชั่วโมงในสัปดาห์สำรวจถือเป็นผู้มีงานทำ</li>
+      <li><b>ภาคเกษตรเป็นฟองน้ำ:</b> ผู้มีงานทำ 28.1% อยู่ภาคเกษตร คนที่ตกงานจากเมืองกลับไปช่วยงานในครัวเรือนได้ ซึ่งทำให้เป็นผู้มีงานทำหรือผู้รอฤดูกาลแทนผู้ว่างงาน</li>
+      <li><b>จนเกินกว่าจะว่างงาน:</b> แรงงานนอกระบบ 52.4% ไม่มีประกันการว่างงาน จึงไม่มีทางเลือกที่จะรอหางานที่ดีกว่า ต้องรับงานอะไรก็ได้ทันที</li>
+    </ol>
+    <h3>2.3 หลักฐานที่มีอยู่</h3>
+    <ul>
+      <li><b>ILOSTAT:</b> LU4 ของไทยปี 2568 อยู่ที่ 1.24% เทียบกับเอเชียตะวันออกเฉียงใต้ 8.37% และโลก 12.75% ไทยจึงดูดีที่สุดแม้วัดด้วยตัวชี้วัดที่กว้างที่สุด เพราะแม้แต่ LU4 ก็ไม่นับผู้รอฤดูกาลและคนที่ชั่วโมงน้อยแต่ไม่ได้บอกว่าอยากทำเพิ่ม</li>
+      <li><b>สศช.</b> ใช้ "ผู้เสมือนว่างงาน" ซึ่งวัดจากชั่วโมงทำงานอย่างเดียว ไตรมาส 2/2569 มี 2.2 ล้านคน (+8.0%) และรายงาน "ผู้ว่างงานแฝง" (ทำงานน้อยกว่า 10 ชั่วโมงรวมผู้รอฤดูกาล) 0.66% ในไตรมาส 2/2568</li>
+      <li><b>OECD:</b> ในกว่าครึ่งของประเทศสมาชิก อัตราการจ้างงานระหว่างภูมิภาคต่างกันเกิน 20 จุด ค่าเฉลี่ยระดับประเทศจึงพาไปเลือกพื้นที่ผิดได้ง่าย</li>
+      <li><b>ข้อมูลระดับจังหวัด:</b> สสช. เผยแพร่ผู้ว่างงาน ผู้รอฤดูกาล และชั่วโมงทำงานรายจังหวัดรายไตรมาส แต่ยังไม่เผยแพร่ผู้ทำงานต่ำระดับหรือกำลังแรงงานศักยภาพรายจังหวัด</li>
+    </ul>
+    <div class="callout">
+      <b class="t">ข้อค้นพบระหว่างทาง: แก้ตัวเลขในรายงานต้นทาง</b>
+      รายงานต้นทางเขียนว่า "ผู้ทำงานต่ำระดับ 2.2 ล้านคน" แต่ตัวเลข 2.2 ล้านคือ <b>ผู้เสมือนว่างงาน</b> ซึ่งวัดจากชั่วโมงทำงานอย่างเดียว ผู้ทำงานต่ำระดับที่ต้องการทำงานเพิ่มจริงมีเพียง 0.19 ล้านคน (+19.1%) และ 70.3% อยู่ภาคเกษตร ส่วนตัวเลขของ สสช. ตามนิยามสากลคือ 169,600 คน (0.4%, +24.1%) สองตัวเลขนี้จึงเป็นขอบล่างและขอบบนของปัญหา ไม่ใช่สิ่งเดียวกัน
+    </div>
+
+    <h3>2.4 กรอบแนวคิดและนิยามเชิงปฏิบัติการของดัชนี</h3>
+    <p>สสช. ไม่เผยแพร่ผู้ทำงานต่ำระดับรายจังหวัด งานนี้จึงประมาณจากสัดส่วนผู้ทำงานน้อยกว่า 35 ชั่วโมง โดยใช้สัดส่วนระดับประเทศเป็นตัวปรับ และสร้างดัชนีสองระดับที่ตรงกับขอบล่างและขอบบนข้างต้น:</p>
+  </div>
+  <div class="frame" aria-label="กรอบแนวคิด">
+    <div class="box"><b>ชั้นที่ 1 · นับได้</b>ผู้ว่างงาน (UR)</div>
+    <div class="box"><b>ชั้นที่ 2 · ตามฤดูกาล</b>ผู้รอฤดูกาล (S)</div>
+    <div class="box"><b>ชั้นที่ 3 · ชั่วโมงไม่พอ</b>สัดส่วนผู้ทำงาน &lt; 35 ชม. (SH) × ตัวปรับระดับประเทศ</div>
+    <div class="box out"><b>ผลลัพธ์</b>ดัชนีแคบ (ขอบล่าง) และดัชนีกว้าง (ขอบบน) ร้อยละของกำลังแรงงาน รายจังหวัด</div>
+  </div>
+  <div class="formula">
+    <div><code>ดัชนีแคบ = UR + S + 0.025 × SH</code> &nbsp;·&nbsp; 0.025 = ผู้ทำงานต่ำระดับ 169,600 ÷ ผู้ทำงาน 1–34 ชม. 6.81 ล้านคน</div>
+    <div><code>ดัชนีกว้าง = UR + S + 0.32 × SH</code> &nbsp;·&nbsp; 0.32 = ผู้เสมือนว่างงาน 2.2 ล้าน ÷ ผู้ทำงาน 1–34 ชม. 6.81 ล้านคน</div>
+  </div>
+  <div class="prose">
+    <p>เมื่อใช้ตัวปรับนี้กับค่าระดับประเทศ ดัชนีแคบให้ 1.94% และดัชนีกว้างให้ 6.8% ตรงกับตัวเลขของ สสช. และ สศช. ตามลำดับ ทุกค่าเป็นค่าเฉลี่ยไตรมาส 1 และ 2/2569</p>
+  </div>
+</section>
+
+<!-- ======================= CHAPTER 3 (skipped) ======================= -->
+<section class="skipped" id="ch3" aria-label="บทที่ 3 ข้าม">
+  <div class="ch-no"><div><small>บทที่</small><b>3</b></div></div>
+  <div>
+    <h2>วิธีดำเนินการวิจัย <span class="stamp">ข้าม</span></h2>
+    <p>ละไว้ตามขอบเขตของบันทึกฉบับนี้ แหล่งข้อมูลอยู่ในข้อ 1.4 และสูตรดัชนีอยู่ในข้อ 2.4</p>
+  </div>
+</section>
+
+<!-- ======================= CHAPTER 4 ======================= -->
+<section class="chapter" id="ch4">
+  <div class="ch-head">
+    <div class="ch-no" data-depth="−40 ม."><div><small>บทที่</small><b>4</b></div></div>
+    <div><p class="kicker">FINDINGS</p><h2>ผลการวิจัย</h2></div>
+  </div>
+
+  <div class="prose"><h3>4.1 ขนาดของภูเขาน้ำแข็งระดับประเทศ</h3>
+    <p>อัตราว่างงาน 0.95% คือชั้นบนสุด เมื่อเพิ่มผู้ทำงานต่ำระดับและผู้รอฤดูกาล ตัวเลขเป็น 1.94% หรือ 2 เท่า และถ้านับผู้เสมือนว่างงานด้วย ตัวเลขเป็น 6.8% หรือราว 2.85 ล้านคน ซึ่งเป็น 7.1 เท่าของผู้ว่างงาน</p>
+  </div>
+  <div class="tiles">
+    <div class="tile" style="--c:var(--tip)"><div class="label">อัตราว่างงานทางการ (LU1)</div><div class="value">0.95%</div><div class="delta">4.0 แสนคน · Q2/2569</div></div>
+    <div class="tile" style="--c:var(--ice-2)"><div class="label">ดัชนีแคบ: + ต่ำระดับ + รอฤดูกาล</div><div class="value">1.94%</div><div class="delta">8.2 แสนคน · 2.0 เท่า</div></div>
+    <div class="tile" style="--c:var(--ice-4)"><div class="label">ดัชนีกว้าง: + เสมือนว่างงาน</div><div class="value">6.8%</div><div class="delta">2.85 ล้านคน · 7.1 เท่า</div></div>
+    <div class="tile" style="--c:var(--ice-3)"><div class="label">อัตราว่างงานผู้ประกันตน ม.33</div><div class="value">2.37%</div><div class="delta">2.9 แสนคน · ปีก่อน 2.07%</div></div>
+  </div>
+  <div class="fig">
+    <p class="fno">ภาพ 4.1</p>
+    <h4>จากอัตราว่างงานสู่อัตราการใช้แรงงานไม่เต็มศักยภาพ ไตรมาส 2/2569</h4>
+    <p class="sub">ร้อยละของกำลังแรงงาน 42.16 ล้านคน แต่ละแท่งเพิ่มชั้นจากแท่งก่อนหน้า</p>
+    <div class="chart" id="c-ladder"></div>
+    <p class="src">ที่มา: สสช. การสำรวจภาวะการทำงานของประชากร Q2/2569; สศช. ภาวะสังคม Q2/2569 (ผู้เสมือนว่างงาน 2.2 ล้านคน) · ผู้จัดทำคำนวณ</p>
+  </div>
+
+  <div class="prose"><h3>4.2 เทียบกับโลก: ตัวชี้วัดมาตรฐานยังมองไม่เห็นปัญหาแบบไทย</h3>
+    <p>แม้ใช้ LU4 ซึ่งกว้างที่สุดตามมาตรฐาน ILO ไทยก็ยังต่ำที่สุดในภูมิภาค (1.24%) ต่ำกว่าเวียดนาม 2.6 เท่าและต่ำกว่าฟิลิปปินส์ 8 เท่า เหตุผลไม่ใช่เพราะตลาดแรงงานไทยดีกว่า แต่เพราะรูปแบบปัญหาของไทยคือการรอฤดูกาลและการทำงานชั่วโมงน้อย ซึ่ง LU4 ไม่นับ ที่น่าสังเกตคือ LU4 รายไตรมาสของไทยขึ้นจาก 1.08% ใน Q4/2568 เป็น 1.46% ใน Q1/2569 แม้ส่วนหนึ่งเป็นผลของฤดูแล้ง แต่ก็สูงกว่าไตรมาสเดียวกันของปีก่อน (1.37%)</p>
+  </div>
+  <div class="grid2">
+    <div class="fig">
+      <p class="fno">ภาพ 4.2</p>
+      <h4>LU4 ล่าสุด ไทยเทียบภูมิภาคและโลก</h4>
+      <p class="sub">ร้อยละของกำลังแรงงานส่วนขยาย ปีล่าสุดที่มีข้อมูล</p>
+      <div class="chart" id="c-lu4"></div>
+      <p class="src">ที่มา: ILOSTAT (ประเทศ: ข้อมูลสำรวจ; ภูมิภาคและโลก: ค่าประมาณแบบจำลองของ ILO ปี 2568)</p>
+    </div>
+    <div class="fig">
+      <p class="fno">ภาพ 4.3</p>
+      <h4>ตัวชี้วัด LU ของไทย 2562–2568</h4>
+      <p class="sub">ร้อยละ รายปี ยอดสูงสุดคือปี 2564 ช่วงโควิด</p>
+      <div class="chart" id="c-lutrend"></div>
+      <p class="src">ที่มา: ILOSTAT, Thailand LFS</p>
+    </div>
+  </div>
+
+  <div class="prose"><h3>4.3 ระดับภาค: อีสานพลิกจากต่ำสุดเป็นสูงสุด</h3>
+    <p>ตามอัตราว่างงาน อีสานดีที่สุดในประเทศ (0.72%) แต่เมื่อรวมผู้รอฤดูกาล อีสานกลายเป็นภาคที่หนักที่สุด (2.68%) เพราะผู้รอฤดูกาล 1.92 แสนคน หรือ 77% ของทั้งประเทศอยู่ในอีสาน ภาคใต้และชายแดนใต้มีรูปแบบต่างออกไป คือผู้มีงานทำ 34–41% ทำงานน้อยกว่า 35 ชั่วโมง ซึ่งส่วนหนึ่งมาจากลักษณะงานกรีดยาง</p>
+  </div>
+  <div class="fig">
+    <p class="fno">ภาพ 4.4</p>
+    <h4>อัตราว่างงาน เทียบกับอัตราว่างงานรวมผู้รอฤดูกาล รายภาค Q2/2569</h4>
+    <p class="sub">ร้อยละของกำลังแรงงาน</p>
+    <div class="chart" id="c-region"></div>
+    <p class="src">ที่มา: สสช. LFS Q2/2569 ตาราง 1 และ 13 · ผู้จัดทำคำนวณ (U+S)/LF</p>
+  </div>
+  <div class="grid2">
+    <div class="fig">
+      <p class="fno">ภาพ 4.5</p>
+      <h4>สัดส่วนผู้มีงานทำที่ทำงานน้อยกว่า 35 ชั่วโมง</h4>
+      <p class="sub">ร้อยละ รายภาค Q2/2569</p>
+      <div class="chart" id="c-hours"></div>
+      <p class="src">ที่มา: สสช. LFS Q2/2569 ตาราง 18 · ผู้จัดทำคำนวณ</p>
+    </div>
+    <div class="fig">
+      <p class="fno">ภาพ 4.6</p>
+      <h4>การจ้างงานภาคเกษตรที่เพิ่มขึ้น Q2/2568 → Q2/2569</h4>
+      <p class="sub">พันคน (ภาคตะวันออกเพิ่มมากที่สุดเชิงร้อยละ: +25.4%)</p>
+      <div class="chart" id="c-ag"></div>
+      <p class="src">ที่มา: สสช. LFS Q2/2568 และ Q2/2569 ตาราง 8 · ผู้จัดทำคำนวณ</p>
+    </div>
+  </div>
+  <div class="prose">
+    <div class="callout ice">
+      <b class="t">ระบบข้อมูลมีจุดบอดสองจุด</b>
+      ข้อมูลสำรวจครัวเรือน (LFS) มองไม่เห็นคนที่ไหลกลับภาคเกษตร ส่วนข้อมูลประกันสังคมมองไม่เห็นแรงงานนอกระบบ ในปี 2568 ผู้ขอรับประโยชน์ทดแทนว่างงาน 51% อยู่ในกรุงเทพฯ และปริมณฑล ซึ่งผู้มีงานทำ 92.7% อยู่ในระบบประกันสังคม ขณะที่ในอีสานมีเพียง 32.0% ภาคที่ปัญหาหนักที่สุดตามดัชนีจึงเป็นภาคที่ระบบประกันสังคมมองเห็นน้อยที่สุด
+    </div>
+  </div>
+  <div class="grid2">
+    <div class="fig">
+      <p class="fno">ภาพ 4.7</p>
+      <h4>ผู้ขอรับประโยชน์ทดแทนว่างงาน ประกันสังคม ปี 2568</h4>
+      <p class="sub">พันคน แยกตามภาคของกระทรวงแรงงาน</p>
+      <div class="chart" id="c-sso"></div>
+      <p class="src">ที่มา: กระทรวงแรงงาน, รายงานสถานการณ์และดัชนีชี้วัดภาวะแรงงานระดับภาค ปี 2568</p>
+    </div>
+    <div class="fig">
+      <p class="fno">ภาพ 4.8</p>
+      <h4>สัดส่วนแรงงานนอกระบบ ปี 2568</h4>
+      <p class="sub">ร้อยละของผู้มีงานทำในแต่ละภาค</p>
+      <div class="chart" id="c-informal"></div>
+      <p class="src">ที่มา: สสช. การสำรวจแรงงานนอกระบบ พ.ศ. 2568</p>
+    </div>
+  </div>
+
+  <div class="prose"><h3>4.4 ระดับจังหวัด: อัตราว่างงานชี้ผิด 9 ใน 10</h3>
+    <p>จาก 10 จังหวัดที่อัตราว่างงานสูงสุด มีเพียง <b>บุรีรัมย์</b> จังหวัดเดียวที่อยู่ใน 10 อันดับแรกของดัชนีแคบ และก็มีบุรีรัมย์จังหวัดเดียวเช่นกันที่อยู่ใน 10 อันดับแรกของดัชนีกว้าง สหสัมพันธ์เชิงอันดับระหว่างอัตราว่างงานกับดัชนีกว้างมีเพียง 0.33 จังหวัดที่ลำดับเปลี่ยนมากที่สุดคือกาฬสินธุ์ (อันดับ 61 ตามอัตราว่างงาน ขึ้นเป็นอันดับ 6 ตามดัชนีกว้าง) มุกดาหาร (63 → 12) และยโสธร (58 → 10)</p>
+  </div>
+  <div class="fig">
+    <p class="fno">ภาพ 4.9</p>
+    <h4>15 จังหวัดที่ปัญหาหนักที่สุด แยกตามชั้นของภูเขาน้ำแข็ง</h4>
+    <p class="sub">ร้อยละของกำลังแรงงาน เฉลี่ย Q1–Q2/2569 · เลือกตัวชี้วัดที่ใช้จัดลำดับได้</p>
+    <div class="seg" role="group" aria-label="เลือกตัวชี้วัด">
+      <button type="button" data-k="narrow" aria-pressed="true">ดัชนีแคบ</button>
+      <button type="button" data-k="broad" aria-pressed="false">ดัชนีกว้าง</button>
+      <button type="button" data-k="ur" aria-pressed="false">อัตราว่างงานทางการ</button>
+    </div>
+    <div id="rank-wrap"></div>
+    <p class="src">ที่มา: สสช. LFS รายจังหวัด Q1 และ Q2/2569 · ผู้จัดทำคำนวณ ◆ = อยู่ใน 10 อันดับแรกของทั้งดัชนีแคบและดัชนีกว้าง</p>
+  </div>
+  <div class="fig">
+    <p class="fno">ภาพ 4.10</p>
+    <h4>อัตราว่างงานกับดัชนีแคบ ราย 76 จังหวัด</h4>
+    <p class="sub">แต่ละจุดคือหนึ่งจังหวัด จุดที่อยู่สูงแต่ชิดซ้ายคือจังหวัดที่อัตราว่างงานต่ำแต่ปัญหาจริงสูง</p>
+    <div class="legend"><span><i class="dot" style="background:var(--series-1)"></i>จังหวัดทั่วไป</span><span><i class="dot" style="background:var(--series-2)"></i>จังหวัดที่หลักฐานแข็ง (6 จังหวัด)</span></div>
+    <div class="chart" id="c-scatter"></div>
+    <p class="src">ที่มา: สสช. LFS รายจังหวัด Q1 และ Q2/2569 · ผู้จัดทำคำนวณ</p>
+  </div>
+  <div class="prose">
+    <h4>จังหวัดที่หลักฐานแข็ง: ติด 10 อันดับแรกทั้งดัชนีแคบและดัชนีกว้าง</h4>
+  </div>
+  <ul class="robust-list" id="robust"></ul>
+  <div class="fig">
+    <p class="fno">ตาราง 4.1</p>
+    <h4>ดัชนีรายจังหวัดทั้ง 76 จังหวัด</h4>
+    <p class="sub">คลิกหัวคอลัมน์เพื่อเรียงลำดับ · ค่าเฉลี่ย Q1–Q2/2569</p>
+    <div class="controls">
+      <label for="regionSel" style="font-size:14px;color:var(--text-secondary)">ภาค</label>
+      <select id="regionSel"><option value="">ทุกภาค</option></select>
+    </div>
+    <div class="ptable" id="ptable"></div>
+    <p class="src">UR = อัตราว่างงาน, S = อัตราผู้รอฤดูกาล, SH = สัดส่วนผู้ทำงาน &lt; 35 ชม., เกษตร = สัดส่วนการจ้างงานภาคเกษตร · ภาคใช้การแบ่ง 7 ภาคของ สสช. (ไม่รวมกรุงเทพฯ)</p>
+  </div>
+</section>
+
+<!-- ======================= CHAPTER 5 ======================= -->
+<section class="chapter" id="ch5">
+  <div class="ch-head">
+    <div class="ch-no" data-depth="ก้นทะเล"><div><small>บทที่</small><b>5</b></div></div>
+    <div><p class="kicker">CONCLUSION</p><h2>สรุป อภิปรายผล และข้อเสนอแนะ</h2></div>
+  </div>
+  <div class="prose">
+    <h3>5.1 สรุปผลการวิจัย</h3>
+  </div>
+  <ol class="findings">
+    <li><b>ขนาด:</b> อัตราว่างงาน 0.95% ซ่อนปัญหาไว้ 2 ถึง 7 เท่า ขอบล่าง (ดัชนีแคบ) 1.94% หรือ 8.2 แสนคน ขอบบน (ดัชนีกว้าง) 6.8% หรือ 2.85 ล้านคน</li>
+    <li><b>ตำแหน่ง:</b> อัตราว่างงานชี้จังหวัดผิด 9 ใน 10 อันดับแรก ปัญหาจริงกระจุกในอีสานตอนกลางและตอนล่าง ภาคใต้ฝั่งอันดามัน และพิจิตร</li>
+    <li><b>พื้นที่นำร่อง:</b> 6 จังหวัดติด 10 อันดับแรกของทั้งสองดัชนี ได้แก่ นครพนม สุรินทร์ ยโสธร บุรีรัมย์ กาฬสินธุ์ และพิจิตร</li>
+    <li><b>กลไก:</b> อีสานซ่อนปัญหาไว้ในผู้รอฤดูกาล ภาคใต้ซ่อนไว้ในชั่วโมงทำงานสั้น ส่วนภาคตะวันออกมีสัญญาณแรงงานไหลกลับภาคเกษตรเร็วที่สุด (+25.4% ในหนึ่งปี) สอดคล้องกับการปิดโรงงาน</li>
+    <li><b>จุดบอดของข้อมูล:</b> ภาคที่ปัญหาหนักที่สุดคือภาคที่ประกันสังคมครอบคลุมต่ำที่สุด ข้อมูลผู้ขอรับประโยชน์ว่างงานจึงใช้แทนการวัดปัญหาในพื้นที่เหล่านี้ไม่ได้</li>
+  </ol>
+  <div class="prose">
+    <h3>5.2 อภิปรายผล</h3>
+    <p><b>ภาคเกษตรเป็นฟองน้ำที่เริ่มอิ่มตัว</b> ผลนี้สอดคล้องกับคำอธิบายเดิมว่าภาคเกษตรรองรับแรงงานที่หลุดจากเมือง แต่ข้อมูลปี 2569 ชี้ว่าการรองรับนี้มาพร้อมผู้รอฤดูกาลที่เพิ่มขึ้นและชั่วโมงทำงานที่สั้นลง คนจึงไม่ได้ "มีงาน" ในความหมายที่นโยบายเข้าใจ</p>
+    <p><b>ชั่วโมงสั้นในภาคใต้ต้องตีความอย่างระวัง</b> การกรีดยางใช้เวลาไม่กี่ชั่วโมงต่อวันโดยธรรมชาติ ดัชนีกว้างจึงน่าจะสูงเกินจริงในจังหวัดยางพารา เช่น ยะลา สตูล และตรัง ดัชนีแคบซึ่งใช้ตัวปรับที่ต่ำกว่ามากจึงเหมาะเป็นตัวหลักในการจัดสรรงบ และใช้ดัชนีกว้างเป็นสัญญาณเตือน</p>
+    <p><b>ทำไมไทยดูดีในการเปรียบเทียบสากล</b> LU4 ของไทยต่ำกว่าเพื่อนบ้านมาก เพราะ LU4 นับเฉพาะคนที่บอกว่าอยากทำงานเพิ่ม ในสังคมที่การทำงานชั่วโมงน้อยเป็นเรื่องปกติและไม่มีประกันการว่างงาน คนจำนวนมากอาจไม่ตอบว่า "อยากทำเพิ่ม" แม้รายได้ไม่พอ ผู้วิจัยมองว่าไทยควรรายงานตัวชี้วัดเสริมที่นับผู้รอฤดูกาลควบคู่กับ LU4</p>
+    <p><b>ข้อควรระวังเรื่องการถ่วงน้ำหนักใหม่</b> ผู้มีงานทำเพิ่ม 2.0 ล้านคนในหนึ่งปี ซึ่งใกล้เคียงกับกำลังแรงงานที่เพิ่ม 2.05 ล้านคน ส่วนหนึ่งน่าจะมาจากการปรับฐานประชากรคาดประมาณของ สสช. การเปรียบเทียบข้ามปีจึงควรดูอัตราส่วน ไม่ใช่จำนวนคน ดัชนีในงานนี้เป็นอัตราส่วนทั้งหมด</p>
+
+    <h3>5.3 ข้อเสนอแนะเชิงนโยบาย</h3>
+    <ol>
+      <li><b>สสช. และ สศช.:</b> เผยแพร่ผู้ทำงานต่ำระดับและกำลังแรงงานศักยภาพรายภาครายไตรมาส และรายจังหวัดรายปี เพื่อให้คำนวณ LU2–LU4 ระดับพื้นที่ได้โดยไม่ต้องประมาณ</li>
+      <li><b>สำนักงบประมาณและกระทรวงแรงงาน:</b> ใช้ดัชนีแคบเป็นเกณฑ์หนึ่งในการจัดสรรงบพัฒนาฝีมือและจัดหางานรายจังหวัด แทนการอ้างอัตราว่างงานอย่างเดียว</li>
+      <li><b>พื้นที่นำร่อง:</b> ใช้ 6 จังหวัดที่หลักฐานแข็งเป็นพื้นที่ทดลองของโจทย์ย่อยที่ 2 (ยืนยันทักษะ) และที่ 4 (จับคู่งานใกล้บ้าน) โดยเฉพาะช่วงนอกฤดูเพาะปลูก (ไตรมาส 1) ซึ่งผู้รอฤดูกาลสูงสุด</li>
+      <li><b>แดชบอร์ดเฝ้าระวังร่วม:</b> รวม LFS ประกันสังคม และทะเบียนเกษตรกรไว้ในที่เดียว และตั้ง "จังหวัดเฝ้าระวัง" เมื่อดัชนีแคบเกิน 2 เท่าของอัตราว่างงานติดกันสองไตรมาส</li>
+    </ol>
+
+    <h3>5.4 ข้อจำกัดของการวิจัย</h3>
+    <ul>
+      <li>ขนาดตัวอย่างระดับจังหวัดเล็ก บางค่าแกว่งมากระหว่างไตรมาส เช่น สัดส่วนชั่วโมงสั้นของสมุทรปราการ (22.0% → 0.9%) และชัยภูมิ (0.8% → 0.1%) ซึ่งน่าจะเป็นความคลาดเคลื่อนของตาราง</li>
+      <li>ตัวปรับ 0.025 และ 0.32 มาจากค่าระดับประเทศ จึงสมมติว่าสัดส่วนคนที่อยากทำงานเพิ่มในกลุ่มชั่วโมงสั้นเท่ากันทุกจังหวัด</li>
+      <li>ใช้ข้อมูลเพียงสองไตรมาส และไม่รวมกรุงเทพฯ ในการจัดลำดับรายจังหวัด</li>
+      <li>ตัวเลข สศช. ไตรมาส 2/2569 อ้างผ่านสื่อ เพราะเข้าถึงไฟล์ต้นฉบับไม่ได้ และมีสื่อหนึ่งรายงานผู้เสมือนว่างงาน 9.3 แสนคน ซึ่งขัดกับแหล่งอื่น</li>
+    </ul>
+
+    <h3>5.5 ข้อเสนอแนะสำหรับการวิจัยครั้งต่อไป</h3>
+    <ul>
+      <li>ขอข้อมูลระดับบุคคล (microdata) ของ LFS เพื่อคำนวณผู้ทำงานต่ำระดับรายจังหวัดโดยตรง และใช้การประมาณค่าพื้นที่ขนาดเล็ก (small area estimation) ลดความแกว่ง</li>
+      <li>เพิ่มมิติรายได้ เช่น ค่าจ้างที่แท้จริงรายภาค และสัดส่วนแรงงานนอกระบบที่รายงานปัญหา เพื่อวัดคุณภาพงาน ไม่ใช่แค่ปริมาณ</li>
+      <li>ทำซ้ำทุกไตรมาสเพื่อดูว่าจังหวัดในภาคตะวันออกที่การจ้างงานเกษตรเพิ่มเร็ว จะขึ้นอันดับในดัชนีหรือไม่</li>
+    </ul>
+  </div>
+</section>
+
+<section class="chapter" id="refs" style="padding-top:40px">
+  <h2 style="font-size:24px">บรรณานุกรม</h2>
+  <ul class="refs prose">
+    <li>สำนักงานสถิติแห่งชาติ. (2569). <a href="https://www.nso.go.th/nsoweb/storage/survey_detail/2026/20260819112824_18928.pdf">การสำรวจภาวะการทำงานของประชากร ไตรมาสที่ 2: เมษายน–มิถุนายน 2569</a>.</li>
+    <li>สำนักงานสถิติแห่งชาติ. (2569). <a href="https://www.nso.go.th/nsoweb/storage/survey_detail/2026/20260803143102_69361.pdf">ตารางสถิติรายจังหวัด ไตรมาส 2/2569</a> และ <a href="https://www.nso.go.th/nsoweb/storage/survey_detail/2026/20260512094814_57201.pdf">ไตรมาส 1/2569</a>.</li>
+    <li>สำนักงานสถิติแห่งชาติ. (2569). <a href="https://www.nso.go.th/nsoweb/storage/survey_detail/2026/20260521125006_36387.pdf">รายงานฉบับสมบูรณ์ ไตรมาส 1/2569</a>; (2568). <a href="https://www.nso.go.th/nsoweb/storage/survey_detail/2026/20250909094250_98001.pdf">ไตรมาส 2/2568</a>.</li>
+    <li>สำนักงานสถิติแห่งชาติ. (2568). <a href="https://www.nso.go.th/nsoweb/storage/survey_detail/2025/20251117142743_84154.pdf">การสำรวจแรงงานนอกระบบ พ.ศ. 2568</a>.</li>
+    <li>กระทรวงแรงงาน. (2569). <a href="https://www.mol.go.th/wp-content/uploads/sites/2/2026/04/%E0%B8%A3%E0%B8%B2%E0%B8%A2%E0%B8%87%E0%B8%B2%E0%B8%99%E0%B8%AA%E0%B8%96%E0%B8%B2%E0%B8%99%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%93%E0%B9%8C%E0%B9%81%E0%B8%A5%E0%B8%B0%E0%B8%94%E0%B8%B1%E0%B8%8A%E0%B8%99%E0%B8%B5%E0%B8%8A%E0%B8%B5%E0%B9%89%E0%B8%A7%E0%B8%B1%E0%B8%94%E0%B8%A0%E0%B8%B2%E0%B8%A7%E0%B8%B0%E0%B9%81%E0%B8%A3%E0%B8%87%E0%B8%87%E0%B8%B2%E0%B8%99-%E0%B8%A3%E0%B8%B0%E0%B8%94%E0%B8%B1%E0%B8%9A%E0%B8%A0%E0%B8%B2%E0%B8%84-%E0%B8%9B%E0%B8%B5-2568.pdf">รายงานสถานการณ์และดัชนีชี้วัดภาวะแรงงาน ระดับภาค ปี 2568</a>.</li>
+    <li>สศช. (2568). <a href="https://www.nesdc.go.th/wordpress/wp-content/uploads/2025/08/1.-publisher_q2-68.pdf">ภาวะสังคมไทย ไตรมาสสอง ปี 2568</a>; ภาวะสังคม Q2/2569 อ้างผ่าน <a href="https://thestandard.co/thai-labor-market-unemployment-crisis/">The Standard</a>, <a href="https://www.thaipbs.or.th/news/content/509810">Thai PBS</a>, <a href="https://www.amarintv.com/spotlight/economy/555612">Amarin TV</a>.</li>
+    <li>ILO. <a href="https://ilostat.ilo.org/">ILOSTAT</a>: Labour underutilization (LU2–LU4) Thailand และประเทศอาเซียน; ILO modelled estimates (LU4 โลกและภูมิภาค 2568).</li>
+    <li>ILO. (2556). Resolution concerning statistics of work, employment and labour underutilization, 19th ICLS.</li>
+    <li>OECD. (2569). <a href="https://www.oecd.org/en/publications/oecd-employment-outlook-2026_7e710f54-en.html">OECD Employment Outlook 2026</a>.</li>
+    <li>@Digital WRS. (2569). <a href="report-2026.md">สภาพตลาดแรงงานไทยและโลก 2026</a> (รายงานต้นทาง).</li>
+  </ul>
+</section>
+</main>
+
+<footer><div class="wrap">โจทย์วิจัยย่อยที่ 1 จาก 8 · เรื่องอื่น: <a href="q2-skills-verification.html">โจทย์ 2</a> · <a href="q4-spatial-matching.html">โจทย์ 4</a> · <a href="q5-platform-riders.html">โจทย์ 5</a> · กลับไป<a href="index.html">หน้ารวมคำถามวิจัย</a></div></footer>
+
+<script>
+/* Minimal responsive SVG chart kit (no dependencies).
+   Every chart re-renders on container resize, reads colors from CSS custom
+   properties, ships a hover/focus tooltip, and builds a table-view twin. */
+const Viz = (() => {
+  const NS = "http://www.w3.org/2000/svg";
+  const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  const col = (c) => (c && c.startsWith("--") ? css(c) : c);
+  const el = (tag, attrs = {}, parent) => {
+    const n = document.createElementNS(NS, tag);
+    for (const k in attrs) if (attrs[k] !== undefined && attrs[k] !== null) n.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(n);
+    return n;
+  };
+  const fmtNum = (v, d = 1) => v.toLocaleString("th-TH", { minimumFractionDigits: d, maximumFractionDigits: d });
+
+  // ---------- tooltip ----------
+  let tip;
+  function tooltip() {
+    if (tip) return tip;
+    tip = document.createElement("div");
+    tip.className = "viz-tip";
+    tip.setAttribute("role", "status");
+    document.body.appendChild(tip);
+    return tip;
+  }
+  function showTip(evt, html) {
+    const t = tooltip();
+    t.innerHTML = html;
+    t.style.opacity = "1";
+    let x, y;
+    if (evt && evt.clientX !== undefined && evt.type.startsWith("pointer")) { x = evt.clientX; y = evt.clientY; }
+    else { const r = evt.target.getBoundingClientRect(); x = r.left + r.width / 2; y = r.top; }
+    const w = t.offsetWidth, h = t.offsetHeight;
+    let left = x + 14, top = y - h - 12;
+    if (left + w > window.innerWidth - 8) left = x - w - 14;
+    if (left < 8) left = 8;
+    if (top < 8) top = y + 18;
+    t.style.transform = `translate(${left}px, ${top}px)`;
+  }
+  function hideTip() { if (tip) tip.style.opacity = "0"; }
+  function bindTip(node, html) {
+    node.setAttribute("tabindex", "0");
+    node.addEventListener("pointermove", (e) => showTip(e, html));
+    node.addEventListener("pointerleave", hideTip);
+    node.addEventListener("focus", (e) => showTip(e, html));
+    node.addEventListener("blur", hideTip);
+  }
+
+  // ---------- table twin ----------
+  function table(host, head, rows, numericCols = []) {
+    const d = document.createElement("details");
+    d.className = "tbl";
+    d.innerHTML = `<summary>ดูเป็นตาราง</summary>`;
+    const wrap = document.createElement("div");
+    wrap.className = "scroll";
+    const t = document.createElement("table");
+    t.innerHTML = `<thead><tr>${head.map((h, i) => `<th${numericCols.includes(i) ? ' class="num"' : ""}>${h}</th>`).join("")}</tr></thead>
+      <tbody>${rows.map(r => `<tr>${r.map((c, i) => `<td${numericCols.includes(i) ? ' class="num"' : ""}>${c}</td>`).join("")}</tr>`).join("")}</tbody>`;
+    wrap.appendChild(t);
+    d.appendChild(wrap);
+    host.after(d);
+  }
+
+  // ---------- responsive mount ----------
+  const mounts = [];
+  function mount(host, draw) {
+    const render = () => { if (!host.isConnected) return; host.innerHTML = ""; draw(host, Math.max(280, host.clientWidth)); };
+    mounts.push(render);
+    render();
+    if ("ResizeObserver" in window) {
+      let last = host.clientWidth;
+      new ResizeObserver(() => { if (Math.abs(host.clientWidth - last) > 4) { last = host.clientWidth; render(); } }).observe(host);
+    }
+    return render;
+  }
+  // theme changes repaint (colors come from CSS vars at draw time)
+  const rerenderAll = () => mounts.forEach(r => r());
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", rerenderAll);
+  new MutationObserver(rerenderAll).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+
+  // rounded data-end bar path (square at baseline)
+  function hbarPath(x0, y, w, h, r = 4) {
+    if (w <= 0) return "";
+    r = Math.min(r, w, h / 2);
+    return `M${x0},${y}H${x0 + w - r}Q${x0 + w},${y} ${x0 + w},${y + r}V${y + h - r}Q${x0 + w},${y + h} ${x0 + w - r},${y + h}H${x0}Z`;
+  }
+  function vbarPath(x, y0, w, h, r = 4) {
+    if (h <= 0) return "";
+    r = Math.min(r, h, w / 2);
+    return `M${x},${y0}V${y0 - h + r}Q${x},${y0 - h} ${x + r},${y0 - h}H${x + w - r}Q${x + w},${y0 - h} ${x + w},${y0 - h + r}V${y0}Z`;
+  }
+  // choose a round tick step and stretch max to a whole number of steps
+  function niceTicks(maxRaw, n = 4) {
+    const raw = maxRaw / n, p = Math.pow(10, Math.floor(Math.log10(raw)));
+    const m = raw / p, step = (m <= 1 ? 1 : m <= 2 ? 2 : m <= 2.5 ? 2.5 : m <= 5 ? 5 : 10) * p;
+    const count = Math.max(1, Math.ceil(maxRaw / step - 1e-9));
+    return { max: step * count, step, count };
+  }
+  const decOf = (step) => (step >= 1 || Math.abs(step - Math.round(step)) < 1e-9 ? 0 : step >= 0.1 ? (Math.abs(step * 10 - Math.round(step * 10)) < 1e-9 ? 1 : 2) : 2);
+  // wrap an SVG label onto two lines (at the space nearest the middle) when it is wider than maxW
+  function fitLabel(t, maxW) {
+    if (t.getComputedTextLength() <= maxW) return;
+    const txt = t.textContent, x = t.getAttribute("x"), y = +t.getAttribute("y");
+    const sp = [...txt].map((c, i) => (c === " " ? i : -1)).filter(i => i > 0);
+    if (!sp.length) { t.setAttribute("textLength", maxW); t.setAttribute("lengthAdjust", "spacingAndGlyphs"); return; }
+    const cut = sp.reduce((a, b) => (Math.abs(b - txt.length / 2) < Math.abs(a - txt.length / 2) ? b : a));
+    t.textContent = "";
+    [txt.slice(0, cut), txt.slice(cut + 1)].forEach((ln, k) => {
+      const ts = el("tspan", { x, y: y - 7 + k * 14 }, t); ts.textContent = ln;
+      if (ts.getComputedTextLength() > maxW) { ts.setAttribute("textLength", maxW); ts.setAttribute("lengthAdjust", "spacingAndGlyphs"); }
+    });
+  }
+  // widest label (px) in a given class, measured off-screen in a throwaway svg
+  function maxLabelW(host, labels, cls = "lbl") {
+    const svg = el("svg", { width: 10, height: 10, style: "position:absolute;visibility:hidden" }, host);
+    let m = 0;
+    labels.forEach(t => { const n = el("text", { class: cls }, svg); n.textContent = t; m = Math.max(m, n.getComputedTextLength()); });
+    svg.remove();
+    return m;
+  }
+  const niceMax = (v) => {
+    const p = Math.pow(10, Math.floor(Math.log10(v)));
+    const n = v / p;
+    const s = n <= 1 ? 1 : n <= 2 ? 2 : n <= 2.5 ? 2.5 : n <= 5 ? 5 : 10;
+    return s * p;
+  };
+
+  /* Horizontal bars. data: [{label, value, color?, tip?, valueLabel?}] */
+  function hbar(host, data, o = {}) {
+    const unit = o.unit || "", dec = o.decimals ?? 1;
+    mount(host, (h, W) => {
+      const labelW = Math.min(o.labelWidth || 150, W * 0.38);
+      const wraps = maxLabelW(h, data.map(d => d.label)) > labelW - 2;
+      const rowH = Math.max(o.rowH || 34, wraps ? 40 : 0), barH = Math.min(18, rowH - 12);
+      const top = 22, H = top + data.length * rowH + 6 + (o.refLine ? 18 : 0);
+      const nt = niceTicks(o.max || Math.max(...data.map(d => d.value)) * 1.08, Math.max(2, Math.min(o.ticks || 4, Math.floor(W / 110))));
+      const max = nt.max;
+      const x0 = labelW + 8, x1 = W - (o.rightPad ?? 58);
+      const sx = v => x0 + (v / max) * (x1 - x0);
+      const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: "img", "aria-label": o.aria || "" }, h);
+      for (let i = 0; i <= nt.count; i++) {
+        const v = nt.step * i, x = sx(v);
+        el("line", { x1: x, x2: x, y1: top - 6, y2: H - 4, stroke: css(i ? "--grid" : "--axis"), "stroke-width": 1 }, svg);
+        el("text", { x, y: 12, "text-anchor": "middle", class: "tick" }, svg).textContent = fmtNum(v, decOf(nt.step)) + (o.tickUnit ?? "");
+      }
+      if (o.refLine) {
+        const x = sx(o.refLine.value);
+        el("line", { x1: x, x2: x, y1: top - 6, y2: H - 4, stroke: col(o.refLine.color || "--text-secondary"), "stroke-width": 1.5 }, svg);
+        el("text", { x: x + 4, y: H - 4, class: "ref" }, svg).textContent = o.refLine.label;
+      }
+      data.forEach((d, i) => {
+        const y = top + i * rowH + (rowH - barH) / 2;
+        const lt = el("text", { x: labelW, y: y + barH / 2 + 4, "text-anchor": "end", class: "lbl" + (d.bold ? " strong" : "") }, svg);
+        lt.textContent = d.label;
+        fitLabel(lt, labelW - 2);
+        const g = el("g", { class: "hit" }, svg);
+        el("rect", { x: 0, y: top + i * rowH, width: W, height: rowH, fill: "transparent" }, g);
+        el("path", { d: hbarPath(x0, y, sx(d.value) - x0, barH), fill: col(d.color || o.color || "--series-1") }, g);
+        el("text", { x: sx(d.value) + 6, y: y + barH / 2 + 4, class: "val" }, g).textContent = d.valueLabel ?? (fmtNum(d.value, dec) + unit);
+        bindTip(g, d.tip || `<b>${d.label}</b><br>${fmtNum(d.value, dec)}${unit}`);
+      });
+    });
+    if (o.table !== false) table(host, [o.labelHead || "รายการ", o.valueHead || "ค่า"], data.map(d => [d.label, d.valueLabel ?? fmtNum(d.value, dec) + unit]), [1]);
+  }
+
+  /* Stacked horizontal bars. rows: [{label, parts:[...]}], series: [{name,color}] */
+  function stack(host, rows, series, o = {}) {
+    const unit = o.unit || "", dec = o.decimals ?? 1;
+    mount(host, (h, W) => {
+      const labelW = Math.min(o.labelWidth || 130, W * 0.34);
+      const wraps = maxLabelW(h, rows.map(r => r.label)) > labelW - 2;
+      const rowH = Math.max(o.rowH || 36, wraps ? 40 : 0), barH = Math.min(20, rowH - 12);
+      const top = 22, H = top + rows.length * rowH + 6;
+      const tot = rows.map(r => r.parts.reduce((a, b) => a + b, 0));
+      const nt = niceTicks(o.max || Math.max(...tot) * 1.05, Math.max(2, Math.min(o.ticks || 4, Math.floor(W / 110))));
+      const max = nt.max;
+      const x0 = labelW + 8, x1 = W - (o.rightPad ?? 56);
+      const sx = v => x0 + (v / max) * (x1 - x0);
+      const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: "img", "aria-label": o.aria || "" }, h);
+      for (let i = 0; i <= nt.count; i++) {
+        const v = nt.step * i, x = sx(v);
+        el("line", { x1: x, x2: x, y1: top - 6, y2: H - 4, stroke: css(i ? "--grid" : "--axis"), "stroke-width": 1 }, svg);
+        el("text", { x, y: 12, "text-anchor": "middle", class: "tick" }, svg).textContent = fmtNum(v, decOf(nt.step)) + (o.tickUnit ?? "");
+      }
+      rows.forEach((r, i) => {
+        const y = top + i * rowH + (rowH - barH) / 2;
+        const lt = el("text", { x: labelW, y: y + barH / 2 + 4, "text-anchor": "end", class: "lbl" + (r.bold ? " strong" : "") }, svg);
+        lt.textContent = r.label; fitLabel(lt, labelW - 2);
+        let acc = 0;
+        const last = r.parts.reduce((li, v, k) => (v > 0 ? k : li), -1);
+        r.parts.forEach((v, k) => {
+          if (v <= 0) return;
+          const xa = sx(acc) + (acc > 0 ? 1 : 0), xb = sx(acc + v) - (k === last ? 0 : 1);
+          const g = el("g", { class: "hit" }, svg);
+          const path = k === last ? hbarPath(xa, y, xb - xa, barH) : `M${xa},${y}H${xb}V${y + barH}H${xa}Z`;
+          el("path", { d: path, fill: col(series[k].color) }, g);
+          bindTip(g, `<b>${r.label}</b><br><i class="sw" style="background:${col(series[k].color)}"></i>${series[k].name}: ${fmtNum(v, dec)}${unit}`);
+          acc += v;
+        });
+        el("text", { x: sx(tot[i]) + 6, y: y + barH / 2 + 4, class: "val" }, svg).textContent = r.totalLabel ?? (fmtNum(tot[i], dec) + unit);
+      });
+    });
+    legend(host, series);
+    if (o.table !== false) table(host, [o.labelHead || "รายการ", ...series.map(s => s.name), "รวม"],
+      rows.map(r => [r.label, ...r.parts.map(v => fmtNum(v, dec)), fmtNum(r.parts.reduce((a, b) => a + b, 0), dec)]),
+      series.map((_, i) => i + 1).concat([series.length + 1]));
+  }
+
+  function legend(host, series) {
+    const lg = document.createElement("div");
+    lg.className = "legend";
+    lg.innerHTML = series.map(s => `<span><i class="${s.line ? "line" : ""}" style="background:${col(s.color)}"></i>${s.name}</span>`).join("");
+    host.before(lg);
+  }
+
+  /* Line chart. x: labels[], series: [{name,color,values[], dashed?}] */
+  function line(host, x, series, o = {}) {
+    const unit = o.unit || "", dec = o.decimals ?? 2;
+    mount(host, (h, W) => {
+      const H = o.height || 260, L = o.left ?? 46, R = o.right ?? 74, T = 16, B = 34;
+      const all = series.flatMap(s => s.values).filter(v => v != null);
+      const min = o.min ?? 0, nt = niceTicks((o.max ?? Math.max(...all)) - min, o.ticks || 4), max = min + nt.max;
+      const sx = i => L + (i / (x.length - 1)) * (W - L - R);
+      const sy = v => T + (1 - (v - min) / (max - min)) * (H - T - B);
+      const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: "img", "aria-label": o.aria || "" }, h);
+      for (let i = 0; i <= nt.count; i++) {
+        const v = min + nt.step * i, y = sy(v);
+        el("line", { x1: L, x2: W - R + 8, y1: y, y2: y, stroke: css(i ? "--grid" : "--axis"), "stroke-width": 1 }, svg);
+        el("text", { x: L - 6, y: y + 4, "text-anchor": "end", class: "tick" }, svg).textContent = fmtNum(v, decOf(nt.step)) + (o.tickUnit ?? "");
+      }
+      const every = Math.ceil(x.length / Math.max(2, Math.floor((W - L - R) / 64)));
+      x.forEach((lab, i) => {
+        if (i % every && i !== x.length - 1) return;
+        el("text", { x: sx(i), y: H - 12, "text-anchor": "middle", class: "tick" }, svg).textContent = lab;
+      });
+      const endLabels = [];
+      series.forEach(s => {
+        const pts = s.values.map((v, i) => (v == null ? null : [sx(i), sy(v)]));
+        const d = pts.reduce((acc, p, i) => (p ? acc + (acc && (o.connect || pts[i - 1]) ? "L" : "M") + p[0] + "," + p[1] : acc), "");
+        if (s.area) el("path", { d: d + `L${pts[pts.length - 1][0]},${sy(min)}L${pts.find(Boolean)[0]},${sy(min)}Z`, fill: col(s.color), opacity: 0.1 }, svg);
+        el("path", { d, fill: "none", stroke: col(s.color), "stroke-width": 2, "stroke-linejoin": "round", "stroke-linecap": "round" }, svg);
+        if (o.markers) pts.forEach(p => p && el("circle", { cx: p[0], cy: p[1], r: 4, fill: col(s.color), stroke: css("--surface-1"), "stroke-width": 2 }, svg));
+        const lastI = s.values.length - 1;
+        el("circle", { cx: pts[lastI][0], cy: pts[lastI][1], r: 4.5, fill: col(s.color), stroke: css("--surface-1"), "stroke-width": 2 }, svg);
+        endLabels.push({ x: pts[lastI][0] + 9, y: pts[lastI][1] + 4, t: s.endLabel ?? fmtNum(s.values[lastI], dec) + unit });
+      });
+      endLabels.sort((a, b) => a.y - b.y).forEach((l, i, arr) => { if (i && l.y - arr[i - 1].y < 14) l.y = arr[i - 1].y + 14; });
+      endLabels.forEach(l => { el("text", { x: l.x, y: l.y, class: "val" }, svg).textContent = l.t; });
+      // crosshair hit columns
+      const cross = el("line", { y1: T, y2: H - B, stroke: css("--axis"), "stroke-width": 1, opacity: 0 }, svg);
+      const dots = series.map(s => el("circle", { r: 4.5, fill: col(s.color), stroke: css("--surface-1"), "stroke-width": 2, opacity: 0 }, svg));
+      x.forEach((lab, i) => {
+        const w = (W - L - R) / (x.length - 1);
+        const g = el("g", { class: "hit" }, svg);
+        el("rect", { x: sx(i) - w / 2, y: T, width: w, height: H - T - B, fill: "transparent" }, g);
+        const html = `<b>${lab}</b>` + series.map(s => s.values[i] == null ? "" : `<br><i class="sw" style="background:${col(s.color)}"></i>${s.name}: ${fmtNum(s.values[i], dec)}${unit}`).join("");
+        const on = () => { cross.setAttribute("x1", sx(i)); cross.setAttribute("x2", sx(i)); cross.setAttribute("opacity", 1);
+          series.forEach((s, k) => { if (s.values[i] == null) return; dots[k].setAttribute("cx", sx(i)); dots[k].setAttribute("cy", sy(s.values[i])); dots[k].setAttribute("opacity", 1); }); };
+        const off = () => { cross.setAttribute("opacity", 0); dots.forEach(d => d.setAttribute("opacity", 0)); };
+        bindTip(g, html);
+        g.addEventListener("pointerenter", on); g.addEventListener("focus", on);
+        g.addEventListener("pointerleave", off); g.addEventListener("blur", off);
+      });
+    });
+    if (series.length > 1) legend(host, series.map(s => ({ ...s, line: true })));
+    if (o.table !== false) table(host, [o.xHead || "ช่วงเวลา", ...series.map(s => s.name)],
+      x.map((lab, i) => [lab, ...series.map(s => (s.values[i] == null ? "–" : fmtNum(s.values[i], dec)))]), series.map((_, i) => i + 1));
+  }
+
+  /* Grouped columns. cats: labels[], series: [{name,color,values[]}] */
+  function columns(host, cats, series, o = {}) {
+    const unit = o.unit || "", dec = o.decimals ?? 0;
+    mount(host, (h, W) => {
+      const H = o.height || 270, L = o.left ?? 52, R = 12, T = 22, B = o.bottom ?? 40;
+      const all = series.flatMap(s => s.values);
+      const minV = Math.min(0, ...all);
+      const min = o.min ?? (minV < 0 ? -niceMax(-minV * 1.1) : 0);
+      const nt = niceTicks((o.max || Math.max(...all) * 1.1) - min, o.ticks || 4), max = min + nt.max;
+      const sy = v => T + (1 - (v - min) / (max - min)) * (H - T - B);
+      const band = (W - L - R) / cats.length;
+      const bw = Math.min(24, (band * 0.72) / series.length - 2);
+      const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: "img", "aria-label": o.aria || "" }, h);
+      for (let i = 0; i <= nt.count; i++) {
+        const v = min + nt.step * i, y = sy(v);
+        el("line", { x1: L, x2: W - R, y1: y, y2: y, stroke: css(Math.abs(v) < 1e-9 ? "--axis" : "--grid"), "stroke-width": 1 }, svg);
+        el("text", { x: L - 6, y: y + 4, "text-anchor": "end", class: "tick" }, svg).textContent = fmtNum(v, decOf(nt.step)) + (o.tickUnit ?? "");
+      }
+      if (o.refLine) {
+        const y = sy(o.refLine.value);
+        el("line", { x1: L, x2: W - R, y1: y, y2: y, stroke: col(o.refLine.color || "--text-secondary"), "stroke-width": 1.5 }, svg);
+        el("text", { x: W - R, y: y - 6, "text-anchor": "end", class: "ref" }, svg).textContent = o.refLine.label;
+      }
+      cats.forEach((c, i) => {
+        const cx = L + band * i + band / 2;
+        const lines = String(c).split("\n");
+        lines.forEach((ln, k) => { el("text", { x: cx, y: H - B + 16 + k * 14, "text-anchor": "middle", class: "tick" }, svg).textContent = ln; });
+        const gw = series.length * (bw + 2) - 2;
+        series.forEach((s, k) => {
+          const v = s.values[i];
+          const x = cx - gw / 2 + k * (bw + 2);
+          const g = el("g", { class: "hit" }, svg);
+          el("rect", { x: x - 1, y: T, width: bw + 2, height: H - T - B, fill: "transparent" }, g);
+          const y0 = sy(0);
+          const p = v >= 0 ? vbarPath(x, y0, bw, y0 - sy(v)) : `M${x},${y0}V${sy(v) - 4}Q${x},${sy(v)} ${x + 4},${sy(v)}H${x + bw - 4}Q${x + bw},${sy(v)} ${x + bw},${sy(v) - 4}V${y0}Z`;
+          el("path", { d: p, fill: col(s.color) }, g);
+          if (o.labels !== false && (o.labelSeries == null || o.labelSeries === k))
+            el("text", { x: x + bw / 2, y: v >= 0 ? sy(v) - 5 : sy(v) + 13, "text-anchor": "middle", class: "val sm" }, g).textContent = fmtNum(v, dec);
+          bindTip(g, `<b>${c.replace("\n", " ")}</b><br><i class="sw" style="background:${col(s.color)}"></i>${s.name}: ${fmtNum(v, dec)}${unit}`);
+        });
+      });
+    });
+    if (series.length > 1) legend(host, series);
+    if (o.table !== false) table(host, [o.catHead || "รายการ", ...series.map(s => s.name)],
+      cats.map((c, i) => [c.replace("\n", " "), ...series.map(s => fmtNum(s.values[i], dec))]), series.map((_, i) => i + 1));
+  }
+
+  return { hbar, stack, line, columns, table, legend, bindTip, fmtNum, css, col, el, mount, niceMax, niceTicks, fitLabel, hideTip };
+})();
+
+</script>
+<script>
+(() => {
+  // ---------- theme toggle ----------
+  const root = document.documentElement;
+  try { const t = localStorage.getItem("q1-theme"); if (t) root.setAttribute("data-theme", t); } catch (e) {}
+  document.getElementById("themeBtn").addEventListener("click", () => {
+    const dark = root.getAttribute("data-theme") ? root.getAttribute("data-theme") === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+    const next = dark ? "light" : "dark";
+    root.setAttribute("data-theme", next);
+    try { localStorage.setItem("q1-theme", next); } catch (e) {}
+    drawBerg();
+  });
+
+  // ---------- iceberg hero ----------
+  const LAYERS = [
+    { name: "ผู้ว่างงาน (เหนือน้ำ)", v: 401, c: "--tip", note: "4.0 แสน" },
+    { name: "ผู้รอฤดูกาล", v: 249, c: "--ice-1", note: "2.5 แสน" },
+    { name: "ผู้ทำงานต่ำระดับ (อยากทำงานเพิ่ม)", v: 170, c: "--ice-2", note: "1.7 แสน" },
+    { name: "ผู้เสมือนว่างงานส่วนที่เหลือ", v: 2010, c: "--ice-3", note: "2.0 ล้าน" },
+    { name: "แรงงานนอกระบบที่รายงานปัญหาจากงาน*", v: 6100, c: "--ice-4", note: "6.1 ล้าน" },
+  ];
+  function drawBerg() {
+    const svg = document.getElementById("berg");
+    const css = n => getComputedStyle(root).getPropertyValue(n).trim();
+    const W = 420, water = 92, depth = 500;
+    const below = LAYERS.slice(1).reduce((a, l) => a + l.v, 0);
+    const k = depth / below;
+    const tipH = Math.max(LAYERS[0].v * k, 18);
+    // iceberg silhouette: half-widths at relative depth (0 = waterline, 1 = bottom)
+    const prof = [[0, 46], [0.04, 92], [0.12, 128], [0.3, 160], [0.5, 172], [0.68, 158], [0.84, 120], [0.95, 70], [1, 22]];
+    const cx = 205;
+    const right = prof.map(([d, w], i) => [cx + w + (i % 2 ? 8 : -4), water + d * depth]);
+    const left = prof.map(([d, w], i) => [cx - w + (i % 2 ? -6 : 10), water + d * depth]).reverse();
+    const body = "M" + [...right, ...left].map(p => p.join(",")).join("L") + "Z";
+    const tip = `M${cx - 46},${water} L${cx - 22},${water - tipH * 0.7} L${cx - 4},${water - tipH} L${cx + 14},${water - tipH * 0.8} L${cx + 46},${water} Z`;
+    let y = water, bands = "";
+    LAYERS.slice(1).forEach(l => {
+      const h = l.v * k;
+      bands += `<rect x="0" y="${y}" width="${W}" height="${h + 0.5}" fill="${css(l.c)}"/>`;
+      y += h;
+      bands += `<line x1="0" x2="${W}" y1="${y}" y2="${y}" stroke="${css("--sea-bottom")}" stroke-width="2"/>`;
+    });
+    const waveY = water;
+    let wave = "M-20," + waveY;
+    for (let x = -20; x <= W + 140; x += 30) wave += ` q15,-5 30,0`;
+    svg.innerHTML = `
+      <defs><clipPath id="bodyclip"><path d="${body}"/></clipPath>
+      <linearGradient id="shine" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity=".22"/><stop offset=".45" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>
+      <g class="berg-float">
+        <path d="${tip}" fill="${css("--tip")}" stroke="${css("--ice-0")}" stroke-width="2" stroke-linejoin="round"/>
+        <g clip-path="url(#bodyclip)">${bands}<rect x="0" y="${water}" width="${W}" height="${depth}" fill="url(#shine)"/></g>
+        <path d="${body}" fill="none" stroke="${css("--ice-0")}" stroke-opacity=".55" stroke-width="1.5"/>
+      </g>
+      <g class="wave"><path d="${wave}" fill="none" stroke="${css("--ice-0")}" stroke-opacity=".7" stroke-width="2"/></g>
+      <text x="8" y="${water - 8}" font-size="12" fill="${css("--text-secondary")}" font-family="IBM Plex Sans Thai">ผิวน้ำ = อัตราว่างงาน 0.95%</text>`;
+    document.getElementById("berg-legend").innerHTML = LAYERS.map(l =>
+      `<li><i style="background:${css(l.c)}"></i><span>${l.name}</span><b>${l.note}</b></li>`).join("") +
+      `<li style="grid-template-columns:1fr;font-size:12px;color:#b8d3e2">ความสูงแต่ละชั้นเป็นสัดส่วนกับจำนวนคน · *มิติคุณภาพงาน อาจซ้อนกับชั้นอื่น</li>`;
+  }
+  drawBerg();
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", drawBerg);
+
+  // ---------- nav highlight + depth bar ----------
+  const links = [...document.querySelectorAll(".topbar a")];
+  const secs = links.map(a => document.querySelector(a.getAttribute("href")));
+  const bar = document.getElementById("depthBar");
+  const onScroll = () => {
+    const h = document.documentElement.scrollHeight - innerHeight;
+    bar.style.width = (h > 0 ? (scrollY / h) * 100 : 0) + "%";
+    let cur = 0;
+    secs.forEach((s, i) => { if (s && s.getBoundingClientRect().top < 120) cur = i; });
+    links.forEach((a, i) => a.classList.toggle("on", i === cur && scrollY > 200));
+  };
+  addEventListener("scroll", onScroll, { passive: true }); onScroll();
+
+  const f1 = (v, d = 1) => Viz.fmtNum(v, d);
+
+  // ---------- 4.1 ladder ----------
+  Viz.hbar(document.getElementById("c-ladder"), [
+    { label: "อัตราว่างงาน (LU1)", value: 0.951, color: "--tip", tip: "<b>LU1</b><br>ผู้ว่างงาน 400,900 คน = 0.95%" },
+    { label: "+ ผู้ทำงานต่ำระดับ (≈LU2)", value: 1.353, color: "--ice-2", tip: "<b>+ ผู้ทำงานต่ำระดับ 169,600 คน</b><br>1.35%" },
+    { label: "+ ผู้รอฤดูกาล (ดัชนีแคบ)", value: 1.943, color: "--ice-3", tip: "<b>+ ผู้รอฤดูกาล 248,500 คน</b><br>1.94% ≈ 819,000 คน" },
+    { label: "+ เสมือนว่างงาน (ดัชนีกว้าง)", value: 6.76, color: "--ice-4", bold: true, tip: "<b>ใช้ผู้เสมือนว่างงาน 2.2 ล้านแทนผู้ทำงานต่ำระดับ</b><br>6.76% ≈ 2.85 ล้านคน" },
+  ], { unit: "%", decimals: 2, labelWidth: 250, max: 8, ticks: 4, tickUnit: "%", labelHead: "ชั้น", valueHead: "ร้อยละของกำลังแรงงาน", rowH: 40 });
+
+  // ---------- 4.2 LU4 international ----------
+  const lu4 = [
+    ["ไทย (2568)", 1.24, "--tip"], ["เวียดนาม (2567)", 3.2], ["ลาว (2565)", 3.9], ["มาเลเซีย (2565)", 5.9],
+    ["กัมพูชา (2568)", 6.4], ["สิงคโปร์ (2568)", 7.0], ["เอเชียตะวันออกเฉียงใต้*", 8.37], ["เอเชีย-แปซิฟิก*", 10.26],
+    ["ฟิลิปปินส์ (2567)", 10.3], ["อินโดนีเซีย (2566)", 12.7], ["โลก*", 12.75],
+  ];
+  Viz.hbar(document.getElementById("c-lu4"), lu4.map(([l, v, c]) => ({ label: l, value: v, color: c || "--ice-3", bold: !!c })),
+    { unit: "%", decimals: 2, labelWidth: 150, max: 14, tickUnit: "%", rowH: 28, labelHead: "ประเทศ/ภูมิภาค", valueHead: "LU4 (%)" });
+
+  // ---------- 4.3 LU trend ----------
+  Viz.line(document.getElementById("c-lutrend"), ["2562", "2563", "2564", "2565", "2566", "2567", "2568"], [
+    { name: "LU2", color: "--series-1", values: [1.38, 2.37, 2.74, 1.63, 1.24, 1.26, 1.01] },
+    { name: "LU3", color: "--series-3", values: [1.01, 1.73, 1.97, 1.34, 1.00, 1.02, 0.83] },
+    { name: "LU4", color: "--series-2", values: [1.67, 2.99, 3.49, 2.03, 1.50, 1.50, 1.24] },
+  ], { unit: "%", decimals: 2, max: 4, tickUnit: "%", tickDecimals: 0, height: 250, xHead: "ปี" });
+
+  // ---------- regions ----------
+  const R = [ // name, UR, (U+S)/LF, <35h share, ag change (k)
+    ["กรุงเทพฯ", 0.74, 0.74, 11.2, -15.1], ["กลาง", 1.16, 1.24, 7.4, 12.5], ["ตะวันออก", 0.91, 0.93, 8.8, 168.6],
+    ["เหนือ", 1.17, 1.90, 20.9, 136.8], ["อีสาน", 0.72, 2.68, 22.4, 300.1], ["ใต้", 0.89, 0.91, 33.9, 78.7], ["ชายแดนใต้", 1.44, 1.45, 40.9, 31.0],
+  ];
+  Viz.columns(document.getElementById("c-region"), R.map(r => r[0]), [
+    { name: "อัตราว่างงาน", color: "--tip", values: R.map(r => r[1]) },
+    { name: "อัตราว่างงาน + ผู้รอฤดูกาล", color: "--ice-3", values: R.map(r => r[2]) },
+  ], { unit: "%", decimals: 2, max: 3, tickUnit: "%", height: 260, catHead: "ภาค", labelSeries: 1 });
+  Viz.hbar(document.getElementById("c-hours"), R.map(r => ({ label: r[0], value: r[3] })).sort((a, b) => b.value - a.value),
+    { unit: "%", decimals: 1, labelWidth: 90, max: 50, tickUnit: "%", color: "--ice-3", rowH: 30, labelHead: "ภาค", valueHead: "ทำงาน < 35 ชม. (%)" });
+  Viz.hbar(document.getElementById("c-ag"), R.filter(r => r[4] > 0).map(r => ({ label: r[0], value: r[4] })).sort((a, b) => b.value - a.value),
+    { unit: " พัน", decimals: 1, labelWidth: 90, max: 350, color: "--ice-3", rowH: 30, rightPad: 74, labelHead: "ภาค", valueHead: "เพิ่มขึ้น (พันคน)" });
+  const sso = [["กทม.+ปริมณฑล", 114.951, 92.7], ["ตะวันออก", 28.613, null], ["อีสาน", 22.773, 32.0], ["เหนือ", 20.044, 39.6], ["ใต้", 18.705, null], ["กลาง", 10.920, null], ["ตะวันตก", 8.553, null]];
+  Viz.hbar(document.getElementById("c-sso"), sso.map(([l, v, cov]) => ({ label: l, value: v,
+    tip: `<b>${l}</b><br>ผู้ขอรับประโยชน์ ${f1(v * 1000, 0)} คน` + (cov ? `<br>ผู้มีงานทำในประกันสังคม ${cov}%` : "") })),
+    { unit: " พัน", decimals: 1, labelWidth: 112, max: 125, color: "--ice-3", rowH: 30, rightPad: 74, labelHead: "ภาค", valueHead: "ผู้ขอรับประโยชน์ (พันคน)" });
+  const inf = [["อีสาน", 74.9], ["เหนือ", 69.0], ["ใต้", 60.2], ["ชายแดนใต้", 49.6], ["ตะวันออก", 39.2], ["กลาง", 36.5], ["กรุงเทพฯ", 27.9]];
+  Viz.hbar(document.getElementById("c-informal"), inf.map(([l, v]) => ({ label: l, value: v })),
+    { unit: "%", decimals: 1, labelWidth: 90, max: 100, color: "--ice-3", rowH: 30, tickUnit: "%", refLine: { value: 52.4, label: "ทั้งประเทศ 52.4%" }, labelHead: "ภาค", valueHead: "นอกระบบ (%)" });
+
+  // ---------- provinces ----------
+  const RAW = [["นครพนม","ตะวันออกเฉียงเหนือ",290495,2455,0.85,4.11,55.8,54.2],["ยะลา","ชายแดนใต้",261236,2494,0.96,0.03,55.0,55.3],["สตูล","ใต้",171323,2716,1.59,0.08,49.4,47.4],["พิจิตร","เหนือ",288442,4179,1.45,2.12,43.0,40.9],["บุรีรัมย์","ตะวันออกเฉียงเหนือ",665289,10601,1.6,2.21,39.5,52.0],["กาฬสินธุ์","ตะวันออกเฉียงเหนือ",405890,2266,0.56,3.22,37.9,53.8],["สุรินทร์","ตะวันออกเฉียงเหนือ",564476,5242,0.92,4.58,31.3,46.1],["อำนาจเจริญ","ตะวันออกเฉียงเหนือ",160651,1854,1.16,1.32,40.1,55.4],["ตรัง","ใต้",391052,3346,0.86,0.0,45.0,44.0],["ยโสธร","ตะวันออกเฉียงเหนือ",271510,1664,0.62,4.15,32.1,59.7],["กระบี่","ใต้",266150,2852,1.07,0.0,42.8,42.2],["มุกดาหาร","ตะวันออกเฉียงเหนือ",246784,1152,0.46,1.28,39.2,57.8],["ชุมพร","ใต้",298229,1943,0.65,0.0,41.9,54.0],["นราธิวาส","ชายแดนใต้",406044,8946,2.21,0.01,36.8,41.2],["นครศรีธรรมราช","ใต้",894556,7386,0.82,0.05,40.5,43.6],["สุราษฎร์ธานี","ใต้",725744,7480,1.03,0.09,39.0,44.5],["อุทัยธานี","เหนือ",155710,1095,0.7,1.04,36.3,50.8],["ศรีสะเกษ","ตะวันออกเฉียงเหนือ",552322,4254,0.76,1.17,34.8,71.8],["สุโขทัย","เหนือ",354255,8535,2.41,0.19,30.3,41.3],["พัทลุง","ใต้",292713,2254,0.77,0.14,35.2,41.3],["อุตรดิตถ์","เหนือ",224842,3420,1.52,0.8,30.5,43.5],["ร้อยเอ็ด","ตะวันออกเฉียงเหนือ",573586,5462,0.95,1.82,28.9,49.9],["บึงกาฬ","ตะวันออกเฉียงเหนือ",193411,1122,0.58,0.83,31.5,76.1],["มหาสารคาม","ตะวันออกเฉียงเหนือ",408471,1762,0.44,2.03,28.0,48.9],["ชัยนาท","กลาง",178526,2744,1.54,0.22,29.2,35.2],["ปัตตานี","ชายแดนใต้",343661,4178,1.21,0.0,30.8,27.3],["กำแพงเพชร","เหนือ",468976,4631,0.98,0.26,29.1,46.1],["สงขลา","ใต้",965578,12386,1.28,0.0,27.6,35.4],["พิษณุโลก","เหนือ",502408,6980,1.39,0.39,26.0,37.8],["นครราชสีมา","ตะวันออกเฉียงเหนือ",1270412,15892,1.25,3.6,15.8,24.1],["หนองบัวลำภู","ตะวันออกเฉียงเหนือ",247738,3073,1.27,2.46,18.9,56.7],["อ่างทอง","กลาง",141556,2662,1.88,0.05,23.3,22.7],["สิงห์บุรี","กลาง",102696,2064,2.02,0.0,22.6,20.4],["ตาก","เหนือ",293914,6636,2.26,0.66,19.5,46.0],["ฉะเชิงเทรา","ตะวันออก",636724,4335,0.68,0.03,26.2,19.8],["แพร่","เหนือ",198258,3798,1.91,1.43,18.0,32.2],["ลำปาง","เหนือ",371715,3515,0.95,0.78,22.6,31.1],["พังงา","ใต้",141665,1262,0.89,0.01,24.9,38.8],["เชียงใหม่","เหนือ",1068072,8650,0.81,0.0,25.0,30.2],["เชียงราย","เหนือ",645238,4700,0.72,0.2,23.5,40.9],["สระแก้ว","ตะวันออก",423146,5116,1.21,0.35,21.1,44.5],["ระนอง","ใต้",178158,912,0.51,0.05,24.2,50.6],["ลพบุรี","กลาง",467364,8810,1.88,0.42,16.8,31.9],["สุพรรณบุรี","กลาง",496984,3216,0.65,0.08,20.9,52.3],["จันทบุรี","ตะวันออก",392746,3408,0.87,0.09,20.2,45.9],["เพชรบูรณ์","เหนือ",507548,4193,0.83,3.47,9.4,46.2],["พระนครศรีอยุธยา","กลาง",543976,5764,1.06,0.0,19.1,4.0],["น่าน","เหนือ",255048,914,0.36,0.32,20.2,47.6],["ขอนแก่น","ตะวันออกเฉียงเหนือ",953777,8178,0.86,1.3,15.6,37.0],["ปทุมธานี","กลาง",1244562,23546,1.89,0.1,15.7,4.0],["กาญจนบุรี","กลาง",503768,9194,1.82,0.09,15.6,39.5],["นครสวรรค์","เหนือ",500641,1888,0.37,1.15,15.2,44.3],["เลย","ตะวันออกเฉียงเหนือ",303124,356,0.12,0.2,18.8,62.8],["อุบลราชธานี","ตะวันออกเฉียงเหนือ",863880,2624,0.3,1.92,12.7,47.9],["สระบุรี","กลาง",462014,5944,1.28,0.21,14.8,15.7],["อุดรธานี","ตะวันออกเฉียงเหนือ",637974,2835,0.44,3.2,7.5,52.0],["ชลบุรี","ตะวันออก",1313068,15802,1.2,0.0,15.1,5.2],["สมุทรสงคราม","กลาง",105766,928,0.88,0.0,15.9,12.8],["หนองคาย","ตะวันออกเฉียงเหนือ",228936,2084,0.91,0.95,11.5,42.5],["ลำพูน","เหนือ",235648,691,0.29,0.15,15.6,39.1],["นนทบุรี","กลาง",1255802,9830,0.79,0.02,13.9,1.2],["สมุทรปราการ","กลาง",1595569,22463,1.41,0.08,11.4,3.0],["ปราจีนบุรี","ตะวันออก",423614,2374,0.58,0.0,13.9,14.2],["พะเยา","เหนือ",192558,1923,1.0,0.41,11.0,49.1],["สมุทรสาคร","กลาง",820858,8145,0.99,0.0,11.6,2.9],["ราชบุรี","กลาง",482156,5600,1.16,0.14,9.2,25.8],["สกลนคร","ตะวันออกเฉียงเหนือ",410819,294,0.07,0.83,9.6,39.6],["ประจวบคีรีขันธ์","กลาง",294175,2105,0.72,0.14,9.7,28.1],["แม่ฮ่องสอน","เหนือ",147174,364,0.25,1.57,6.4,69.3],["นครนายก","กลาง",160992,300,0.19,0.07,10.7,19.4],["ภูเก็ต","ใต้",369075,3895,1.06,0.0,7.0,4.2],["ตราด","ตะวันออก",184102,656,0.36,0.0,8.9,45.8],["ระยอง","ตะวันออก",802990,5796,0.72,0.0,6.7,12.1],["ชัยภูมิ","ตะวันออกเฉียงเหนือ",496620,878,0.18,1.64,0.5,41.8],["เพชรบุรี","กลาง",304322,2310,0.76,0.0,3.8,23.5],["นครปฐม","กลาง",914280,1240,0.14,0.0,1.7,10.1]];
+  const P = RAW.map(([p, r, lf, u, ur, s, sh, ag]) => ({ p, r, lf, u, ur, s, sh, ag,
+    narrow: ur + s + 0.025 * sh, broad: ur + s + 0.32 * sh }));
+  const rankBy = k => [...P].sort((a, b) => b[k] - a[k]);
+  ["ur", "narrow", "broad"].forEach(k => rankBy(k).forEach((x, i) => (x["rk_" + k] = i + 1)));
+  const robust = P.filter(x => x.rk_narrow <= 10 && x.rk_broad <= 10).sort((a, b) => a.rk_narrow - b.rk_narrow);
+  const robustSet = new Set(robust.map(x => x.p));
+  document.getElementById("robust").innerHTML = robust.map(x =>
+    `<li><b>${x.p}</b><span>ดัชนีแคบ ${f1(x.narrow, 2)}% · อันดับ ${x.rk_narrow}<br>อัตราว่างงาน ${f1(x.ur, 2)}% · อันดับ ${x.rk_ur}</span></li>`).join("");
+
+  const rankWrap = document.getElementById("rank-wrap");
+  function drawRank(k) {
+    rankWrap.innerHTML = '<div class="chart"></div>';
+    const top = rankBy(k).slice(0, 15);
+    const coef = k === "broad" ? 0.32 : 0.025;
+    const rows = top.map(x => ({ label: (robustSet.has(x.p) ? "◆ " : "") + x.p, bold: robustSet.has(x.p),
+      parts: k === "ur" ? [x.ur, 0, 0] : [x.ur, x.s, coef * x.sh],
+      totalLabel: f1(x[k], 2) + "%" }));
+    Viz.stack(rankWrap.firstChild, rows, [
+      { name: "อัตราว่างงาน", color: "--tip" },
+      { name: "ผู้รอฤดูกาล", color: "--ice-1" },
+      { name: k === "broad" ? "ชั่วโมงไม่พอ (×0.32)" : "ชั่วโมงไม่พอ (×0.025)", color: "--ice-3" },
+    ], { unit: "%", decimals: 2, labelWidth: 130, rowH: 30, tickUnit: "%", labelHead: "จังหวัด", max: k === "broad" ? 25 : k === "narrow" ? 7 : 3 });
+  }
+  document.querySelectorAll(".seg button").forEach(b => b.addEventListener("click", () => {
+    document.querySelectorAll(".seg button").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+    drawRank(b.dataset.k);
+  }));
+  drawRank("narrow");
+
+  // scatter UR vs narrow
+  const sc = document.getElementById("c-scatter");
+  Viz.mount(sc, (h, W) => {
+    const H = Math.min(420, Math.max(320, W * 0.6)), L = 46, Rr = 16, T = 14, B = 42;
+    const xmax = 2.6, ymax = 7;
+    const sx = v => L + (v / xmax) * (W - L - Rr), sy = v => T + (1 - v / ymax) * (H - T - B);
+    const svg = Viz.el("svg", { viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: "img", "aria-label": "แผนภาพการกระจาย อัตราว่างงานกับดัชนีแคบ 76 จังหวัด" }, h);
+    for (let v = 0; v <= ymax; v++) {
+      Viz.el("line", { x1: L, x2: W - Rr, y1: sy(v), y2: sy(v), stroke: Viz.css(v ? "--grid" : "--axis") }, svg);
+      Viz.el("text", { x: L - 6, y: sy(v) + 4, "text-anchor": "end", class: "tick" }, svg).textContent = v + "%";
+    }
+    for (let v = 0; v <= 2.5; v += 0.5) {
+      Viz.el("line", { x1: sx(v), x2: sx(v), y1: T, y2: H - B, stroke: Viz.css(v ? "--grid" : "--axis") }, svg);
+      Viz.el("text", { x: sx(v), y: H - B + 16, "text-anchor": "middle", class: "tick" }, svg).textContent = f1(v, 1) + "%";
+    }
+    Viz.el("text", { x: (L + W - Rr) / 2, y: H - 6, "text-anchor": "middle", class: "ref" }, svg).textContent = "อัตราว่างงานทางการ →";
+    Viz.el("text", { x: L + 6, y: T + 10, class: "ref" }, svg).textContent = "↑ ดัชนีแคบ";
+    // y = x reference
+    Viz.el("line", { x1: sx(0), y1: sy(0), x2: sx(2.6), y2: sy(2.6), stroke: Viz.css("--text-muted"), "stroke-width": 1 }, svg);
+    Viz.el("text", { x: sx(1.6) + 4, y: sy(1.6) + 18, "text-anchor": "start", class: "ref" }, svg).textContent = "เส้น ดัชนี = อัตราว่างงาน";
+    const sorted = [...P].sort((a, b) => robustSet.has(a.p) - robustSet.has(b.p));
+    const labels = [];
+    sorted.forEach(x => {
+      const on = robustSet.has(x.p);
+      const g = Viz.el("g", { class: "hit" }, svg);
+      Viz.el("circle", { cx: sx(x.ur), cy: sy(x.narrow), r: 12, fill: "transparent" }, g);
+      Viz.el("circle", { cx: sx(x.ur), cy: sy(x.narrow), r: on ? 6 : 4.5, fill: Viz.css(on ? "--series-2" : "--series-1"), "fill-opacity": on ? 1 : 0.75, stroke: Viz.css("--surface-1"), "stroke-width": 2 }, g);
+      Viz.bindTip(g, `<b>${x.p}</b> (${x.r})<br>อัตราว่างงาน ${f1(x.ur, 2)}% · อันดับ ${x.rk_ur}<br>ดัชนีแคบ ${f1(x.narrow, 2)}% · อันดับ ${x.rk_narrow}`);
+      if (on || (x.rk_ur <= 3 && W > 520)) labels.push({ x: sx(x.ur), y: sy(x.narrow) + 4, t: x.p, right: sx(x.ur) < W * 0.72 });
+    });
+    // greedy de-overlap: push a label down/up when it would collide with one already placed on the same side
+    const placed = [];
+    labels.sort((a, b) => a.y - b.y).forEach(l => {
+      let y = l.y;
+      const w = l.t.length * 6.5 + 4;
+      const box = yy => ({ x0: l.right ? l.x + 9 : l.x - 9 - w, x1: l.right ? l.x + 9 + w : l.x - 9, y0: yy - 11, y1: yy + 3 });
+      const hit = b => placed.some(p => p.x0 < b.x1 && b.x0 < p.x1 && p.y0 < b.y1 && b.y0 < p.y1);
+      let k = 0; while (hit(box(y)) && k++ < 8) y += 13;
+      placed.push(box(y));
+      if (Math.abs(y - l.y) > 2) Viz.el("line", { x1: l.x + (l.right ? 4 : -4), y1: l.y - 4, x2: l.x + (l.right ? 9 : -9), y2: y - 4, stroke: Viz.css("--text-muted"), "stroke-width": 1 }, svg);
+      Viz.el("text", { x: l.x + (l.right ? 9 : -9), y, "text-anchor": l.right ? "start" : "end", class: "val sm" }, svg).textContent = l.t;
+    });
+  });
+  Viz.table(sc, ["จังหวัด", "อัตราว่างงาน (%)", "ดัชนีแคบ (%)"], [...P].sort((a, b) => b.narrow - a.narrow).map(x => [x.p, f1(x.ur, 2), f1(x.narrow, 2)]), [1, 2]);
+
+  // province table
+  const sel = document.getElementById("regionSel");
+  [...new Set(P.map(x => x.r))].forEach(r => sel.insertAdjacentHTML("beforeend", `<option>${r}</option>`));
+  const cols = [["p", "จังหวัด"], ["r", "ภาค"], ["ur", "UR %"], ["s", "S %"], ["sh", "SH %"], ["ag", "เกษตร %"], ["narrow", "ดัชนีแคบ %"], ["broad", "ดัชนีกว้าง %"], ["rk_ur", "อันดับ UR"], ["rk_narrow", "อันดับ แคบ"]];
+  let sortK = "narrow", dir = -1;
+  function drawTable() {
+    const rows = P.filter(x => !sel.value || x.r === sel.value).sort((a, b) => (typeof a[sortK] === "string" ? a[sortK].localeCompare(b[sortK], "th") : a[sortK] - b[sortK]) * dir);
+    document.getElementById("ptable").innerHTML = `<table><thead><tr>${cols.map(([k, n], i) =>
+      `<th data-k="${k}" class="${i > 1 ? "num" : ""}" aria-sort="${k === sortK ? (dir < 0 ? "descending" : "ascending") : "none"}" tabindex="0">${n}</th>`).join("")}</tr></thead><tbody>${rows.map(x =>
+      `<tr class="${robustSet.has(x.p) ? "robust" : ""}">${cols.map(([k], i) => `<td class="${i > 1 ? "num" : ""}">${typeof x[k] === "number" ? (k.startsWith("rk") ? x[k] : f1(x[k], k === "sh" || k === "ag" ? 1 : 2)) : x[k]}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
+    document.querySelectorAll("#ptable th").forEach(th => {
+      const go = () => { const k = th.dataset.k; dir = k === sortK ? -dir : (k === "p" || k === "r" || k.startsWith("rk") ? 1 : -1); sortK = k; drawTable(); };
+      th.addEventListener("click", go); th.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
+    });
+  }
+  sel.addEventListener("change", drawTable);
+  drawTable();
+})();
+</script>
+</body>
+</html>
