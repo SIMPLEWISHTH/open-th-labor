@@ -628,7 +628,7 @@ footer { padding: 48px 0 64px; color: var(--text-muted); font-size: 13.5px; }
 </section>
 </main>
 
-<footer><div class="wrap">โจทย์วิจัยย่อยที่ 1 จาก 8 · เรื่องอื่น: <a href="q2-skills-verification.html">โจทย์ 2</a> · <a href="q4-spatial-matching.html">โจทย์ 4</a> · <a href="q5-platform-riders.html">โจทย์ 5</a> · กลับไป<a href="index.html">หน้ารวมคำถามวิจัย</a></div></footer>
+<footer><div class="wrap">โจทย์วิจัยย่อยที่ 1 จาก 8 · เรื่องอื่น: <a href="q2-skills-verification.html">โจทย์ 2</a> · <a href="q3-ai-entry-level.html">โจทย์ 3</a> · <a href="q4-spatial-matching.html">โจทย์ 4</a> · <a href="q5-platform-riders.html">โจทย์ 5</a> · <a href="q6-learning-accounts.html">โจทย์ 6</a> · กลับไป<a href="index.html">หน้ารวมคำถามวิจัย</a></div></footer>
 
 <script>
 /* Minimal responsive SVG chart kit (no dependencies).
@@ -866,6 +866,11 @@ const Viz = (() => {
         if (i % every && i !== x.length - 1) return;
         el("text", { x: sx(i), y: H - 12, "text-anchor": "middle", class: "tick" }, svg).textContent = lab;
       });
+      if (o.vline) {
+        const vx = sx(o.vline.at);
+        el("line", { x1: vx, x2: vx, y1: T, y2: H - B, stroke: col(o.vline.color || "--text-secondary"), "stroke-width": 1.5 }, svg);
+        el("text", { x: vx + 5, y: T + 10, class: "ref" }, svg).textContent = o.vline.label;
+      }
       const endLabels = [];
       series.forEach(s => {
         const pts = s.values.map((v, i) => (v == null ? null : [sx(i), sy(v)]));
