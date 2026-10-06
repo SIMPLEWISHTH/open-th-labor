@@ -42,7 +42,7 @@ a { color: inherit; }
   align-items: center;
   justify-content: center;
   min-height: 100svh;
-  padding: 72px 16px calc(var(--rail-h) + 32px);
+  padding: 72px 16px calc(var(--rail-h) + 42svh);
   box-sizing: border-box;
 }
 .panel-in {
@@ -54,7 +54,7 @@ a { color: inherit; }
   padding: 28px 22px;
   box-sizing: border-box;
   border-radius: 28px;
-  background: color-mix(in srgb, var(--pbg) 80%, transparent);
+  background: color-mix(in srgb, var(--pbg) 84%, transparent);
   -webkit-backdrop-filter: blur(3px);
   backdrop-filter: blur(3px);
 }
@@ -64,7 +64,7 @@ a { color: inherit; }
   .wrap { height: calc(var(--n, 13) * 100vh); }
   .sticky { position: sticky; top: 0; height: 100vh; overflow: hidden; }
   .track { flex-direction: row; height: 100%; will-change: transform; }
-  .panel { flex: 0 0 100%; height: 100%; min-height: 0; padding: 5vh 5vw calc(var(--rail-h) + 4vh); }
+  .panel { flex: 0 0 100%; height: 100%; min-height: 0; padding: 4vh 5vw calc(var(--rail-h) + 18vh); }
   .panel-in {
     grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
     gap: 4vw;
@@ -302,7 +302,7 @@ a { color: inherit; }
         <div class="panel-in">
           <p class="eyebrow">หมื่นปีของการทำงาน · 11 ยุค</p>
           <h1 class="hero-title">การเดินทางของแรงงาน</h1>
-          <p class="lede">จากนักล่าสัตว์หาของป่าถึงไรเดอร์ในยุค AI สีพื้นหลังของแต่ละยุคคือการตีความบรรยากาศความรู้สึกของคนทำงานในยุคนั้น ยิ่งเดินทางไปข้างหน้า สีจะค่อย ๆ เปลี่ยนตามเวลา</p>
+          <p class="lede">จากนักล่าสัตว์หาของป่าถึงไรเดอร์ในยุค AI ฉากกระดาษตัดด้านหลังจะค่อย ๆ แปรรูปจากยุคหนึ่งไปอีกยุคหนึ่ง ทั้งภูมิทัศน์และท่าทางของคนทำงาน ส่วนสีของแต่ละยุคคือการตีความบรรยากาศความรู้สึกของคนทำงานในยุคนั้น</p>
           <div class="spectrum">
             <div class="spectrum-bar" id="spectrumBar" role="group" aria-label="แถบสีบรรยากาศทุกยุค กดเพื่อไปยังยุคนั้น"></div>
             <div class="spectrum-labels" id="spectrumLabels" aria-hidden="true"></div>
@@ -765,235 +765,592 @@ a { color: inherit; }
     else panels[i].scrollIntoView({ behavior, block: 'start' });
   }
 
-  /* ---------- background motifs ---------- */
+  /* ---------- paper-cut scenes ----------
+     Each era is 4 paper layers (far → near) stored as height profiles over a world axis u.
+     Changing era morphs the profiles point by point, morphs the figures' poses and tools,
+     slides the layers at different speeds (parallax) and crossfades small cut-out details. */
   const cv = document.getElementById('bgfx');
   const ctx = cv.getContext('2d');
-  let W = 0, H = 0, DPR = 1;
-  const cache = new Map();
+  let W = 0, H = 0, DPR = 1, U = 1, stableW = 0, stableH = 0, BASE = 0;
   function rng(seed) { return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
-  const MOTIFS = {
-    intro(g, w, h, r) {
-      g.lineWidth = 1;
-      const y = h * 0.86;
-      g.beginPath(); g.moveTo(0, y); g.lineTo(w, y); g.stroke();
-      for (let x = 0; x < w; x += 24) { const big = (x / 24) % 10 === 0; g.beginPath(); g.moveTo(x, y); g.lineTo(x, y - (big ? 18 : 7)); g.stroke(); }
+  const hash = (a, b) => { const s = Math.sin(a * 127.1 + b * 311.7) * 43758.5453; return s - Math.floor(s); };
+
+  const UMIN = -1.8, UMAX = 3.8, DU = 0.004, NS = Math.round((UMAX - UMIN) / DU) + 1;
+  const CENTER = 0.9;
+  const SPD = [0.05, 0.1, 0.17, 0.26], SKY_SPD = 0.03;
+
+  /* height primitives: u → height (in U) */
+  const rect = (a, b, h) => u => (u >= a && u <= b) ? h : 0;
+  const col = (c, w, h) => rect(c - w / 2, c + w / 2, h);
+  const tri = (c, w, h) => u => { const d = Math.abs(u - c); return d < w ? h * (1 - d / w) : 0; };
+  const dome = (c, r, h, base = 0) => u => { const d = (u - c) / r; return d > -1 && d < 1 ? base + h * Math.sqrt(1 - d * d) : 0; };
+  const gable = (a, b, wall, roof) => u => { if (u < a || u > b) return 0; const hw = (b - a) / 2; return wall + roof * (1 - Math.abs(u - a - hw) / hw); };
+  const steps = (c, w, h, n) => u => { const d = Math.abs(u - c); if (d > w) return 0; const k = Math.min(n - 1, Math.floor((1 - d / w) * n)); return h * (k + 1) / n; };
+  const saw = (a, b, wall, tooth, n) => u => (u < a || u > b) ? 0 : wall + tooth * ((((u - a) / (b - a)) * n) % 1);
+  const crenel = (a, b, h, m, n) => u => (u < a || u > b) ? 0 : h + ((Math.floor((u - a) / (b - a) * n * 2) % 2) ? 0 : m);
+  const waves = (b, list = []) => u => { let s = b; for (const [a, f, p] of list) s += a * Math.sin(u * f + p); return s; };
+  const trap = (a, b, h, sl) => u => { if (u < a - sl || u > b + sl) return 0; if (u < a) return h * (u - a + sl) / sl; if (u > b) return h * (b + sl - u) / sl; return h; };
+  const prang = (c, w, h) => { const b = dome(c, w, h * 0.62), t = tri(c, w * 0.32, h), base = rect(c - w * 1.15, c + w * 1.15, h * 0.14); return u => Math.max(b(u), t(u), base(u)); };
+
+  /* figures: poses in degrees (0 = straight down, + = toward facing side) */
+  const POSE = {
+    stand:  { lean: 2, head: 0, bu: -6, bf: -3, fu: 6, ff: 10, bt: -4, bs: -4, ft: 5, fs: 4, lift: 0 },
+    walk:   { lean: 5, head: 0, bu: -28, bf: -12, fu: 26, ff: 45, bt: -22, bs: -35, ft: 24, fs: 8, lift: 0 },
+    travel: { lean: 6, head: -4, bu: -28, bf: -12, fu: 30, ff: 150, bt: -22, bs: -35, ft: 24, fs: 8, lift: 0 },
+    throw:  { lean: 8, head: -10, bu: -55, bf: -30, fu: 150, ff: 165, bt: -28, bs: -20, ft: 30, fs: 6, lift: 0 },
+    crouch: { lean: 25, head: 10, bu: 30, bf: 70, fu: 45, ff: 85, bt: -10, bs: -95, ft: 80, fs: 0, lift: 0 },
+    bend:   { lean: 60, head: -20, bu: 25, bf: 40, fu: 45, ff: 70, bt: -12, bs: -8, ft: 18, fs: 6, lift: 0 },
+    carryHead: { lean: 2, head: 0, bu: -8, bf: -5, fu: 165, ff: 195, bt: -18, bs: -28, ft: 20, fs: 6, lift: 0 },
+    shoulderLoad: { lean: 14, head: 5, bu: -20, bf: -10, fu: 155, ff: 215, bt: -20, bs: -30, ft: 24, fs: 8, lift: 0 },
+    plough: { lean: 32, head: -15, bu: 62, bf: 80, fu: 66, ff: 84, bt: -30, bs: -40, ft: 22, fs: 4, lift: 0 },
+    mourn:  { lean: 12, head: 38, bu: 4, bf: 20, fu: 8, ff: 30, bt: -3, bs: -3, ft: 4, fs: 4, lift: 0 },
+    sack:   { lean: 35, head: -25, bu: -10, bf: 10, fu: 170, ff: 225, bt: -22, bs: -32, ft: 26, fs: 10, lift: 0 },
+    hunch:  { lean: 18, head: 10, bu: -18, bf: -8, fu: 18, ff: 30, bt: -18, bs: -26, ft: 20, fs: 6, lift: 0 },
+    childCarry: { lean: 6, head: 0, bu: 40, bf: 90, fu: 45, ff: 95, bt: -5, bs: -5, ft: 6, fs: 5, lift: 0 },
+    line:   { lean: 16, head: -6, bu: 55, bf: 85, fu: 70, ff: 100, bt: -12, bs: -8, ft: 14, fs: 6, lift: 0 },
+    boxCarry: { lean: 4, head: -4, bu: 45, bf: 100, fu: 50, ff: 105, bt: -20, bs: -30, ft: 22, fs: 6, lift: 0 },
+    briefcase: { lean: 4, head: 0, bu: -26, bf: -14, fu: 8, ff: 6, bt: -24, bs: -36, ft: 24, fs: 8, lift: 0 },
+    phone:  { lean: 4, head: 28, bu: -4, bf: -2, fu: 40, ff: 150, bt: -4, bs: -4, ft: 5, fs: 4, lift: 0 },
+    ride:   { lean: 22, head: -5, bu: 55, bf: 80, fu: 60, ff: 85, bt: 80, bs: 10, ft: 85, fs: 5, lift: 0.16 },
+    point:  { lean: 0, head: -12, bu: -6, bf: -4, fu: 118, ff: 128, bt: -4, bs: -4, ft: 5, fs: 4, lift: 0 }
+  };
+  const T = {
+    spear: { a: 'hand', pts: [[-0.4, -0.3], [0.7, 0.5]], w: 0.03 },
+    sickle: { a: 'hand', pts: [[0, 0], [0.03, -0.07], [0.1, -0.11], [0.17, -0.09], [0.2, -0.03]], w: 0.03 },
+    basketHead: { a: 'hand', pts: [[-0.14, 0], [0.12, 0], [0.08, 0.1], [-0.1, 0.1]], fill: true, w: 0.01 },
+    block: { a: 'hand', pts: [[-0.06, 0], [0.2, 0], [0.2, 0.13], [-0.06, 0.13]], fill: true, w: 0.01 },
+    plough: { a: 'hand', pts: [[0, 0], [0.25, -0.3], [0.42, -0.5], [0.52, -0.5]], w: 0.035 },
+    sack: { a: 'hand', pts: [[-0.3, -0.08], [-0.02, -0.04], [0, 0.1], [-0.15, 0.16], [-0.32, 0.08]], fill: true, w: 0.01 },
+    pail: { a: 'hand', pts: [[-0.05, -0.02], [0.05, -0.02], [0.04, -0.11], [-0.04, -0.11]], fill: true, w: 0.01 },
+    bobbin: { a: 'hand', pts: [[-0.12, -0.02], [0.1, -0.02], [0.08, -0.12], [-0.1, -0.12]], fill: true, w: 0.01 },
+    wrench: { a: 'hand', pts: [[0, 0], [0.14, 0.04], [0.19, 0.08]], w: 0.04 },
+    box: { a: 'hand', pts: [[-0.04, -0.06], [0.2, -0.06], [0.2, 0.14], [-0.04, 0.14]], fill: true, w: 0.01 },
+    briefcase: { a: 'hand', pts: [[-0.07, -0.02], [0.08, -0.02], [0.08, -0.13], [-0.07, -0.13]], fill: true, w: 0.01 },
+    phone: { a: 'hand', pts: [[-0.01, 0], [0.03, 0], [0.03, 0.07], [-0.01, 0.07]], fill: true, w: 0.01 },
+    scooter: { a: 'root', pts: [[-0.36, 0], [-0.44, 0.06], [-0.42, 0.14], [-0.36, 0.34], [-0.02, 0.36], [0.02, 0.16], [0.18, 0.16], [0.3, 0.52], [0.38, 0.54], [0.36, 0.48], [0.32, 0.16], [0.44, 0.08], [0.4, 0], [0.3, -0.01], [0.22, 0.04], [-0.24, 0.04], [-0.3, -0.01]], fill: true, w: 0.01 },
+    deliveryBox: { a: 'shoulder', pts: [[-0.3, -0.14], [-0.05, -0.14], [-0.05, 0.12], [-0.3, 0.12]], fill: true, w: 0.01 },
+    stick: { a: 'hand', pts: [[0, 0], [-0.45, 0.22]], w: 0.025 },
+    bundle: { a: 'hand', pts: [[-0.52, 0.18], [-0.4, 0.2], [-0.38, 0.3], [-0.46, 0.36], [-0.55, 0.28]], fill: true, w: 0.01 }
+  };
+  const TP = 16; // every tool outline is resampled to this many points so any tool can morph into any other
+  function resample(pts, closed) {
+    const P = closed ? [...pts, pts[0]] : pts.slice();
+    if (P.length < 2) P.push(P[0]);
+    const seg = []; let L = 0;
+    for (let i = 1; i < P.length; i++) { const d = Math.hypot(P[i][0] - P[i - 1][0], P[i][1] - P[i - 1][1]); seg.push(d); L += d; }
+    const out = [];
+    for (let k = 0; k < TP; k++) {
+      let target = L * k / (closed ? TP : TP - 1), i = 0;
+      while (i < seg.length - 1 && target > seg[i]) { target -= seg[i]; i++; }
+      const r = seg[i] ? Math.min(1, target / seg[i]) : 0;
+      out.push([P[i][0] + (P[i + 1][0] - P[i][0]) * r, P[i][1] + (P[i + 1][1] - P[i][1]) * r]);
+    }
+    return out;
+  }
+
+  /* cut-out details (crossfaded) */
+  const DECO = {
+    birds: list => (g, P) => {
+      g.strokeStyle = P.col; g.lineWidth = Math.max(1.2, P.U * 0.0028); g.lineCap = 'round';
+      for (const [u, h, s] of list) { const x = P.X(u), y = P.Y(h), w = s * P.U; g.beginPath(); g.moveTo(x - w, y - w * 0.35); g.quadraticCurveTo(x - w * 0.4, y - w * 0.5, x, y); g.quadraticCurveTo(x + w * 0.4, y - w * 0.5, x + w, y - w * 0.35); g.stroke(); }
     },
-    hunter(g, w, h, r) {
-      for (let k = 0; k < 160; k++) { g.globalAlpha = 0.25 + r() * 0.6; g.beginPath(); g.arc(r() * w, r() * h, 1.5 + r() * 4, 0, 7); g.fill(); }
-      g.globalAlpha = 0.55; g.lineCap = 'round';
-      const hands = Math.max(5, Math.round(w / 260));
-      for (let k = 0; k < hands; k++) {
-        const x = r() * w, y = r() * h, a = r() * Math.PI * 2, s = 0.9 + r() * 0.7;
-        g.save(); g.translate(x, y); g.rotate(a); g.scale(s, s);
-        g.beginPath(); g.ellipse(0, 0, 20, 24, 0, 0, 7); g.fill();
-        g.lineWidth = 9;
-        [[-16, -42, -14], [-6, -50, -5], [5, -50, 5], [15, -44, 14], [24, -6, 40]].forEach(([fx, fy, sx], j) => {
-          g.beginPath(); g.moveTo(j === 4 ? 16 : sx, j === 4 ? 6 : -16); g.lineTo(fx, fy); g.stroke();
-        });
-        g.restore();
+    stars: n => (g, P) => {
+      const a0 = g.globalAlpha; g.fillStyle = P.light;
+      for (let i = 0; i < n; i++) { g.globalAlpha = a0 * (0.35 + hash(i, 3) * 0.65); g.beginPath(); g.arc(hash(i, 1) * P.W, hash(i, 2) * P.H * 0.55, 0.6 + hash(i, 4) * 1.4, 0, 7); g.fill(); }
+      g.globalAlpha = a0;
+    },
+    acacia: list => (g, P) => {
+      P.shadow(true); g.fillStyle = P.col; g.strokeStyle = P.col; g.lineCap = 'round';
+      for (const [c, h, w] of list) {
+        g.lineWidth = P.U * 0.006;
+        g.beginPath(); g.moveTo(P.X(c), P.Y(h - 0.03)); g.lineTo(P.X(c - w * 0.5), P.Y(h)); g.moveTo(P.X(c), P.Y(h - 0.03)); g.lineTo(P.X(c + w * 0.55), P.Y(h + 0.005)); g.stroke();
+        g.beginPath(); g.ellipse(P.X(c), P.Y(h + 0.012), w * P.U, w * 0.24 * P.U, 0, 0, 7); g.fill();
+      }
+      P.shadow(false);
+    },
+    fronds: list => (g, P) => {
+      g.strokeStyle = P.col; g.lineCap = 'round'; g.lineWidth = P.U * 0.007;
+      for (const [c, h] of list) for (let k = 0; k < 8; k++) {
+        const a = -Math.PI / 2 + (k - 3.5) * 0.42, len = 0.07 * P.U;
+        const x = P.X(c), y = P.Y(h), ex = x + Math.cos(a) * len * 1.2, ey = y + Math.sin(a) * len * 0.5 + len * 0.45;
+        g.beginPath(); g.moveTo(x, y); g.quadraticCurveTo(x + Math.cos(a) * len * 0.7, y + Math.sin(a) * len * 0.9, ex, ey); g.stroke();
       }
     },
-    neolithic(g, w, h, r) {
-      g.lineWidth = 1.4;
-      for (let y = h * 0.12; y < h + 40; y += 46) {
-        const ph = r() * 6, amp = 6 + r() * 6;
+    fire: (u, h) => (g, P) => {
+      const x = P.X(u), y = P.Y(h), s = P.U * 0.03, a0 = g.globalAlpha;
+      const gl = g.createRadialGradient(x, y - s, 0, x, y - s, s * 5); gl.addColorStop(0, P.accA(0.45)); gl.addColorStop(1, P.accA(0));
+      g.fillStyle = gl; g.fillRect(x - s * 5, y - s * 6, s * 10, s * 10);
+      g.strokeStyle = P.col; g.lineWidth = s * 0.3; g.lineCap = 'round';
+      g.beginPath(); g.moveTo(x - s, y + s * 0.1); g.lineTo(x + s, y - s * 0.35); g.moveTo(x + s, y + s * 0.1); g.lineTo(x - s, y - s * 0.35); g.stroke();
+      g.fillStyle = P.acc; g.globalAlpha = a0 * 0.95;
+      g.beginPath(); g.moveTo(x - s * 0.7, y - s * 0.2); g.quadraticCurveTo(x - s * 0.8, y - s * 1.3, x - s * 0.1, y - s * 2.4); g.quadraticCurveTo(x + s * 0.1, y - s * 1.5, x + s * 0.4, y - s * 1.7); g.quadraticCurveTo(x + s * 0.9, y - s * 1, x + s * 0.7, y - s * 0.2); g.closePath(); g.fill();
+      g.globalAlpha = a0;
+    },
+    tufts: (a, b, h) => (g, P) => {
+      g.strokeStyle = P.col; g.fillStyle = P.col; g.lineWidth = Math.max(1, P.U * 0.0022);
+      for (let u = a, i = 0; u < b; u += 0.011, i++) {
+        const x = P.X(u); if (x < -10 || x > P.W + 10) continue;
+        const hh = 0.022 + hash(i, 9) * 0.016, lean = (hash(i, 8) - 0.5) * 0.012;
+        g.beginPath(); g.moveTo(x, P.Y(h - 0.01)); g.lineTo(P.X(u + lean), P.Y(h + hh)); g.stroke();
+        g.beginPath(); g.ellipse(P.X(u + lean), P.Y(h + hh + 0.006), P.U * 0.0025, P.U * 0.008, lean * 20, 0, 7); g.fill();
+      }
+    },
+    smoke: list => (g, P) => {
+      const a0 = g.globalAlpha; g.fillStyle = P.light;
+      for (const [u, h] of list) {
+        let x = P.X(u), y = P.Y(h) - P.U * 0.01, r = P.U * 0.012, a = 0.6;
+        for (let k = 0; k < 10; k++) { g.globalAlpha = a0 * a; g.beginPath(); g.arc(x, y, r, 0, 7); g.fill(); y -= r * 1.25; x += r * 0.85; r *= 1.17; a *= 0.84; }
+      }
+      g.globalAlpha = a0;
+    },
+    branches: list => (g, P) => {
+      g.strokeStyle = P.col; g.lineCap = 'round';
+      const br = (x, y, a, len, w, d, seed) => {
+        if (d === 0 || len < 2) return;
+        const ex = x + Math.cos(a) * len, ey = y + Math.sin(a) * len;
+        g.lineWidth = w; g.beginPath(); g.moveTo(x, y); g.lineTo(ex, ey); g.stroke();
+        br(ex, ey, a - 0.45 - hash(seed, d) * 0.3, len * 0.68, w * 0.62, d - 1, seed * 2 + 1);
+        br(ex, ey, a + 0.4 + hash(seed, d + 7) * 0.3, len * 0.66, w * 0.62, d - 1, seed * 2 + 2);
+      };
+      list.forEach(([c, h], i) => br(P.X(c), P.Y(h - 0.02), -Math.PI / 2, P.U * 0.06, P.U * 0.012, 5, i + 1));
+    },
+    sails: list => (g, P) => {
+      P.shadow(true); g.fillStyle = P.light;
+      for (const [c, bot, top, w] of list) {
+        const l = P.X(c - w * 0.48), r = P.X(c + w * 0.48), yt = P.Y(top), yb = P.Y(bot);
+        g.beginPath(); g.moveTo(l, yt); g.lineTo(r, yt); g.quadraticCurveTo(r + w * P.U * 0.25, (yt + yb) / 2, r, yb); g.lineTo(l, yb); g.quadraticCurveTo(l + w * P.U * 0.18, (yt + yb) / 2, l, yt); g.fill();
+      }
+      P.shadow(false);
+    },
+    jibs: list => (g, P) => {
+      g.strokeStyle = P.col; g.lineCap = 'round';
+      for (const [c, h, len] of list) {
+        g.lineWidth = P.U * 0.012; g.beginPath(); g.moveTo(P.X(c - 0.12), P.Y(h)); g.lineTo(P.X(c + len), P.Y(h)); g.stroke();
+        g.lineWidth = P.U * 0.003; g.beginPath(); g.moveTo(P.X(c), P.Y(h + 0.07)); g.lineTo(P.X(c + len), P.Y(h)); g.moveTo(P.X(c), P.Y(h + 0.07)); g.lineTo(P.X(c - 0.12), P.Y(h)); g.moveTo(P.X(c), P.Y(h)); g.lineTo(P.X(c), P.Y(h + 0.07));
+        g.moveTo(P.X(c + len * 0.75), P.Y(h)); g.lineTo(P.X(c + len * 0.75), P.Y(h - 0.2)); g.stroke();
+        g.fillStyle = P.col; g.fillRect(P.X(c + len * 0.75) - P.U * 0.02, P.Y(h - 0.2), P.U * 0.04, P.U * 0.018);
+      }
+    },
+    ribs: list => (g, P) => {
+      const a0 = g.globalAlpha; g.strokeStyle = P.dark; g.lineWidth = 1; g.globalAlpha = a0 * 0.55;
+      for (const [a, b, h, lv] of list) {
+        const xa = P.X(a), xb = P.X(b); if (xb < 0 || xa > P.W) continue;
         g.beginPath();
-        for (let x = -10; x <= w + 10; x += 12) { const yy = y + Math.sin(x / 140 + ph) * amp; x < 0 ? g.moveTo(x, yy) : g.lineTo(x, yy); }
-        g.stroke();
-        for (let x = r() * 20; x < w; x += 20 + r() * 8) {
-          const yy = y + Math.sin(x / 140 + ph) * amp, hh = 10 + r() * 8, lean = (r() - 0.5) * 4;
-          g.beginPath(); g.moveTo(x, yy); g.lineTo(x + lean, yy - hh); g.stroke();
-          g.beginPath(); g.ellipse(x + lean, yy - hh - 3, 1.6, 4, 0, 0, 7); g.fill();
-        }
-      }
-    },
-    ancient(g, w, h, r) {
-      g.lineWidth = 2;
-      for (let y = 70; y < h * 0.7; y += 110) {
-        g.beginPath(); g.moveTo(0, y); g.lineTo(w, y); g.stroke();
-        g.lineWidth = 1.6;
-        for (let x = 10 + r() * 20; x < w; x += 16 + r() * 22) {
-          const t = r();
-          g.beginPath();
-          if (t < 0.4) { g.moveTo(x, y + 18); g.lineTo(x, y + 56 + r() * 30); }
-          else if (t < 0.7) { g.arc(x, y + 40, 6 + r() * 6, 0, 7); }
-          else { g.moveTo(x - 7, y + 60); g.lineTo(x, y + 30); g.lineTo(x + 7, y + 60); }
-          g.stroke();
-        }
-        g.lineWidth = 2;
-      }
-      const base = h * 0.98;
-      [[0.18, 0.28], [0.42, 0.42], [0.72, 0.34]].forEach(([cx, s]) => {
-        const half = w * s * 0.5, top = base - half * 0.9;
-        g.beginPath(); g.moveTo(w * cx - half, base); g.lineTo(w * cx, top); g.lineTo(w * cx + half, base); g.stroke();
-        for (let k = 1; k < 9; k++) { const yy = top + (base - top) * k / 9, hw = half * k / 9; g.beginPath(); g.moveTo(w * cx - hw, yy); g.lineTo(w * cx + hw, yy); g.globalAlpha = 0.4; g.stroke(); g.globalAlpha = 1; }
-      });
-    },
-    medieval(g, w, h, r) {
-      const cols = Math.max(3, Math.round(w / 360)), rows = Math.max(3, Math.round(h / 300));
-      const cw = w / cols, ch = h / rows;
-      g.lineWidth = 1.2;
-      for (let i = 0; i < cols; i++) for (let j = 0; j < rows; j++) {
-        const x = i * cw, y = j * ch;
-        g.save(); g.beginPath(); g.rect(x + 6, y + 6, cw - 12, ch - 12); g.clip();
-        g.translate(x + cw / 2, y + ch / 2); g.rotate((r() < 0.5 ? 0 : Math.PI / 2) + (r() - 0.5) * 0.25);
-        const span = Math.max(cw, ch);
-        for (let k = -span; k < span; k += 9 + r() * 3) { g.beginPath(); g.moveTo(-span, k); g.bezierCurveTo(-span / 3, k + 8, span / 3, k - 8, span, k); g.stroke(); }
-        g.restore();
-        g.strokeRect(x + 6, y + 6, cw - 12, ch - 12);
-      }
-    },
-    plague(g, w, h, r) {
-      g.lineWidth = 1.2;
-      for (let k = 0; k < Math.round(w * h / 2600); k++) {
-        const x = r() * w, y = r() * h, l = 8 + r() * 22;
-        g.globalAlpha = 0.15 + r() * 0.75;
-        g.beginPath(); g.moveTo(x, y); g.lineTo(x - l * 0.25, y + l); g.stroke();
-      }
-      g.globalAlpha = 0.5;
-      for (let k = 0; k < 9; k++) { g.beginPath(); g.arc(r() * w, r() * h, 30 + r() * 120, 0, 7); g.stroke(); }
-    },
-    colonial(g, w, h, r) {
-      g.lineWidth = 1.3;
-      for (let y = h * 0.28; y < h + 30; y += 22) {
-        const ph = r() * 6, amp = 4 + (y / h) * 8, fq = 70 + r() * 50;
-        g.beginPath();
-        for (let x = -10; x <= w + 10; x += 8) { const yy = y + Math.sin(x / fq + ph) * amp; x < 0 ? g.moveTo(x, yy) : g.lineTo(x, yy); }
+        for (let u = a + 0.01; u < b - 0.004; u += 0.012) { g.moveTo(P.X(u), P.Y(0.08)); g.lineTo(P.X(u), P.Y(h - 0.004)); }
+        for (let k = 1; k < lv; k++) { const y = P.Y(0.08 + k * 0.045); g.moveTo(xa, y); g.lineTo(xb, y); }
         g.stroke();
       }
-      for (let k = 0; k < 4; k++) {
-        const x = w * (0.1 + r() * 0.8), y = h * (0.12 + r() * 0.1), s = 22 + r() * 18;
-        g.beginPath(); g.moveTo(x - s, y + s * 0.9); g.lineTo(x + s, y + s * 0.9); g.lineTo(x + s * 0.7, y + s * 1.2); g.lineTo(x - s * 0.7, y + s * 1.2); g.closePath(); g.fill();
-        g.beginPath(); g.moveTo(x, y - s); g.lineTo(x, y + s * 0.8); g.lineTo(x + s * 0.8, y + s * 0.7); g.closePath(); g.fill();
-      }
+      g.globalAlpha = a0;
     },
-    industrial(g, w, h, r) {
-      const base = h;
-      let x = -20;
-      while (x < w) {
-        const bw = 60 + r() * 120, bh = h * (0.08 + r() * 0.12);
-        g.fillRect(x, base - bh, bw, bh);
-        for (let sx = x; sx < x + bw - 10; sx += 22) { g.beginPath(); g.moveTo(sx, base - bh); g.lineTo(sx + 22, base - bh - 16); g.lineTo(sx + 22, base - bh); g.fill(); }
-        if (r() < 0.75) {
-          const cx = x + bw * (0.2 + r() * 0.6), chH = h * (0.18 + r() * 0.22), cw2 = 12 + r() * 8;
-          g.fillRect(cx, base - bh - chH, cw2, chH + bh);
-          let sy = base - bh - chH - 10, sr = 8, sxp = cx + cw2 / 2, a = 0.55;
-          while (sy > -40 && a > 0.04) { g.globalAlpha = a; g.beginPath(); g.arc(sxp, sy, sr, 0, 7); g.fill(); sy -= sr * 1.1; sr *= 1.13; sxp += sr * 0.45; a *= 0.86; }
-          g.globalAlpha = 1;
+    windows: (list, night) => (g, P) => {
+      const a0 = g.globalAlpha; const w = P.U * 0.01, hgt = P.U * 0.015;
+      list.forEach(([a, b, h], ti) => {
+        if (P.X(b) < -5 || P.X(a) > P.W + 5) return;
+        let j = 0;
+        for (let u = a + 0.014; u < b - 0.012; u += 0.022, j++) {
+          let k = 0;
+          for (let hh = h - 0.03; hh > 0.12; hh -= 0.03, k++) {
+            const r = hash(ti * 31 + j, k);
+            if (night) { if (r > 0.38) continue; g.fillStyle = P.acc; g.globalAlpha = a0 * (0.55 + r); }
+            else { g.fillStyle = P.light; g.globalAlpha = a0 * 0.45; }
+            g.fillRect(P.X(u), P.Y(hh), w, hgt);
+          }
         }
-        x += bw + 8 + r() * 30;
-      }
-      g.lineWidth = 3;
-      [[0.82, 0.22, 46], [0.12, 0.3, 30]].forEach(([gx, gy, R]) => {
-        const cx = w * gx, cy = h * gy;
-        g.beginPath(); g.arc(cx, cy, R, 0, 7); g.stroke();
-        g.beginPath(); g.arc(cx, cy, R * 0.3, 0, 7); g.stroke();
-        for (let k = 0; k < 12; k++) { const a = k / 12 * Math.PI * 2; g.beginPath(); g.moveTo(cx + Math.cos(a) * R, cy + Math.sin(a) * R); g.lineTo(cx + Math.cos(a) * (R + 10), cy + Math.sin(a) * (R + 10)); g.stroke(); }
       });
+      g.globalAlpha = a0;
     },
-    ford(g, w, h, r) {
-      g.lineWidth = 1.5;
-      for (let y = h * 0.16; y < h; y += h * 0.22) {
-        g.beginPath(); g.moveTo(0, y); g.lineTo(w, y); g.moveTo(0, y + 14); g.lineTo(w, y + 14); g.stroke();
-        for (let x = 0; x < w; x += 34) { g.beginPath(); g.arc(x, y + 7, 5, 0, 7); g.stroke(); }
-        for (let x = 12; x < w; x += 92) { g.globalAlpha = 0.9; g.fillRect(x, y - 30, 40, 26); g.globalAlpha = 1; }
-      }
-    },
-    global(g, w, h, r) {
-      const cw = 118, ch = 46;
-      const cols = Math.ceil(w / (cw + 6)) + 1;
-      for (let c = 0; c < cols; c++) {
-        const stack = 2 + Math.floor(r() * 6);
-        for (let s = 0; s < stack; s++) {
-          if (r() < 0.12) continue;
-          const x = c * (cw + 6) - 20, y = h - (s + 1) * (ch + 5);
-          g.globalAlpha = 0.35 + r() * 0.65;
-          g.strokeRect(x, y, cw, ch);
-          for (let k = x + 8; k < x + cw - 4; k += 8) { g.beginPath(); g.moveTo(k, y + 4); g.lineTo(k, y + ch - 4); g.stroke(); }
+    lamps: (list, h, night) => (g, P) => {
+      const a0 = g.globalAlpha; g.strokeStyle = P.col; g.lineCap = 'round';
+      for (const u of list) {
+        const x = P.X(u); if (x < -40 || x > P.W + 40) continue;
+        g.lineWidth = P.U * 0.005; g.beginPath(); g.moveTo(x, P.Y(h - 0.01)); g.lineTo(x, P.Y(h + 0.15)); g.lineTo(x + P.U * 0.03, P.Y(h + 0.155)); g.stroke();
+        if (night) {
+          const lx = x + P.U * 0.03, ly = P.Y(h + 0.15), gl = g.createRadialGradient(lx, ly, 0, lx, ly, P.U * 0.08);
+          gl.addColorStop(0, P.accA(0.5)); gl.addColorStop(1, P.accA(0)); g.fillStyle = gl; g.globalAlpha = a0;
+          g.fillRect(lx - P.U * 0.08, ly - P.U * 0.08, P.U * 0.16, P.U * 0.16);
         }
       }
-      g.globalAlpha = 0.6; g.lineWidth = 2;
-      const cx = w * 0.7; g.beginPath(); g.moveTo(cx, h * 0.08); g.lineTo(cx, h * 0.55); g.moveTo(cx - w * 0.2, h * 0.1); g.lineTo(cx + w * 0.12, h * 0.1); g.stroke();
-      g.lineWidth = 1; g.beginPath(); g.moveTo(cx - w * 0.15, h * 0.1); g.lineTo(cx - w * 0.15, h * 0.3); g.stroke();
+      g.globalAlpha = a0;
     },
-    computer(g, w, h, r) {
-      const s = 18;
-      g.lineWidth = 1; g.globalAlpha = 0.35;
-      for (let x = 0; x < w; x += s * 6) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x, h); g.stroke(); }
-      for (let y = 0; y < h; y += s * 2) { g.beginPath(); g.moveTo(0, y); g.lineTo(w, y); g.stroke(); }
-      g.globalAlpha = 1;
-      for (let x = 0; x < w; x += s) for (let y = 0; y < h; y += s) {
-        if (r() < 0.07) { g.globalAlpha = 0.3 + r() * 0.7; g.fillRect(x + 2, y + 2, s - 4, s - 4); }
-      }
+    conveyor: (a, b, h) => (g, P) => {
+      P.shadow(true); g.fillStyle = P.col;
+      for (let u = a + 0.03; u < b - 0.03; u += 0.075) { const x = P.X(u); if (x < -20 || x > P.W + 20) continue; g.fillRect(x, P.Y(h + 0.032), P.U * 0.032, P.U * 0.032); }
+      P.shadow(false);
+      g.strokeStyle = P.light; g.lineWidth = Math.max(1, P.U * 0.003); g.beginPath(); g.moveTo(P.X(a), P.Y(h - 0.006)); g.lineTo(P.X(b), P.Y(h - 0.006)); g.stroke();
     },
-    ai(g, w, h, r) {
-      const n = Math.round(w * h / 22000) + 20;
-      const pts = Array.from({ length: n }, () => [r() * w, r() * h]);
-      g.lineWidth = 1;
-      pts.forEach((p, i) => {
-        const near = pts.map((q, j) => [j, (q[0] - p[0]) ** 2 + (q[1] - p[1]) ** 2]).sort((a, b) => a[1] - b[1]).slice(1, 3);
-        near.forEach(([j]) => { g.globalAlpha = 0.6; g.beginPath(); g.moveTo(p[0], p[1]); g.lineTo(pts[j][0], pts[j][1]); g.stroke(); });
-      });
-      g.globalAlpha = 1;
-      pts.forEach(p => { g.beginPath(); g.arc(p[0], p[1], 2.5 + r() * 2.5, 0, 7); g.fill(); });
-      g.setLineDash([3, 7]); g.lineWidth = 1.6;
-      for (let k = 0; k < 3; k++) {
-        g.beginPath(); let x = r() * w * 0.2, y = h * (0.2 + r() * 0.6); g.moveTo(x, y);
-        while (x < w) { if (r() < 0.5) x += 40 + r() * 120; else y += (r() - 0.5) * 160; g.lineTo(x, y); }
-        g.stroke();
-      }
-      g.setLineDash([]);
+    flag: (u, h) => (g, P) => {
+      g.strokeStyle = P.col; g.lineWidth = Math.max(1.2, P.U * 0.003); g.beginPath(); g.moveTo(P.X(u), P.Y(h)); g.lineTo(P.X(u), P.Y(h + 0.07)); g.stroke();
+      g.fillStyle = P.acc; g.beginPath(); g.moveTo(P.X(u), P.Y(h + 0.07)); g.lineTo(P.X(u + 0.045), P.Y(h + 0.058)); g.lineTo(P.X(u), P.Y(h + 0.046)); g.fill();
     },
-    dawn(g, w, h, r) {
-      const cx = w * 0.5, cy = h * 1.05;
-      g.lineWidth = 1.4;
-      for (let R = 60; R < Math.max(w, h) * 1.2; R += 34) { g.globalAlpha = Math.max(0.15, 1 - R / (Math.max(w, h) * 1.2)); g.beginPath(); g.arc(cx, cy, R, Math.PI, 2 * Math.PI); g.stroke(); }
-      g.globalAlpha = 1;
-      for (let k = 0; k < 24; k++) { const a = Math.PI + (k + 0.5) / 24 * Math.PI; g.beginPath(); g.moveTo(cx + Math.cos(a) * 80, cy + Math.sin(a) * 80); g.lineTo(cx + Math.cos(a) * Math.max(w, h), cy + Math.sin(a) * Math.max(w, h)); g.globalAlpha = 0.25; g.stroke(); }
-      g.globalAlpha = 1;
+    fence: (a, b, h) => (g, P) => {
+      g.strokeStyle = P.col; g.lineWidth = Math.max(1.2, P.U * 0.004); g.beginPath();
+      for (let u = a; u <= b; u += 0.04) { g.moveTo(P.X(u), P.Y(h - 0.01)); g.lineTo(P.X(u), P.Y(h + 0.035)); }
+      g.moveTo(P.X(a), P.Y(h + 0.026)); g.lineTo(P.X(b), P.Y(h + 0.026)); g.moveTo(P.X(a), P.Y(h + 0.012)); g.lineTo(P.X(b), P.Y(h + 0.012)); g.stroke();
+    },
+    sign: (u, h) => (g, P) => {
+      P.shadow(true); g.fillStyle = P.col;
+      g.beginPath(); g.moveTo(P.X(u - 0.005), P.Y(h)); g.lineTo(P.X(u + 0.07), P.Y(h)); g.lineTo(P.X(u + 0.085), P.Y(h - 0.017)); g.lineTo(P.X(u + 0.07), P.Y(h - 0.034)); g.lineTo(P.X(u - 0.005), P.Y(h - 0.034)); g.fill();
+      P.shadow(false);
+    },
+    rays: (u, h) => (g, P) => {
+      const a0 = g.globalAlpha; g.strokeStyle = P.light; g.lineWidth = P.U * 0.004; g.globalAlpha = a0 * 0.35;
+      const x = P.X(u), y = P.Y(h);
+      g.beginPath(); for (let k = 0; k < 16; k++) { const a = Math.PI + (k + 0.5) / 16 * Math.PI; g.moveTo(x + Math.cos(a) * P.U * 0.16, y + Math.sin(a) * P.U * 0.16); g.lineTo(x + Math.cos(a) * P.U * 0.6, y + Math.sin(a) * P.U * 0.6); } g.stroke();
+      g.globalAlpha = a0;
     }
   };
-  function motif(i) {
-    if (cache.has(i)) return cache.get(i);
-    const m = meta[i];
-    const off = document.createElement('canvas');
-    off.width = Math.max(1, Math.round(W * DPR)); off.height = Math.max(1, Math.round(H * DPR));
-    const g = off.getContext('2d');
-    g.scale(DPR, DPR);
-    const ink = rgb(m.ink);
-    g.strokeStyle = ink; g.fillStyle = ink;
-    try { (MOTIFS[m.motif] || MOTIFS.intro)(g, W, H, rng(1000 + i * 7919)); } catch (e) { /* motif is decoration only */ }
-    cache.set(i, off);
-    if (cache.size > 5) cache.delete(cache.keys().next().value);
-    return off;
+
+  function build(seed, fn) {
+    const r = rng(seed), L = [[], [], [], []], deco = [];
+    const s = {
+      sun: { u: 1.2, h: 0.5, r: 0.06, kind: 'sun' }, figs: [],
+      add(k, ...f) { L[k].push(...f); return s; },
+      d(k, f) { deco.push({ k, f }); return s; },
+      towers(k, a, b, { wmin, wmax, hmin, hmax, gap }) {
+        const list = []; let u = a;
+        while (u < b) { const w = wmin + r() * (wmax - wmin), h = hmin + r() * (hmax - hmin); s.add(k, rect(u, u + w, h)); list.push([u, u + w, h]); u += w + gap * (0.5 + r()); }
+        return list;
+      }
+    };
+    fn(s, r);
+    s.deco = deco;
+    s.h = L.map(comps => { const a = new Float32Array(NS); for (let i = 0; i < NS; i++) { const u = UMIN + i * DU; let m = 0; for (const c of comps) { const v = c(u); if (v > m) m = v; } a[i] = m; } return a; });
+    s.figs = s.figs.map(f => ({ u: f.u, face: f.face || 1, s: f.s || 1, pose: { ...POSE.stand, ...POSE[f.pose] }, tools: (f.tools || []).map(t => ({ a: t.a, fill: t.fill ? 1 : 0, w: t.w || 0.02, pts: resample(t.pts, !!t.fill) })) }));
+    return s;
   }
-  let lastSize = '';
+  const hut = c => [rect(c - 0.055, c + 0.055, 0.15), tri(c, 0.085, 0.25)];
+
+  const SCENES = {
+    intro: build(11, s => {
+      s.add(0, waves(0.26, [[0.04, 3, 0], [0.02, 7, 1]]));
+      s.add(1, waves(0.19, [[0.03, 4, 2], [0.015, 9, 0]]));
+      s.add(2, waves(0.13, [[0.02, 5, 1]]), dome(1.5, 0.05, 0.1, 0.12), dome(0.25, 0.045, 0.09, 0.11));
+      s.add(3, waves(0.07, [[0.008, 6, 0]]), col(1.25, 0.012, 0.15));
+      s.sun = { u: 1.3, h: 0.44, r: 0.06, kind: 'sun' };
+      s.d(-1, DECO.birds([[0.55, 0.52, 0.015], [0.62, 0.56, 0.011], [0.7, 0.51, 0.013]]));
+      s.d(3, DECO.sign(1.25, 0.15));
+      s.figs = [{ u: 0.8, pose: 'travel', tools: [T.stick, T.bundle] }];
+    }),
+    hunter: build(21, s => {
+      s.add(0, waves(0.16, [[0.02, 3, 1]]), tri(0.25, 0.45, 0.36), tri(0.62, 0.3, 0.27), trap(1.25, 1.62, 0.33, 0.1));
+      s.add(1, waves(0.15, [[0.03, 3.3, 0.5], [0.015, 8, 2]]));
+      s.add(2, waves(0.1, [[0.012, 6, 1]]), col(0.38, 0.014, 0.22), col(1.5, 0.016, 0.25), col(2.3, 0.012, 0.2), col(-0.5, 0.012, 0.22));
+      s.add(3, waves(0.06, [[0.008, 5, 0]]), dome(1.34, 0.05, 0.025, 0.055), dome(0.16, 0.04, 0.02, 0.055));
+      s.sun = { u: 1.08, h: 0.3, r: 0.11, kind: 'sun' };
+      s.d(-1, DECO.birds([[0.5, 0.55, 0.014], [0.58, 0.6, 0.01]]));
+      s.d(2, DECO.acacia([[0.38, 0.22, 0.1], [1.5, 0.25, 0.12], [2.3, 0.2, 0.09], [-0.5, 0.22, 0.1]]));
+      s.d(3, DECO.fire(1.0, 0.065));
+      s.figs = [{ u: 0.74, pose: 'throw', tools: [T.spear] }, { u: 1.12, face: -1, s: 0.95, pose: 'crouch' }];
+    }),
+    neolithic: build(31, s => {
+      s.add(0, waves(0.3, [[0.06, 2.2, 0], [0.03, 5, 1]]));
+      s.add(1, waves(0.15, [[0.02, 3, 1]]), steps(0.35, 0.45, 0.27, 5), steps(1.62, 0.5, 0.25, 6));
+      s.add(2, waves(0.1, [[0.01, 6, 0]]), ...hut(0.95), ...hut(1.16), ...hut(0.3), ...hut(1.95), ...hut(-0.4), dome(1.32, 0.035, 0.06, 0.1));
+      s.add(3, waves(0.06, [[0.006, 7, 0]]));
+      s.sun = { u: 0.45, h: 0.55, r: 0.07, kind: 'sun' };
+      s.d(-1, DECO.birds([[1.3, 0.55, 0.012], [1.37, 0.58, 0.01]]));
+      s.d(2, DECO.smoke([[0.95, 0.25]]));
+      s.d(3, DECO.tufts(0.3, 1.7, 0.06));
+      s.figs = [{ u: 0.72, pose: 'bend', tools: [T.sickle] }, { u: 1.12, face: -1, s: 0.95, pose: 'carryHead', tools: [T.basketHead] }];
+    }),
+    ancient: build(41, s => {
+      s.add(0, waves(0.1, [[0.01, 3, 0]]), tri(0.98, 0.42, 0.52), tri(0.45, 0.3, 0.36), tri(1.6, 0.26, 0.3));
+      s.add(1, waves(0.09), steps(0.12, 0.2, 0.24, 5), steps(2.3, 0.22, 0.26, 5));
+      s.add(2, waves(0.08), gable(1.18, 1.62, 0.16, 0.05), col(0.3, 0.026, 0.26), tri(0.3, 0.018, 0.3), col(0.58, 0.008, 0.2), col(1.85, 0.008, 0.22));
+      s.add(3, waves(0.06, [[0.015, 4, 1], [0.008, 9, 0]]));
+      s.sun = { u: 1.35, h: 0.66, r: 0.08, kind: 'sun' };
+      s.d(2, DECO.fronds([[0.58, 0.2], [1.85, 0.22]]));
+      s.figs = [{ u: 0.74, pose: 'shoulderLoad', tools: [T.block] }, { u: 1.02, s: 0.92, pose: 'shoulderLoad', tools: [T.block] }];
+    }),
+    medieval: build(51, (s, r) => {
+      s.add(0, waves(0.2, [[0.06, 2.4, -0.6]]), crenel(1.12, 1.52, 0.36, 0.022, 8), col(1.12, 0.06, 0.43), tri(1.12, 0.045, 0.5), col(1.52, 0.06, 0.45), tri(1.52, 0.045, 0.53), col(1.33, 0.07, 0.5), crenel(1.295, 1.365, 0.5, 0.02, 3));
+      s.add(1, waves(0.14, [[0.02, 3, 2]]), gable(0.25, 0.48, 0.2, 0.06), col(0.28, 0.05, 0.3), tri(0.28, 0.03, 0.46));
+      for (const a of [0.58, 0.67, 0.76, 0.86, -0.3, -0.2, 1.75, 1.85, 1.95]) s.add(1, gable(a, a + 0.075, 0.16 + r() * 0.02, 0.045));
+      s.add(2, waves(0.1, [[0.03, 3, 2], [0.01, 9, 1]]));
+      s.add(3, waves(0.06, [[0.006, 6, 0]]));
+      s.sun = { u: 0.75, h: 0.6, r: 0.05, kind: 'smog' };
+      s.d(0, DECO.flag(1.33, 0.52));
+      s.d(3, DECO.fence(1.15, 1.8, 0.06));
+      s.figs = [{ u: 0.82, pose: 'plough', tools: [T.plough] }];
+    }),
+    plague: build(61, s => {
+      s.add(0, waves(0.14, [[0.03, 2, 1]]));
+      s.add(1, waves(0.11));
+      for (const a of [-0.6, -0.1, 0.2, 0.32, 0.6, 1.05, 1.5, 1.62, 2.1]) s.add(1, gable(a, a + 0.08, 0.16, 0.05));
+      s.add(2, waves(0.08, [[0.01, 5, 0]]), col(0.48, 0.014, 0.24), col(1.35, 0.016, 0.27), col(1.95, 0.012, 0.22), col(-0.3, 0.012, 0.22));
+      s.add(3, waves(0.06), dome(1.0, 0.035, 0.022, 0.06), dome(1.1, 0.035, 0.022, 0.06), dome(1.2, 0.035, 0.022, 0.06));
+      s.sun = { u: 1.3, h: 0.62, r: 0.05, kind: 'moon' };
+      s.d(-1, DECO.stars(70));
+      s.d(-1, DECO.birds([[0.62, 0.48, 0.014], [0.7, 0.52, 0.012], [0.66, 0.44, 0.01]]));
+      s.d(2, DECO.branches([[0.48, 0.24], [1.35, 0.27], [1.95, 0.22], [-0.3, 0.22]]));
+      s.figs = [{ u: 0.8, pose: 'mourn' }];
+    }),
+    colonial: build(71, s => {
+      s.add(0, waves(0.11, [[0.01, 4, 0]]), prang(0.3, 0.05, 0.3), prang(0.2, 0.035, 0.21), prang(0.4, 0.035, 0.21));
+      s.add(1, waves(0.12, [[0.006, 40, 0], [0.004, 23, 1]]));
+      s.add(2, waves(0.09, [[0.008, 30, 0]]), trap(0.86, 1.2, 0.19, 0.06), col(0.94, 0.008, 0.56), col(1.05, 0.009, 0.62), col(1.15, 0.007, 0.47));
+      s.add(3, rect(UMIN, 0.66, 0.1), waves(0.045, [[0.004, 30, 1]]), dome(0.2, 0.03, 0.045, 0.1), dome(0.27, 0.03, 0.045, 0.1), col(0.64, 0.014, 0.125));
+      s.sun = { u: 1.45, h: 0.28, r: 0.07, kind: 'sun' };
+      s.d(-1, DECO.birds([[0.7, 0.55, 0.012], [0.78, 0.5, 0.01]]));
+      s.d(2, DECO.sails([[0.94, 0.27, 0.52, 0.08], [1.05, 0.27, 0.58, 0.09], [1.15, 0.27, 0.44, 0.07]]));
+      s.figs = [{ u: 0.45, pose: 'sack', tools: [T.sack] }, { u: 0.56, face: -1, s: 0.95, pose: 'stand' }];
+    }),
+    industrial: build(81, (s, r) => {
+      s.add(0, waves(0.15));
+      for (let a = UMIN; a < UMAX; a += 0.1) { s.add(0, gable(a, a + 0.08, 0.17 + r() * 0.04, 0.03)); if (r() < 0.35) s.add(0, col(a + 0.04, 0.012, 0.3 + r() * 0.08)); }
+      s.add(1, waves(0.12), saw(0.05, 0.8, 0.21, 0.05, 6), saw(1.0, 1.75, 0.23, 0.05, 7), saw(-1.2, -0.1, 0.2, 0.05, 8), saw(1.9, 3.0, 0.2, 0.05, 9));
+      s.add(2, waves(0.1), rect(0.18, 0.72, 0.25), col(0.33, 0.032, 0.54), col(0.62, 0.026, 0.45), col(1.32, 0.036, 0.58), col(1.56, 0.026, 0.42), rect(1.25, 1.7, 0.2));
+      s.add(3, waves(0.06));
+      for (let a = UMIN; a < 0.56; a += 0.09) s.add(3, gable(a, a + 0.085, 0.11, 0.03));
+      for (let a = 1.38; a < UMAX; a += 0.09) s.add(3, gable(a, a + 0.085, 0.11, 0.03));
+      s.sun = { u: 0.95, h: 0.62, r: 0.07, kind: 'smog' };
+      s.d(2, DECO.smoke([[0.33, 0.54], [0.62, 0.45], [1.32, 0.58], [1.56, 0.42]]));
+      s.d(2, DECO.windows([[0.18, 0.72, 0.25], [1.25, 1.7, 0.2]], true));
+      s.figs = [{ u: 0.8, pose: 'hunch', tools: [T.pail] }, { u: 0.96, s: 0.64, pose: 'childCarry', tools: [T.bobbin] }];
+    }),
+    ford: build(91, (s, r) => {
+      s.add(0, waves(0.14), steps(0.3, 0.08, 0.5, 4), steps(0.52, 0.06, 0.42, 3), steps(1.55, 0.09, 0.56, 5), steps(1.78, 0.06, 0.4, 3));
+      for (let a = UMIN; a < UMAX; a += 0.16 + r() * 0.1) if (a < 0.15 || a > 1.9) s.add(0, steps(a, 0.05 + r() * 0.03, 0.3 + r() * 0.2, 3));
+      s.add(1, waves(0.11), rect(0.6, 1.45, 0.27), rect(1.58, 1.66, 0.38), dome(1.62, 0.04, 0.035, 0.38), col(0.75, 0.03, 0.42), col(0.85, 0.03, 0.42));
+      s.add(2, waves(0.09), rect(0.1, 1.75, 0.15));
+      s.add(3, waves(0.06));
+      s.sun = { u: 0.25, h: 0.64, r: 0.06, kind: 'sun' };
+      s.d(1, DECO.smoke([[0.75, 0.42], [0.85, 0.42]]));
+      s.d(2, DECO.conveyor(0.1, 1.75, 0.15));
+      s.figs = [{ u: 0.8, pose: 'line', tools: [T.wrench] }, { u: 1.04, face: -1, pose: 'line', tools: [T.wrench] }];
+    }),
+    global: build(101, (s, r) => {
+      s.add(0, waves(0.13, [[0.02, 2.5, 0]]));
+      s.add(1, waves(0.1));
+      const cranes = [0.35, 1.3, 1.85, -0.5, 2.6];
+      for (const c of cranes) s.add(1, col(c, 0.02, 0.5), rect(c - 0.02, c + 0.05, 0.45));
+      s.add(2, waves(0.08));
+      const stacks = [];
+      for (let a = UMIN; a < UMAX; a += 0.13) { const lv = 2 + Math.floor(r() * 4), h = 0.08 + lv * 0.045; s.add(2, rect(a, a + 0.12, h)); stacks.push([a, a + 0.12, h, lv]); }
+      s.add(3, waves(0.06), dome(0.6, 0.012, 0.02, 0.06), dome(1.3, 0.012, 0.02, 0.06));
+      s.sun = { u: 1.0, h: 0.42, r: 0.075, kind: 'sun' };
+      s.d(1, DECO.jibs(cranes.map(c => [c, 0.5, 0.3])));
+      s.d(2, DECO.ribs(stacks));
+      s.figs = [{ u: 0.76, pose: 'boxCarry', tools: [T.box] }, { u: 1.06, s: 0.98, pose: 'walk' }];
+    }),
+    computer: build(111, s => {
+      s.add(0, waves(0.12)); const t0 = s.towers(0, UMIN, UMAX, { wmin: 0.08, wmax: 0.15, hmin: 0.3, hmax: 0.56, gap: 0.012 });
+      s.add(1, waves(0.1)); const t1 = s.towers(1, UMIN, UMAX, { wmin: 0.1, wmax: 0.18, hmin: 0.18, hmax: 0.33, gap: 0.03 });
+      s.add(2, waves(0.08), rect(0.2, 1.6, 0.16), rect(-1.2, 0.05, 0.14), rect(1.75, 3, 0.15));
+      s.add(3, waves(0.055));
+      s.sun = { u: 1.4, h: 0.64, r: 0.05, kind: 'sun' };
+      s.d(0, DECO.windows(t0, false)); s.d(1, DECO.windows(t1, false));
+      s.d(2, DECO.windows([[0.2, 1.6, 0.16]], false));
+      s.d(3, DECO.lamps([0.55, 1.35, 2.0, -0.1], 0.055, false));
+      s.figs = [{ u: 0.78, pose: 'briefcase', tools: [T.briefcase] }, { u: 1.16, face: -1, s: 0.97, pose: 'briefcase', tools: [T.briefcase] }];
+    }),
+    ai: build(121, (s, r) => {
+      s.add(0, waves(0.12)); const t0 = s.towers(0, UMIN, UMAX, { wmin: 0.07, wmax: 0.13, hmin: 0.34, hmax: 0.62, gap: 0.01 });
+      for (const [a, b, h] of t0) if (r() < 0.3) s.add(0, col((a + b) / 2, 0.004, h + 0.06));
+      s.add(1, waves(0.1)); const t1 = s.towers(1, UMIN, UMAX, { wmin: 0.09, wmax: 0.16, hmin: 0.2, hmax: 0.4, gap: 0.025 });
+      s.add(2, waves(0.08)); const shops = [];
+      for (let a = UMIN; a < UMAX; a += 0.085) { const h = 0.15 + (r() < 0.3 ? 0.05 : 0); s.add(2, rect(a, a + 0.08, h), rect(a + 0.015, a + 0.065, h + 0.015)); shops.push([a, a + 0.08, h]); }
+      s.add(3, waves(0.05));
+      s.sun = { u: 1.35, h: 0.64, r: 0.04, kind: 'moon' };
+      s.d(-1, DECO.stars(90));
+      s.d(0, DECO.windows(t0, true)); s.d(1, DECO.windows(t1, true)); s.d(2, DECO.windows(shops, true));
+      s.d(3, DECO.lamps([0.55, 1.4, 2.1, -0.2], 0.05, true));
+      s.figs = [{ u: 0.85, pose: 'ride', tools: [T.scooter, T.deliveryBox] }, { u: 1.2, face: -1, pose: 'phone', tools: [T.phone] }];
+    }),
+    dawn: build(131, s => {
+      s.add(0, waves(0.3, [[0.07, 2.5, 0.5], [0.02, 7, 0]]));
+      s.add(1, waves(0.2, [[0.03, 3.5, 1]]));
+      s.add(2, waves(0.12, [[0.01, 6, 0]]), gable(1.25, 1.42, 0.17, 0.1), dome(1.56, 0.06, 0.1, 0.1), dome(0.2, 0.05, 0.08, 0.1));
+      s.add(3, waves(0.06));
+      s.sun = { u: 0.95, h: 0.2, r: 0.13, kind: 'sun' };
+      s.d(-1, DECO.rays(0.95, 0.2));
+      s.d(-1, DECO.birds([[0.6, 0.5, 0.013], [0.67, 0.54, 0.01], [1.3, 0.58, 0.012]]));
+      s.figs = [{ u: 0.7, pose: 'point' }, { u: 0.82, s: 0.8, pose: 'stand' }];
+    })
+  };
+  const scenes = meta.map(m => SCENES[m.motif] || SCENES.intro);
+
+  /* palettes derived from each panel's own colour tokens */
+  const WHITE = [255, 255, 255], BLACK = [8, 8, 12];
+  const pals = meta.map((m, i) => {
+    const bg = m.bg, ink = m.ink, acc = hexToRgb(m.el.style.getPropertyValue('--pacc'));
+    const light = lum(bg) > 0.2, shade = light ? ink : BLACK;
+    const ds = light ? [0.2, 0.36, 0.54, 0.74] : [0.24, 0.42, 0.6, 0.8];
+    const lay = ds.map((d, k) => { let c = mix(bg, shade, d); if (k === 1) c = mix(c, acc, 0.1); return c; });
+    const kind = scenes[i].sun.kind;
+    const sun = kind === 'moon' ? mix(ink, bg, 0.1) : kind === 'smog' ? mix(bg, acc, 0.5) : light ? mix(bg, WHITE, 0.78) : mix(acc, WHITE, 0.4);
+    return {
+      top: light ? mix(bg, shade, 0.06) : mix(bg, BLACK, 0.35),
+      hor: light ? mix(bg, WHITE, 0.42) : mix(bg, acc, 0.35),
+      lay, acc, sun,
+      sunA: kind === 'smog' ? 0.55 : 1,
+      light: light ? mix(bg, WHITE, 0.6) : mix(bg, acc, 0.6),
+      dark: mix(lay[3], BLACK, 0.3),
+      shadowA: light ? 0.22 : 0.45
+    };
+  });
+  const lerpC = (a, b, t) => a.map((v, i) => v + (b[i] - v) * t);
+  const rgbf = c => `rgb(${c[0] | 0},${c[1] | 0},${c[2] | 0})`;
+  const rgba = (c, a) => `rgba(${c[0] | 0},${c[1] | 0},${c[2] | 0},${a})`;
+
+  /* paper grain */
+  const grain = document.createElement('canvas'); grain.width = grain.height = 160;
+  { const gg = grain.getContext('2d'), id = gg.createImageData(160, 160), rr = rng(7);
+    for (let i = 0; i < 160 * 160; i++) { const v = 205 + rr() * 50 | 0; id.data[i * 4] = v; id.data[i * 4 + 1] = v; id.data[i * 4 + 2] = v; id.data[i * 4 + 3] = 255; }
+    gg.putImageData(id, 0, 0); }
+  const grainPat = ctx.createPattern(grain, 'repeat');
+
   function sizeCanvas() {
     const w = innerWidth, h = innerHeight;
-    const key = `${w}x${Math.round(h / 140)}`;
-    if (key === lastSize) return;
-    lastSize = key;
+    if (w !== stableW || Math.abs(h - stableH) > 150) { stableW = w; stableH = h; }
     W = w; H = h; DPR = Math.min(1.5, devicePixelRatio || 1);
-    cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR);
-    cache.clear();
+    U = Math.min(stableH, Math.max(W, stableH * 0.6)) * (isH() ? 0.72 : 1);
+    const railEl = document.getElementById('rail');
+    BASE = H - (railEl ? railEl.offsetHeight : 0) + 6; /* ground line sits just above the era rail */
+    const cw = Math.round(W * DPR), ch = Math.round(H * DPR);
+    if (cv.width !== cw || cv.height !== ch) { cv.width = cw; cv.height = ch; }
+  }
+
+  const hAt = (arr, u) => { let x = (u - UMIN) / DU; if (x <= 0) return arr[0]; if (x >= NS - 1) return arr[NS - 1]; const i = x | 0, f = x - i; return arr[i] + (arr[i + 1] - arr[i]) * f; };
+
+  function joints(p) {
+    const R = Math.PI / 180, S = a => Math.sin(a * R), C = a => Math.cos(a * R);
+    const TH = 0.25, SH = 0.25, TO = 0.32, NK = 0.045, HR = 0.065, UA = 0.17, FA = 0.16;
+    const leg = (t, s) => { const k = [TH * S(t), -TH * C(t)]; return [k, [k[0] + SH * S(s), k[1] - SH * C(s)]]; };
+    const [kb, fb] = leg(p.bt, p.bs), [kf, ff] = leg(p.ft, p.fs);
+    const sh = [TO * S(p.lean), TO * C(p.lean)];
+    const hd = [sh[0] + (NK + HR) * S(p.lean + p.head), sh[1] + (NK + HR) * C(p.lean + p.head)];
+    const arm = (a, b) => { const e = [sh[0] + UA * S(a), sh[1] - UA * C(a)]; return [e, [e[0] + FA * S(b), e[1] - FA * C(b)]]; };
+    const [eb, hb] = arm(p.bu, p.bf), [ef, hf] = arm(p.fu, p.ff);
+    const off = -Math.min(fb[1], ff[1], kb[1], kf[1]) + (p.lift || 0);
+    const J = { hip: [0, 0], kb, fb, kf, ff, sh, hd, eb, hb, ef, hf };
+    for (const k in J) J[k] = [J[k][0], J[k][1] + off];
+    return J;
+  }
+  const lerpPose = (a, b, t) => { const o = {}; for (const k in a) o[k] = a[k] + ((b[k] ?? a[k]) - a[k]) * t; return o; };
+  function toolWorld(tool, J, x0, y0, sc, face) {
+    const anc = tool.a === 'root' ? [0, 0] : tool.a === 'shoulder' ? J.sh : J.hf;
+    return tool.pts.map(([dx, dy]) => [x0 + face * (anc[0] + dx) * sc, y0 - (anc[1] + dy) * sc]);
+  }
+  const ghostTool = t => ({ a: t.a, fill: t.fill, w: 0, pts: t.pts.map(() => [0, 0]) });
+
+  const ys = [new Float32Array(4096), new Float32Array(4096), new Float32Array(4096), new Float32Array(4096)];
+  const STEP = 3;
+
+  function drawScene(p) {
+    const i = Math.min(N - 2, Math.max(0, Math.floor(p))), f = p - i, t = smooth(0.12, 0.88, f);
+    const A = scenes[i], B = scenes[i + 1], pa = pals[i], pb = pals[i + 1];
+    const C = {};
+    for (const k of ['top', 'hor', 'acc', 'sun', 'light', 'dark']) C[k] = lerpC(pa[k], pb[k], t);
+    C.lay = pa.lay.map((c, k) => lerpC(c, pb.lay[k], t));
+    C.shadowA = pa.shadowA + (pb.shadowA - pa.shadowA) * t;
+    const Wu = W / U, u0 = CENTER - Wu / 2, move = reduce.matches ? 0 : (isH() ? 1 : 0.6);
+    const spd = k => k < 0 ? SKY_SPD : SPD[k];
+    const shA = k => spd(k) * Wu * f * move, shB = k => spd(k) * Wu * (1 - f) * move;
+    const g = ctx;
+    g.setTransform(DPR, 0, 0, DPR, 0, 0);
+    g.globalAlpha = 1; g.globalCompositeOperation = 'source-over';
+    const setShadow = on => {
+      if (on) { g.shadowColor = `rgba(0,0,0,${C.shadowA})`; g.shadowBlur = U * 0.02 * DPR; g.shadowOffsetX = 0; g.shadowOffsetY = -U * 0.003 * DPR; }
+      else { g.shadowColor = 'rgba(0,0,0,0)'; g.shadowBlur = 0; g.shadowOffsetY = 0; }
+    };
+    const mkP = (sh, k) => ({
+      X: u => (u + sh - u0) * U, Y: h => BASE - h * U, U, W, H,
+      col: rgbf(C.lay[Math.max(0, k)]), light: rgbf(C.light), dark: rgbf(C.dark), acc: rgbf(C.acc),
+      accA: a => rgba(C.acc, a), shadow: setShadow
+    });
+    const deco = (S, k, alpha, sh) => {
+      if (alpha < 0.01) return;
+      for (const d of S.deco) if (d.k === k) { g.save(); g.globalAlpha = alpha; d.f(g, mkP(sh, k)); g.restore(); }
+    };
+
+    /* sky */
+    const gr = g.createLinearGradient(0, 0, 0, H);
+    gr.addColorStop(0, rgbf(C.top)); gr.addColorStop(1, rgbf(C.hor));
+    g.fillStyle = gr; g.fillRect(0, 0, W, H);
+    deco(A, -1, 1 - t, -shA(-1)); deco(B, -1, t, shB(-1));
+
+    /* sun / moon morph */
+    const sx = ((A.sun.u - shA(-1) - u0) * (1 - t) + (B.sun.u + shB(-1) - u0) * t) * U;
+    const sy = BASE - (A.sun.h + (B.sun.h - A.sun.h) * t) * U;
+    const sr = (A.sun.r + (B.sun.r - A.sun.r) * t) * U;
+    const sa = pa.sunA + (pb.sunA - pa.sunA) * t;
+    const glow = g.createRadialGradient(sx, sy, sr * 0.5, sx, sy, sr * 3.2);
+    glow.addColorStop(0, rgba(C.sun, 0.35 * sa)); glow.addColorStop(1, rgba(C.sun, 0));
+    g.fillStyle = glow; g.fillRect(sx - sr * 3.2, sy - sr * 3.2, sr * 6.4, sr * 6.4);
+    g.globalAlpha = sa; g.fillStyle = rgbf(C.sun); g.beginPath(); g.arc(sx, sy, sr, 0, 7); g.fill(); g.globalAlpha = 1;
+
+    /* paper layers: morph height profiles point by point */
+    const ns = Math.min(4095, Math.ceil(W / STEP) + 1);
+    for (let k = 0; k < 4; k++) {
+      const a = A.h[k], b = B.h[k], sa_ = shA(k), sb_ = shB(k), y = ys[k];
+      for (let j = 0; j < ns; j++) {
+        const u = u0 + (j * STEP) / U;
+        const ha = hAt(a, u + sa_), hb = hAt(b, u - sb_);
+        y[j] = BASE - (ha + (hb - ha) * t) * U;
+      }
+      g.beginPath(); g.moveTo(-4, H + 4); g.lineTo(-4, y[0]);
+      for (let j = 0; j < ns; j++) g.lineTo(j * STEP, y[j]);
+      g.lineTo(W + 4, y[ns - 1]); g.lineTo(W + 4, H + 4); g.closePath();
+      setShadow(true); g.fillStyle = rgbf(C.lay[k]); g.fill(); setShadow(false);
+      deco(A, k, 1 - t, -sa_); deco(B, k, t, sb_);
+    }
+
+    /* figures: pose morph + tool morph */
+    const groundAt = x => ys[3][Math.max(0, Math.min(ns - 1, Math.round(x / STEP)))];
+    const n = Math.max(A.figs.length, B.figs.length);
+    const figCol = rgbf(C.lay[3]);
+    for (let j = 0; j < n; j++) {
+      let FA = A.figs[j], FB = B.figs[j];
+      if (!FA) FA = { ...FB, s: 0, tools: FB.tools.map(ghostTool) };
+      if (!FB) FB = { ...FA, s: 0, tools: FA.tools.map(ghostTool) };
+      const xa = (FA.u - shA(3) - u0) * U, xb = (FB.u + shB(3) - u0) * U;
+      const x0 = xa + (xb - xa) * t, y0 = groundAt(x0);
+      const s = FA.s + (FB.s - FA.s) * t;
+      if (s < 0.01) continue;
+      const sc = s * U * 0.17, face = FA.face + (FB.face - FA.face) * t;
+      const J = joints(lerpPose(FA.pose, FB.pose, t));
+      const JA = joints(FA.pose), JB = joints(FB.pose);
+      /* rim light so the figures read against dark paper */
+      g.shadowColor = rgba(C.light, 0.6); g.shadowBlur = U * 0.03 * DPR; g.shadowOffsetX = 0; g.shadowOffsetY = 0;
+      g.strokeStyle = figCol; g.fillStyle = figCol; g.lineCap = 'round'; g.lineJoin = 'round';
+      const X = q => x0 + face * q[0] * sc, Y = q => y0 - q[1] * sc;
+      const seg = (pts, w) => { g.lineWidth = w * sc; g.beginPath(); g.moveTo(X(pts[0]), Y(pts[0])); for (let q = 1; q < pts.length; q++) g.lineTo(X(pts[q]), Y(pts[q])); g.stroke(); };
+      seg([J.hip, J.kb, J.fb], 0.095); seg([J.sh, J.eb, J.hb], 0.075);
+      seg([J.hip, J.sh], 0.16);
+      seg([J.hip, J.kf, J.ff], 0.095); seg([J.sh, J.ef, J.hf], 0.075);
+      g.beginPath(); g.arc(X(J.hd), Y(J.hd), 0.078 * sc, 0, 7); g.fill();
+      const nt = Math.max(FA.tools.length, FB.tools.length);
+      for (let q = 0; q < nt; q++) {
+        const ta = FA.tools[q] || ghostTool(FB.tools[q]), tb = FB.tools[q] || ghostTool(FA.tools[q]);
+        const scA = FA.s * U * 0.17, scB = FB.s * U * 0.17;
+        const wa = toolWorld(ta, JA, xa, groundAt(xa), scA, FA.face), wb = toolWorld(tb, JB, xb, groundAt(xb), scB, FB.face);
+        const pts = wa.map((pt, m) => [pt[0] + (wb[m][0] - pt[0]) * t, pt[1] + (wb[m][1] - pt[1]) * t]);
+        const fill = ta.fill + (tb.fill - ta.fill) * t, w = (ta.w * scA) + ((tb.w * scB) - (ta.w * scA)) * t;
+        if (fill > 0.01) { g.globalAlpha = fill; g.beginPath(); g.moveTo(pts[0][0], pts[0][1]); for (const pt of pts) g.lineTo(pt[0], pt[1]); g.closePath(); g.fill(); g.globalAlpha = 1; }
+        if (w > 0.4) { g.lineWidth = w; g.beginPath(); g.moveTo(pts[0][0], pts[0][1]); for (const pt of pts) g.lineTo(pt[0], pt[1]); g.stroke(); }
+      }
+      setShadow(false);
+    }
+
+    /* paper grain + soft vignette */
+    g.globalCompositeOperation = 'multiply'; g.globalAlpha = 0.09; g.fillStyle = grainPat; g.fillRect(0, 0, W, H);
+    g.globalCompositeOperation = 'source-over'; g.globalAlpha = 1;
+    const vg = g.createRadialGradient(W / 2, H * 0.55, Math.min(W, H) * 0.35, W / 2, H * 0.55, Math.max(W, H) * 0.8);
+    vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, 'rgba(0,0,0,0.16)');
+    g.fillStyle = vg; g.fillRect(0, 0, W, H);
   }
 
   /* ---------- render ---------- */
   let shown = 0, target = 0, raf = 0, lastIdx = -1;
-  const MOTIF_ALPHA = 0.14;
   function paint(p) {
     const i = Math.min(N - 2, Math.max(0, Math.floor(p)));
-    const t = smooth(0.2, 0.8, p - i);
+    const t = smooth(0.12, 0.88, p - i);
     const bg = mix(meta[i].bg, meta[i + 1].bg, t);
     root.style.setProperty('--bg', rgb(bg));
     root.style.setProperty('--chrome-bg', rgb(bg));
     root.style.setProperty('--chrome-ink', lum(bg) > 0.28 ? '#1c1712' : '#f4efe6');
-
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.clearRect(0, 0, cv.width, cv.height);
-    if (t < 0.999) { ctx.globalAlpha = MOTIF_ALPHA * (1 - t); ctx.drawImage(motif(i), 0, 0); }
-    if (t > 0.001) { ctx.globalAlpha = MOTIF_ALPHA * t; ctx.drawImage(motif(i + 1), 0, 0); }
-    ctx.globalAlpha = 1;
+    try { drawScene(p); } catch (e) { /* background is decoration only */ }
 
     railMark.style.left = `calc(${(p + 0.5) / N * 100}%)`;
     const idx = Math.round(p);
