@@ -1,0 +1,920 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ภาษากลางที่ยังไม่มี</title>
+<meta name="description" content="โจทย์วิจัยย่อยที่ 7: มาตรฐานข้อมูลอาชีพและทักษะร่วม หน่วยงานด้านจัดหางาน ฝีมือแรงงาน และประกันสังคม ใช้รหัสอาชีพและทักษะชุดเดียวกันได้หรือไม่ เทียบกับ ESCO และ O*NET และทดลองเชื่อมข้อมูลชุดตัวอย่าง">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=JetBrains+Mono:wght@500;700&family=K2D:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  color-scheme: light;
+  --page: #eef2f8;
+  --surface-1: #fbfcfe;
+  --surface-2: #f2f5fa;
+  --text-primary: #0d1b33;
+  --text-secondary: #3b4a63;
+  --text-muted: #66748c;
+  --grid: #dde4ef;
+  --axis: #b9c4d6;
+  --border: rgba(13,27,51,0.12);
+  --accent-ink: #1a4bb0;
+  --link: #1a4bb0;
+  --bp: #0b2a6b;
+  --bp-line: rgba(186,210,255,.16);
+  --series-1: #1f5fd6;
+  --series-2: #e0662a;
+  --series-3: #1a9a7a;
+  --series-muted: #c3ccda;
+  --o1: #8fb0e6;
+  --o2: #6b94dc;
+  --o3: #3a6fcc;
+  --o4: #1f4fa8;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --page: #0a1222;
+    --surface-1: #121d33;
+    --surface-2: #17243d;
+    --text-primary: #e7edf8;
+    --text-secondary: #aab7cc;
+    --text-muted: #7d8aa1;
+    --grid: #1f2c45;
+    --axis: #2e3d5a;
+    --border: rgba(231,237,248,0.11);
+    --accent-ink: #8fb3f0;
+    --link: #8fb3f0;
+    --bp: #071a44;
+    --series-1: #4f86d0;
+    --series-2: #e07040;
+    --series-3: #29a585;
+    --series-muted: #34425c;
+    --o1: #2f5aa8;
+    --o2: #4f86d0;
+    --o3: #86aee6;
+    --o4: #bcd2f2;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #0a1222;
+  --surface-1: #121d33;
+  --surface-2: #17243d;
+  --text-primary: #e7edf8;
+  --text-secondary: #aab7cc;
+  --text-muted: #7d8aa1;
+  --grid: #1f2c45;
+  --axis: #2e3d5a;
+  --border: rgba(231,237,248,0.11);
+  --accent-ink: #8fb3f0;
+  --link: #8fb3f0;
+  --bp: #071a44;
+  --series-1: #4f86d0;
+  --series-2: #e07040;
+  --series-3: #29a585;
+  --series-muted: #34425c;
+  --o1: #2f5aa8;
+  --o2: #4f86d0;
+  --o3: #86aee6;
+  --o4: #bcd2f2;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body { margin: 0; background-color: var(--page); background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px); background-size: 32px 32px; background-attachment: fixed; color: var(--text-primary); font-family: "K2D", system-ui, -apple-system, "Segoe UI", sans-serif; font-size: 16.5px; line-height: 1.78; }
+main { background: transparent; }
+a { color: var(--link); text-underline-offset: 2px; }
+h1, h2, h3 { font-family: "Chakra Petch", "K2D", sans-serif; font-weight: 700; }
+h1 { font-size: clamp(32px, 5.8vw, 58px); line-height: 1.15; margin: 0 0 14px; }
+h2 { font-size: clamp(24px, 3.4vw, 34px); line-height: 1.3; margin: 0; }
+h3 { font-size: 20px; line-height: 1.45; margin: 36px 0 8px; font-weight: 600; }
+h4 { font-size: 16.5px; margin: 20px 0 4px; font-weight: 700; }
+p { margin: 0 0 14px; }
+code, .mono { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: .92em; }
+.wrap { max-width: 1000px; margin: 0 auto; padding: 0 16px; }
+
+/* ---------- hero: blueprint ---------- */
+.hero { position: relative; overflow: hidden; color: #e9f0ff; background-color: var(--bp);
+  background-image: linear-gradient(var(--bp-line) 1px, transparent 1px), linear-gradient(90deg, var(--bp-line) 1px, transparent 1px),
+  linear-gradient(rgba(186,210,255,.07) 1px, transparent 1px), linear-gradient(90deg, rgba(186,210,255,.07) 1px, transparent 1px);
+  background-size: 96px 96px, 96px 96px, 16px 16px, 16px 16px; }
+.hero .wrap { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 28px; align-items: center; padding-top: 40px; padding-bottom: 44px; }
+.eyebrow { display: inline-flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 13.5px; font-weight: 600; color: #b9cdf5; margin: 0 0 14px; }
+.eyebrow .tb { border: 1.5px solid #b9cdf5; padding: 0 10px; font-family: "JetBrains Mono", monospace; font-size: 12px; letter-spacing: .04em; }
+.hero .lede { font-size: 18px; color: #d3e0fb; max-width: 520px; }
+.hero-stats { display: flex; flex-wrap: wrap; gap: 14px 26px; margin: 22px 0 6px; }
+.hero-stats b { display: block; font-family: "Chakra Petch", sans-serif; font-size: clamp(40px, 6vw, 58px); line-height: 1; }
+.hero-stats span { display: block; font-size: 13px; color: #b9cdf5; max-width: 220px; line-height: 1.45; margin-top: 4px; }
+.hero .meta { font-size: 13px; color: #9fb6e6; margin-top: 16px; }
+.hero .meta a { color: inherit; }
+.spec { position: relative; border: 1.5px solid #b9cdf5; background: rgba(7,26,68,.55); padding: 14px 16px 12px; }
+.spec::before, .spec::after { content: ""; position: absolute; width: 14px; height: 14px; border: 2px solid #e9f0ff; }
+.spec::before { left: -6px; top: -6px; border-right: 0; border-bottom: 0; }
+.spec::after { right: -6px; bottom: -6px; border-left: 0; border-top: 0; }
+.spec .st { font-family: "Chakra Petch", sans-serif; font-weight: 700; font-size: 16px; margin: 0 0 2px; }
+.spec .ss { font-size: 12.5px; color: #b9cdf5; margin: 0 0 10px; }
+.spec-row { display: grid; grid-template-columns: 112px 1fr; gap: 10px; align-items: baseline; padding: 7px 0; border-top: 1px dashed rgba(185,205,245,.35); font-size: 13.5px; }
+.spec-row .ag { color: #b9cdf5; }
+.spec-row code { color: #fff; font-weight: 700; }
+.spec-row .gap { color: #ffb08a; font-weight: 600; }
+.spec .note { font-size: 11.5px; color: #9fb6e6; margin: 8px 0 0; }
+@media (prefers-reduced-motion: no-preference) {
+  .spec-row { opacity: 0; transform: translateX(10px); animation: slide .45s ease forwards; }
+  .spec-row:nth-of-type(1) { animation-delay: .4s; } .spec-row:nth-of-type(2) { animation-delay: .6s; } .spec-row:nth-of-type(3) { animation-delay: .8s; }
+  .spec-row:nth-of-type(4) { animation-delay: 1s; } .spec-row:nth-of-type(5) { animation-delay: 1.2s; }
+  @keyframes slide { to { opacity: 1; transform: none; } }
+  .rise { opacity: 0; transform: translateY(12px); animation: rise .7s cubic-bezier(.2,.7,.2,1) forwards; }
+  .rise.d2 { animation-delay: .12s; } .rise.d3 { animation-delay: .25s; } .rise.d4 { animation-delay: .4s; }
+  @keyframes rise { to { opacity: 1; transform: none; } }
+}
+@media (max-width: 760px) { .hero .wrap { grid-template-columns: 1fr; } }
+
+/* ---------- nav ---------- */
+.topbar { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--page) 92%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); }
+.topbar .wrap { display: flex; gap: 6px; align-items: center; overflow-x: auto; padding-top: 8px; padding-bottom: 8px; scrollbar-width: none; }
+.topbar a { flex: none; text-decoration: none; color: var(--text-secondary); font-size: 13.5px; padding: 3px 11px; border: 1px solid transparent; }
+.topbar a.on { color: var(--text-primary); font-weight: 600; border-color: var(--accent-ink); background: var(--surface-1); }
+.topbar a.skip { opacity: .55; text-decoration: line-through; }
+.topbar .sp { flex: 1; }
+.theme-btn { flex: none; border: 1px solid var(--border); background: var(--surface-1); color: var(--text-primary); font: inherit; font-size: 13px; padding: 3px 12px; cursor: pointer; }
+.ruler { position: absolute; left: 0; right: 0; bottom: -1px; height: 4px; background: repeating-linear-gradient(90deg, var(--axis) 0 1px, transparent 1px 10px); }
+.ruler i { display: block; height: 100%; width: 0; background: var(--series-1); }
+
+/* ---------- chapters as drawing sheets ---------- */
+.chapter { padding: 64px 0 8px; scroll-margin-top: 56px; }
+.ch-head { display: grid; grid-template-columns: auto 1fr; gap: 18px; align-items: center; margin-bottom: 18px; }
+.sheet { border: 2px solid var(--text-primary); background: var(--surface-1); min-width: 84px; font-family: "JetBrains Mono", monospace; text-align: center; }
+.sheet small { display: block; font-size: 10px; letter-spacing: .08em; border-bottom: 1px solid var(--text-primary); padding: 2px 6px; color: var(--text-secondary); }
+.sheet b { display: block; font-size: 26px; padding: 2px 8px; color: var(--accent-ink); }
+.ch-head .kicker { font-family: "JetBrains Mono", monospace; font-size: 12.5px; color: var(--accent-ink); letter-spacing: .08em; margin: 0 0 2px; }
+.prose { max-width: 760px; }
+.prose ul, .prose ol { padding-left: 22px; margin: 0 0 14px; }
+.prose li { margin-bottom: 6px; }
+.prose > p, .prose > ul, .prose > ol, .prose > h3 { background: color-mix(in srgb, var(--page) 85%, transparent); }
+.callout { background: var(--surface-1); border: 1px solid var(--border); border-left: 5px solid var(--series-1); padding: 14px 18px; margin: 18px 0; }
+.callout b.t { display: block; font-family: "Chakra Petch", sans-serif; font-size: 15px; color: var(--accent-ink); margin-bottom: 2px; }
+.callout.warn { border-left-color: var(--series-2); }
+.def { display: grid; grid-template-columns: minmax(130px, 220px) 1fr; border: 1px solid var(--border); overflow: hidden; background: var(--surface-1); margin: 12px 0 18px; }
+.def > div { padding: 10px 14px; border-bottom: 1px solid var(--grid); }
+.def > div:nth-child(odd) { font-weight: 700; background: var(--surface-2); }
+.def > div:nth-last-child(-n+2) { border-bottom: 0; }
+@media (max-width: 560px) { .def { grid-template-columns: 1fr; } .def > div:nth-child(odd) { border-bottom: 0; padding-bottom: 0; } }
+
+/* cancelled sheet = skipped chapter */
+.cancelled { margin: 56px 0 0; background: var(--surface-1); border: 2px dashed var(--axis); padding: 18px 22px; display: grid; grid-template-columns: auto 1fr; gap: 18px; align-items: center; position: relative; overflow: hidden; scroll-margin-top: 56px; }
+.cancelled::before, .cancelled::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 2px; background: var(--series-2); opacity: .35; transform: rotate(4deg); }
+.cancelled::after { transform: rotate(-4deg); }
+.cancelled .sheet { opacity: .55; }
+.cancelled h2 { font-size: 21px; color: var(--text-secondary); position: relative; }
+.cancelled p { margin: 2px 0 0; color: var(--text-muted); font-size: 14.5px; position: relative; }
+
+/* ---------- figures ---------- */
+.fig { background: var(--surface-1); border: 1px solid var(--border); padding: 18px 18px 12px; margin: 22px 0; min-width: 0; position: relative; }
+.fig::before { content: ""; position: absolute; left: -1px; top: -1px; width: 16px; height: 16px; border-left: 3px solid var(--series-1); border-top: 3px solid var(--series-1); }
+.fig .fno { font-family: "JetBrains Mono", monospace; font-size: 12px; font-weight: 700; color: var(--accent-ink); letter-spacing: .06em; margin: 0; }
+.fig h4 { font-size: 17px; margin: 2px 0; }
+.fig .sub { color: var(--text-secondary); font-size: 14px; margin: 0 0 12px; }
+.fig .src { color: var(--text-muted); font-size: 12.5px; margin: 10px 0 0; line-height: 1.55; }
+.fig .src a { color: var(--text-muted); }
+.grid2 { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr)); }
+.grid2 .fig { margin: 0; }
+.chart { width: 100%; }
+.chart svg { display: block; overflow: visible; max-width: 100%; }
+.chart text { font-family: inherit; }
+.chart .tick { font-size: 11.5px; fill: var(--text-muted); font-variant-numeric: tabular-nums; }
+.chart .lbl { font-size: 13px; fill: var(--text-secondary); }
+.chart .lbl.strong { fill: var(--text-primary); font-weight: 700; }
+.chart .val { font-size: 12.5px; fill: var(--text-primary); font-weight: 700; font-variant-numeric: tabular-nums; }
+.chart .val.sm { font-size: 11.5px; }
+.chart .ref { font-size: 11.5px; fill: var(--text-secondary); }
+.chart .hit { outline: none; }
+.chart .hit:hover path, .chart .hit:focus path { filter: brightness(1.08); }
+.chart .hit:focus-visible { outline: 2px solid var(--link); }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 13px; color: var(--text-secondary); margin: 0 0 8px; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { display: inline-block; width: 12px; height: 12px; border-radius: 2px; }
+details.tbl { margin-top: 10px; font-size: 13.5px; }
+details.tbl summary { cursor: pointer; color: var(--text-secondary); font-size: 13px; }
+.scroll { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; padding: 7px 9px; border-bottom: 1px solid var(--grid); vertical-align: top; }
+th { color: var(--text-secondary); font-weight: 700; font-size: 13px; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.inv table { min-width: 760px; }
+.inv td:first-child { font-weight: 700; }
+.inv td.y { color: var(--series-3); font-weight: 700; }
+.inv td.o { color: var(--series-2); font-weight: 700; }
+.inv td.n { color: var(--text-muted); }
+.viz-tip { position: fixed; left: 0; top: 0; z-index: 50; pointer-events: none; opacity: 0; transition: opacity .12s; background: var(--surface-1); color: var(--text-primary); border: 1px solid var(--border); padding: 8px 11px; font-size: 13px; line-height: 1.5; box-shadow: 0 12px 28px -12px rgba(0,0,0,.35); max-width: 290px; }
+.viz-tip .sw { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 6px; }
+
+.tiles { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(185px, 1fr)); margin: 22px 0; }
+.tile { background: var(--surface-1); border: 1px solid var(--border); padding: 14px 16px; position: relative; }
+.tile::after { content: ""; position: absolute; right: -1px; bottom: -1px; width: 14px; height: 14px; border-right: 3px solid var(--series-1); border-bottom: 3px solid var(--series-1); }
+.tile .label { font-size: 13px; color: var(--text-secondary); line-height: 1.45; }
+.tile .value { font-family: "Chakra Petch", sans-serif; font-size: 30px; font-weight: 700; line-height: 1.2; margin-top: 4px; }
+.tile .delta { font-size: 13px; color: var(--text-secondary); line-height: 1.45; margin-top: 2px; }
+.findings { counter-reset: f; list-style: none; padding: 0; margin: 14px 0; }
+.findings li { counter-increment: f; position: relative; padding: 12px 14px 12px 60px; background: var(--surface-1); border: 1px solid var(--border); margin-bottom: 10px; }
+.findings li::before { content: "F" counter(f); position: absolute; left: 12px; top: 12px; font-family: "JetBrains Mono", monospace; font-weight: 700; font-size: 14px; color: #fff; background: var(--bp); padding: 2px 6px; }
+.spine { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; margin: 14px 0 20px; position: relative; }
+.spine div { background: var(--surface-1); border: 1px solid var(--border); padding: 12px 14px; font-size: 14.5px; line-height: 1.55; }
+.spine div b { display: block; font-family: "Chakra Petch", sans-serif; font-size: 15.5px; color: var(--accent-ink); margin-bottom: 2px; }
+.spine div.core { background: var(--bp); color: #e9f0ff; border-color: var(--bp); }
+.spine div.core b { color: #fff; }
+.refs { font-size: 14px; }
+.refs li { margin-bottom: 6px; }
+footer { padding: 48px 0 64px; color: var(--text-muted); font-size: 13.5px; }
+@media print { .topbar, .theme-btn { display: none; } .fig { break-inside: avoid; } body { background-image: none; } }
+</style>
+</head>
+<body>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <div>
+      <p class="eyebrow rise"><span class="tb">SUB-Q 07 / 08</span> โจทย์วิจัยย่อยที่ 7 · บันทึกการวิจัย 5 บท</p>
+      <h1 class="rise d2">ภาษากลาง<br>ที่ยังไม่มี</h1>
+      <p class="lede rise d3">มาตรฐานข้อมูลอาชีพและทักษะร่วม: หน่วยงานด้านจัดหางาน ฝีมือแรงงาน และประกันสังคม ใช้รหัสอาชีพและทักษะชุดเดียวกันได้หรือไม่</p>
+      <div class="hero-stats rise d4">
+        <div><b>60%</b><span>มาตรฐานฝีมือ 87 สาขาที่ระบบค้นหาอัตโนมัติของ ESCO จับคู่รหัสอาชีพได้ตรงกับผู้เชี่ยวชาญ</span></div>
+        <div><b>4 / 12</b><span>หน่วยงานที่ระบบ Labour Big Data เชื่อมผ่าน API ได้จริง</span></div>
+      </div>
+      <p class="meta">6 ต.ค. 2569 · @Digital WRS · ต่อยอดจาก<a href="report-2026.md">รายงานตลาดแรงงานไทยและโลก 2026</a></p>
+    </div>
+    <div class="spec rise d3" role="img" aria-label="ตัวอย่าง: ช่างไฟฟ้าคนเดียวกันมีรหัสต่างกันในห้าระบบ">
+      <p class="st">ช่างไฟฟ้าคนเดียวกัน ในห้าทะเบียน</p>
+      <p class="ss">ตัวอย่าง: ผู้ผ่านมาตรฐานฝีมือช่างไฟฟ้าภายในอาคาร ระดับ 1</p>
+      <div class="spec-row"><span class="ag">สสช. (LFS)</span><span><code>ISCO-08 7411</code> Building and related electricians</span></div>
+      <div class="spec-row"><span class="ag">กรมการจัดหางาน</span><span>หมวดแบบ <code>TSCO 2544</code> (ฐาน ISCO-88 รหัส 7137)</span></div>
+      <div class="spec-row"><span class="ag">กรมพัฒนาฝีมือแรงงาน</span><span>"ช่างไฟฟ้าภายในอาคาร ระดับ 1" <span class="gap">ไม่มีรหัสสากล</span></span></div>
+      <div class="spec-row"><span class="ag">สถาบันคุณวุฒิวิชาชีพ</span><span>กรอบสาขาวิชาชีพของตนเอง ระดับ 1–8 <span class="gap">ไม่มีรหัสสากล</span></span></div>
+      <div class="spec-row"><span class="ag">สำนักงานประกันสังคม</span><span><span class="gap">ไม่บันทึกอาชีพ</span> มีเพียงประเภทกิจการของนายจ้าง (TSIC)</span></div>
+      <p class="note">รหัส ISCO-88 ของกรมการจัดหางานอนุมานจากหมวดในตารางที่เผยแพร่ ไม่พบรายการรหัสภายในของแพลตฟอร์ม</p>
+    </div>
+  </div>
+</header>
+
+<nav class="topbar" aria-label="สารบัญ">
+  <div class="wrap">
+    <a href="#ch1">บทที่ 1 บทนำ</a>
+    <a href="#ch2">บทที่ 2 แนวคิด</a>
+    <a href="#ch3" class="skip">บทที่ 3 วิธีวิจัย</a>
+    <a href="#ch4">บทที่ 4 ผล</a>
+    <a href="#ch5">บทที่ 5 สรุป</a>
+    <a href="#refs">อ้างอิง</a>
+    <span class="sp"></span>
+    <button class="theme-btn" id="themeBtn" type="button" aria-label="สลับโหมดสว่างหรือมืด">◐ โหมด</button>
+  </div>
+  <div class="ruler"><i id="rulerBar"></i></div>
+</nav>
+
+<main class="wrap">
+
+<!-- ======================= CHAPTER 1 ======================= -->
+<section class="chapter" id="ch1">
+  <div class="ch-head">
+    <div class="sheet"><small>SHEET</small><b>01</b></div>
+    <div><p class="kicker">INTRODUCTION</p><h2>บทนำ</h2></div>
+  </div>
+  <div class="prose">
+    <h3>1.1 ความเป็นมาและความสำคัญของปัญหา</h3>
+    <p>โจทย์วิจัยย่อยทั้งหกข้อก่อนหน้าสะดุดที่จุดเดียวกัน คือข้อมูลจากหน่วยงานต่าง ๆ เชื่อมกันไม่ได้ โจทย์ที่ 1 หาผู้ทำงานต่ำระดับรายจังหวัดไม่ได้ โจทย์ที่ 3 วัดการจ้างใหม่ตามอาชีพไม่ได้ เพราะประกันสังคมไม่บันทึกอาชีพ โจทย์ที่ 2 พบว่าใบรับรองทักษะไม่ได้ถูกใช้จับคู่งาน และโจทย์ที่ 4 ดาวน์โหลดข้อมูลการจัดหางานรายจังหวัดไม่ได้</p>
+    <p>สำนักงานการตรวจเงินแผ่นดินตรวจระบบ Labour Big Data ของกระทรวงแรงงาน (ปีงบ 2563–2565) แล้วพบตรง ๆ ว่า "หน่วยงานภายในกระทรวงแรงงานยังใช้มาตรฐานข้อมูล (Standard Code) ไม่เป็นมาตรฐานเดียวกัน เช่น มาตรฐานอาชีพ มาตรฐานประเภทอุตสาหกรรม มาตรฐานระดับการศึกษา" ระบบนี้เชื่อมกับ 12 หน่วยงาน แต่เชื่อมผ่าน API ได้เพียง 4 หน่วยงาน OECD (2025) ก็ระบุเช่นกันว่าข้อมูลทักษะของไทย "กระจัดกระจาย และเก็บในรูปแบบที่เข้ากันไม่ได้" และนายจ้างต้องตอบข้อมูลเดิมให้หลายหน่วยงานซ้ำ ๆ</p>
+    <p>ทั่วโลกมีพจนานุกรมอาชีพและทักษะที่ใช้ได้ฟรีอยู่แล้ว ได้แก่ ESCO ของสหภาพยุโรปและ O*NET ของสหรัฐฯ คำถามคือไทยจะใช้สิ่งเหล่านี้เป็นภาษากลางได้หรือไม่ และต้องปรับอะไร</p>
+    <h3>1.2 คำถามการวิจัย</h3>
+    <p><b>คำถามหลัก:</b> หน่วยงานด้านจัดหางาน ฝีมือแรงงาน และประกันสังคม ใช้รหัสอาชีพและทักษะชุดเดียวกันได้หรือไม่</p>
+    <ol>
+      <li>แต่ละหน่วยงานใช้ระบบรหัสอะไรอยู่ และต่างกันตรงไหน</li>
+      <li>มาตรฐานไทยเทียบกับ ESCO, O*NET และระบบของประเทศในเอเชียอย่างไร</li>
+      <li>ถ้าลองเชื่อมข้อมูลชุดตัวอย่างจริง จะเชื่อมได้แค่ไหน และติดปัญหาตรงไหน</li>
+    </ol>
+    <h3>1.3 วัตถุประสงค์การวิจัย</h3>
+    <ol>
+      <li>เพื่อทำบัญชีระบบรหัสอาชีพ อุตสาหกรรม และทักษะของหน่วยงานแรงงานไทย</li>
+      <li>เพื่อเปรียบเทียบกับ ESCO, O*NET และระบบของสิงคโปร์ มาเลเซีย เกาหลี และออสเตรเลีย</li>
+      <li>เพื่อทดลองเชื่อมมาตรฐานฝีมือแรงงาน 87 สาขาและกรอบคุณวุฒิวิชาชีพ 72 กรอบเข้ากับ ISCO-08 และ ESCO</li>
+    </ol>
+    <h3>1.4 ขอบเขตการวิจัย</h3>
+    <ul>
+      <li><b>ข้อมูลไทย:</b> สถิติแรงงานประจำปี 2567 (กระทรวงแรงงาน), ข้อมูลเปิดการทดสอบมาตรฐานฝีมือ ปีงบ 2568 (กรมพัฒนาฝีมือแรงงาน), ชุดข้อมูลมาตรฐานอาชีพ (สถาบันคุณวุฒิวิชาชีพ), รายงานการตรวจสอบของ สตง., ผู้มีงานทำตาม ISCO-08 รหัส 2 หลัก ปี 2568 (ILOSTAT)</li>
+      <li><b>ต่างประเทศ:</b> ESCO v1.2, O*NET 31.0, ตารางเทียบ ESCO–O*NET (2565), MASCO 2020, OSCA 2024, Skills Framework ของสิงคโปร์</li>
+      <li><b>การทดลองเชื่อม:</b> ผู้วิจัยกำหนดรหัส ISCO-08 ให้มาตรฐานฝีมือแต่ละสาขาด้วยวิจารณญาณ แล้วเทียบกับผลค้นหาอัตโนมัติของ ESCO API</li>
+    </ul>
+    <h3>1.5 นิยามศัพท์เฉพาะ</h3>
+  </div>
+  <div class="def">
+    <div>ISCO-08</div><div>การจัดประเภทอาชีพมาตรฐานสากลของ ILO ฉบับปี 2551 มี 4 ระดับ 436 หมู่ย่อย (unit group) สสช. ใช้ในการสำรวจภาวะการทำงานตั้งแต่ปี 2554</div>
+    <div>TSCO 2544</div><div>การจัดประเภทอาชีพมาตรฐานของประเทศไทย ฉบับปี 2544 อิงกับ ISCO-88 ซึ่งเป็นฉบับก่อนหน้า</div>
+    <div>ESCO</div><div>European Skills, Competences, Qualifications and Occupations: พจนานุกรมอาชีพ 3,039 อาชีพ และทักษะ 13,939 รายการ ใน 28 ภาษา ทุกอาชีพผูกกับรหัส ISCO-08 หนึ่งรหัส</div>
+    <div>O*NET</div><div>ฐานข้อมูลอาชีพของสหรัฐฯ 1,016 อาชีพ แต่ละอาชีพมีคำบรรยายทักษะ ความสามารถ ความรู้ และงาน (task) กว่า 19,000 รายการ</div>
+    <div>ตารางเทียบ (crosswalk)</div><div>ตารางที่จับคู่รหัสของระบบหนึ่งกับอีกระบบ เช่น ESCO–O*NET หรือ ISCO-08–ISCO-88</div>
+    <div>รหัสแกนกลาง</div><div>รหัสชุดเดียวที่ทุกระบบต้องบันทึกควบคู่กับรหัสของตัวเอง เพื่อให้เชื่อมข้อมูลกันได้</div>
+  </div>
+  <div class="prose">
+    <h3>1.6 ประโยชน์ที่คาดว่าจะได้รับ</h3>
+    <ul>
+      <li>ข้อเสนอรหัสแกนกลางที่ทำได้จริงในระยะสั้น โดยไม่ต้องรื้อระบบเดิม</li>
+      <li>ตารางเทียบตัวอย่างระหว่างมาตรฐานฝีมือไทยกับ ISCO-08 ที่นำไปต่อยอดได้</li>
+      <li>รายการช่องว่างของมาตรฐานฝีมือ เทียบกับโครงสร้างการจ้างงานจริง</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ======================= CHAPTER 2 ======================= -->
+<section class="chapter" id="ch2">
+  <div class="ch-head">
+    <div class="sheet"><small>SHEET</small><b>02</b></div>
+    <div><p class="kicker">LITERATURE &amp; CONCEPTS</p><h2>แนวคิด ทฤษฎี และงานวิจัยที่เกี่ยวข้อง</h2></div>
+  </div>
+  <div class="prose">
+    <h3>2.1 อาชีพกับทักษะเป็นคนละชั้น</h3>
+    <p>ระบบข้อมูลตลาดแรงงานสมัยใหม่แยกสองชั้นออกจากกัน ชั้นแรกคือ<b>อาชีพ</b> (ทำงานอะไร) ใช้เพื่อนับคนและจัดสถิติ ชั้นที่สองคือ<b>ทักษะ</b> (ทำอะไรได้) ใช้เพื่อจับคู่คนกับงานและวางแผนฝึกอบรม ESCO และ O*NET เชื่อมสองชั้นนี้ไว้ อาชีพหนึ่งต้องใช้ทักษะหลายตัว และทักษะหนึ่งใช้ได้ในหลายอาชีพ OECD (2026) สรุปว่าถ้าไม่มีตารางเทียบที่เชื่อถือได้ นักวิเคราะห์จะเชื่อมข้อมูลทักษะกับผลลัพธ์ในตลาดแรงงานได้ยาก</p>
+    <h3>2.2 ระบบรหัสของหน่วยงานแรงงานไทย</h3>
+  </div>
+  <div class="fig inv">
+    <p class="fno">TABLE 2.1</p>
+    <h4>บัญชีระบบรหัสของหน่วยงานแรงงานไทย</h4>
+    <div class="scroll"><table>
+      <thead><tr><th>หน่วยงาน / ระบบ</th><th>รหัสอาชีพ</th><th>รหัสอุตสาหกรรม</th><th>หน่วยทักษะ</th><th>ขนาด</th></tr></thead>
+      <tbody>
+        <tr><td>สสช. การสำรวจภาวะการทำงาน</td><td class="y">✓ ISCO-08 (ตั้งแต่ 2554)</td><td class="y">✓ TSIC 2009</td><td class="n">—</td><td>ISCO-08 4 หลัก มีคำแปลไทย (2565)</td></tr>
+        <tr><td>กรมการจัดหางาน (ไทยมีงานทำ ใบอนุญาตทำงาน)</td><td class="o">△ แบบ TSCO 2544 (ฐาน ISCO-88)</td><td class="y">✓ TSIC 2009</td><td class="n">—</td><td>ไม่พบรายการรหัสภายในที่เผยแพร่</td></tr>
+        <tr><td>กรมพัฒนาฝีมือแรงงาน มาตรฐานฝีมือ</td><td class="o">✗ กลุ่มสาขาของตนเอง</td><td class="y">✓ TSIC (ข้อมูลฝึกอบรม)</td><td>มาตรฐาน × ระดับ 1–3</td><td>ทดสอบ 87 สาขา (2568) · ค่าจ้างตามมาตรฐาน ~145 สาขา</td></tr>
+        <tr><td>สถาบันคุณวุฒิวิชาชีพ</td><td class="o">✗ ต้นไม้สาขา–อาชีพของตนเอง</td><td class="n">—</td><td>หน่วยสมรรถนะ ระดับ 1–8</td><td>72 กรอบ · 1,270 อาชีพ · 3,606 ระดับ</td></tr>
+        <tr><td>สำนักงานประกันสังคม</td><td class="o">✗ ไม่เผยแพร่ข้อมูลอาชีพ</td><td class="y">✓ TSIC 2009 (ของนายจ้าง)</td><td class="n">—</td><td>—</td></tr>
+        <tr><td>กระทรวง อว. หลักสูตรอุดมศึกษา</td><td class="n">—</td><td class="n">—</td><td>สาขาตาม ISCED-F 2013</td><td>—</td></tr>
+        <tr><td>Labour Big Data / LMIS</td><td class="o">△ ปนกันตามแหล่งข้อมูล</td><td class="o">△ ปนกัน</td><td class="n">—</td><td>เชื่อม 12 หน่วยงาน ผ่าน API 4</td></tr>
+      </tbody>
+    </table></div>
+    <p class="src">✓ ใช้มาตรฐานสากล · △ ใช้ฉบับเก่าหรือปนกัน · ✗ ใช้ระบบของตนเอง หรือไม่บันทึก · ที่มา: สถิติแรงงานประจำปี 2567; data.go.th; opendata.dsd.go.th; tpqi-net; สตง. (2567); OECD (2025)</p>
+  </div>
+  <div class="prose">
+    <h3>2.3 ระบบในต่างประเทศ</h3>
+  </div>
+  <div class="grid2">
+    <div class="fig">
+      <p class="fno">FIG 2.1</p>
+      <h4>จำนวนหน่วยอาชีพในแต่ละระบบ</h4>
+      <p class="sub">อาชีพหรือตำแหน่งงานในระดับละเอียดที่สุด</p>
+      <div class="chart" id="c-units"></div>
+      <p class="src">ที่มา: ILO; ESCO v1.2; O*NET 31.0; ABS (2567); DOSM (MASCO 2020); OECD (2026) สำหรับสิงคโปร์; ชุดข้อมูลสถาบันคุณวุฒิวิชาชีพ</p>
+    </div>
+    <div class="fig">
+      <p class="fno">FIG 2.2</p>
+      <h4>ตารางเทียบ ESCO–O*NET แยกประเภทการจับคู่</h4>
+      <p class="sub">จำนวนคู่ (รวม 4,253 คู่)</p>
+      <div class="chart" id="c-xwalk"></div>
+      <p class="src">ที่มา: คณะกรรมาธิการยุโรปและกระทรวงแรงงานสหรัฐฯ (2565) · ผู้จัดทำนับจาก CSV ทางการ</p>
+    </div>
+  </div>
+  <div class="prose">
+    <ul>
+      <li><b>มาเลเซีย MASCO 2020</b> อิง ISCO-08 แล้วแตกเป็นรหัส 6 หลัก 6,366 รหัส ทำให้ใช้ได้ทั้งเทียบสากลและบรรยายงานในประเทศ</li>
+      <li><b>ออสเตรเลีย OSCA 2024</b> แทนที่ ANZSCO มี 1,156 อาชีพ และใช้ในการสำรวจกำลังแรงงานตั้งแต่ ก.ย. 2569 ควบคู่กับ Australian Skills Classification ที่แยกชั้นทักษะ</li>
+      <li><b>สิงคโปร์ Skills Framework</b> มีราว 1,900 ตำแหน่งงานใน 39 สาขา และกำลังเปลี่ยนเป็น Skills Framework 2.0 ซึ่งเป็นอนุกรมวิธานทักษะระดับชาติ</li>
+      <li><b>สหภาพยุโรป</b> บังคับให้ประเทศสมาชิกจับคู่ระบบของตนกับ ESCO หรือใช้ ESCO โดยตรง ตามระเบียบ EURES 2016/589</li>
+    </ul>
+    <div class="callout">
+      <b class="t">บทเรียนร่วม</b>
+      ไม่มีประเทศใดใช้ ESCO หรือ O*NET แทนระบบของตนทั้งหมด แต่ทุกระบบที่ประสบความสำเร็จ <b>ผูกกับ ISCO-08 เป็นแกนกลาง</b> แล้วจึงแตกรายละเอียดตามบริบทของประเทศ ตารางเทียบ ESCO–O*NET เองมีคู่ที่ตรงกันพอดี (exact match) เพียง 12% ที่เหลือเป็นการจับคู่แบบกว้างหรือใกล้เคียง แปลว่าการเทียบระบบต้องยอมรับความไม่ตรงกันบางส่วน
+    </div>
+    <h3>2.4 กรอบแนวคิดการวิจัย</h3>
+    <p>งานนี้ประเมินความเป็นไปได้ของ<b>รหัสแกนกลาง</b> ไม่ใช่การเปลี่ยนทุกระบบให้เหมือนกัน หน่วยงานยังใช้ระบบของตนได้ แต่ต้องบันทึกรหัส ISCO-08 คู่กันเสมอ ส่วนทักษะเชื่อมผ่าน ESCO ซึ่งผูกกับ ISCO-08 อยู่แล้ว คำถามเชิงปฏิบัติจึงมีสองข้อ คือ (1) ระบบเดิมจับคู่กับ ISCO-08 ได้แม่นยำแค่ไหน และ (2) ต้องใช้คนตรวจมากน้อยเท่าไร</p>
+  </div>
+</section>
+
+<!-- ======================= CHAPTER 3 (cancelled) ======================= -->
+<section class="cancelled" id="ch3" aria-label="บทที่ 3 ข้าม">
+  <div class="sheet"><small>SHEET</small><b>03</b></div>
+  <div>
+    <h2>บทที่ 3 วิธีดำเนินการวิจัย · แบบที่ยกเลิก</h2>
+    <p>ข้ามบทนี้ตามขอบเขตของบันทึก แหล่งข้อมูลและวิธีทดลองเชื่อมอยู่ในข้อ 1.4</p>
+  </div>
+</section>
+
+<!-- ======================= CHAPTER 4 ======================= -->
+<section class="chapter" id="ch4">
+  <div class="ch-head">
+    <div class="sheet"><small>SHEET</small><b>04</b></div>
+    <div><p class="kicker">FINDINGS</p><h2>ผลการวิจัย</h2></div>
+  </div>
+  <div class="prose">
+    <h3>4.1 ผลการทดลองเชื่อมมาตรฐานฝีมือ 87 สาขา</h3>
+    <p>ผู้วิจัยกำหนดรหัส ISCO-08 ได้อย่างมั่นใจสูง 47 สาขา ปานกลาง 29 สาขา และต่ำ 11 สาขา สาขาที่มั่นใจสูงครอบคลุมผู้เข้าทดสอบ 72% (74,184 จาก 103,492 คน) ทั้ง 87 สาขากระจายอยู่ใน ISCO-08 56 หมู่ย่อย และ 21 หมู่รหัส 2 หลัก กลุ่มที่เชื่อมได้ยากที่สุดคือมาตรฐาน "พนักงานการใช้คอมพิวเตอร์" 6 สาขา เพราะเป็น<b>ทักษะ</b>ที่ใช้ได้ในหลายอาชีพ ไม่ใช่<b>อาชีพ</b> ในระบบ ESCO สาขาเหล่านี้ควรจัดเป็นทักษะ</p>
+    <p>เมื่อป้อนชื่อมาตรฐานภาษาอังกฤษเข้า ESCO API ผลลัพธ์อันดับหนึ่งตรงกับรหัสของผู้วิจัยที่ระดับ 4 หลัก 52 จาก 87 สาขา (60%) และรหัสของผู้วิจัยอยู่ใน 5 อันดับแรก 69 สาขา (79%) ระบบค้นหายังผิดพลาดชัด เช่น ค้น "electronics technician" แล้วได้ช่างเทคนิคอุตุนิยมวิทยา การเชื่อมจึงต้องมีรายการชื่อไทย–อังกฤษที่ตรวจแล้ว และมีคนตรวจทาน ระบบอัตโนมัติอย่างเดียวไม่พอ</p>
+  </div>
+  <div class="tiles">
+    <div class="tile"><div class="label">มาตรฐานฝีมือที่จับคู่ ISCO-08 ได้มั่นใจสูง</div><div class="value">47 / 87</div><div class="delta">ครอบคลุมผู้เข้าทดสอบ 72%</div></div>
+    <div class="tile"><div class="label">ESCO อันดับหนึ่งตรงกับผู้เชี่ยวชาญ</div><div class="value">60%</div><div class="delta">อยู่ใน 5 อันดับแรก 79%</div></div>
+    <div class="tile"><div class="label">ISCO-08 หมู่ย่อยที่มาตรฐานครอบคลุม</div><div class="value">56</div><div class="delta">จาก 436 หมู่ย่อย</div></div>
+    <div class="tile"><div class="label">ผู้มีงานทำในหมวดที่มีมาตรฐานอย่างน้อย 1 สาขา</div><div class="value">38%</div><div class="delta">15.1 ล้านคน · เฉพาะที่มั่นใจสูง 29%</div></div>
+  </div>
+  <div class="grid2">
+    <div class="fig">
+      <p class="fno">FIG 4.1</p>
+      <h4>ความแม่นยำของการค้นหาอัตโนมัติ ESCO</h4>
+      <p class="sub">ร้อยละของสาขาที่ ESCO ให้ผลตรงกับรหัสของผู้เชี่ยวชาญ แยกตามความมั่นใจของผู้เชี่ยวชาญ</p>
+      <div class="chart" id="c-esco"></div>
+      <p class="src">ผู้จัดทำทดสอบกับ ESCO API v1.2.0 · สูง 47 สาขา ปานกลาง 29 ต่ำ 11</p>
+    </div>
+    <div class="fig">
+      <p class="fno">FIG 4.2</p>
+      <h4>ความมั่นใจในการจับคู่ แยกจำนวนสาขาและผู้เข้าทดสอบ</h4>
+      <p class="sub">ร้อยละ (สีเข้มขึ้นเมื่อความมั่นใจสูงขึ้น)</p>
+      <div class="chart" id="c-conf"></div>
+      <p class="src">ผู้จัดทำกำหนดรหัสจากชื่อมาตรฐานและคำบรรยาย ISCO-08</p>
+    </div>
+  </div>
+
+  <div class="prose">
+    <h3>4.2 มาตรฐานฝีมือกับโครงสร้างงานจริง ไม่ได้อยู่ที่เดียวกัน</h3>
+    <p>เมื่อวางมาตรฐานฝีมือบนรหัสเดียวกับสถิติการจ้างงาน ช่องว่างก็เห็นทันที ผู้เข้าทดสอบ 60% อยู่ในหมวดช่างฝีมือ (ISCO 7) ซึ่งมีผู้มีงานทำเพียง 10% ส่วนเกษตรกร (ISCO 6) มีผู้มีงานทำ 26% แต่ไม่มีผู้เข้าทดสอบเลย และงานบริการและขาย (ISCO 5) มีผู้มีงานทำ 22% แต่มีผู้เข้าทดสอบเพียง 8% นี่คือสิ่งที่วิเคราะห์ไม่ได้เลย ถ้าไม่มีรหัสแกนกลาง</p>
+  </div>
+  <div class="fig">
+    <p class="fno">FIG 4.3</p>
+    <h4>สัดส่วนผู้มีงานทำ เทียบสัดส่วนผู้เข้าทดสอบมาตรฐานฝีมือ ตามหมวดอาชีพ ISCO-08</h4>
+    <p class="sub">ร้อยละ · ผู้มีงานทำ 2568 (39.6 ล้านคน) · ผู้เข้าทดสอบ ปีงบ 2568 (103,492 คน)</p>
+    <div class="chart" id="c-mismatch"></div>
+    <p class="src">ที่มา: ILOSTAT (สสช. LFS); กรมพัฒนาฝีมือแรงงาน ข้อมูลเปิด · การจับคู่รหัสโดยผู้จัดทำ</p>
+  </div>
+  <div class="grid2">
+    <div class="fig">
+      <p class="fno">FIG 4.4</p>
+      <h4>หมวดอาชีพใหญ่ที่ยังไม่มีมาตรฐานฝีมือเลย</h4>
+      <p class="sub">ผู้มีงานทำ (ล้านคน) ISCO-08 รหัส 2 หลัก ปี 2568</p>
+      <div class="chart" id="c-gaps"></div>
+      <p class="src">ที่มา: ILOSTAT · การจับคู่รหัสโดยผู้จัดทำ</p>
+    </div>
+    <div class="fig">
+      <p class="fno">FIG 4.5</p>
+      <h4>กรอบคุณวุฒิวิชาชีพ 72 กรอบ จับคู่กับ ISCO-08</h4>
+      <p class="sub">จำนวนกรอบ แยกระดับความมั่นใจ</p>
+      <div class="chart" id="c-tpqi"></div>
+      <p class="src">ผู้จัดทำจับคู่จากชุดข้อมูลสถาบันคุณวุฒิวิชาชีพ · 2 กรอบเป็นสมรรถนะร่วม (ภาษาอังกฤษ สมรรถนะหลัก) จึงไม่จับคู่</p>
+    </div>
+  </div>
+  <div class="prose" style="margin-top:22px">
+    <p>กรอบคุณวุฒิวิชาชีพจัดตาม<b>อุตสาหกรรม</b> มากกว่าตาม<b>อาชีพ</b> จาก 72 กรอบ มีเพียง 15 กรอบที่จับคู่กับหมู่อาชีพ ISCO-08 หมู่เดียวได้ ที่เหลือเป็นการจับคู่หลายต่อหลาย เช่น กรอบอุตสาหกรรมยานยนต์มีทั้งวิศวกร ช่างเทคนิค และผู้ควบคุมเครื่องจักร การเชื่อมกรอบเหล่านี้จึงต้องใช้รหัสสองชุดคู่กัน คืออุตสาหกรรม (TSIC) และอาชีพ (ISCO-08) แม้จะเชื่อมยาก แต่กรอบทั้งหมดรวมกันแตะ ISCO-08 31 หมู่รหัส 2 หลัก ซึ่งครอบคลุมผู้มีงานทำ 89%</p>
+  </div>
+</section>
+
+<!-- ======================= CHAPTER 5 ======================= -->
+<section class="chapter" id="ch5">
+  <div class="ch-head">
+    <div class="sheet"><small>SHEET</small><b>05</b></div>
+    <div><p class="kicker">CONCLUSION</p><h2>สรุป อภิปรายผล และข้อเสนอแนะ</h2></div>
+  </div>
+  <div class="prose"><h3>5.1 สรุปผลการวิจัย</h3></div>
+  <ol class="findings">
+    <li><b>ตอนนี้ยังใช้ร่วมกันไม่ได้:</b> สสช. ใช้ ISCO-08 กรมการจัดหางานใช้หมวดแบบ ISCO-88 กรมพัฒนาฝีมือแรงงานและสถาบันคุณวุฒิวิชาชีพใช้ระบบของตนเอง และประกันสังคมไม่บันทึกอาชีพ สตง. ยืนยันปัญหานี้อย่างเป็นทางการแล้ว</li>
+    <li><b>แต่ทำได้ ถ้าใช้ ISCO-08 เป็นแกนกลาง:</b> มาตรฐานฝีมือ 87% จับคู่ ISCO-08 ได้ในระดับมั่นใจสูงหรือปานกลาง และ สสช. มีคำแปลไทยของ ISCO-08 อยู่แล้ว</li>
+    <li><b>เครื่องมืออัตโนมัติช่วยได้ครึ่งทาง:</b> ESCO จับคู่ถูก 60% ในอันดับแรก และ 79% ใน 5 อันดับแรก จึงใช้เป็นตัวช่วยเสนอรหัสได้ แต่ยังต้องมีคนตรวจ</li>
+    <li><b>รหัสร่วมเผยช่องว่างที่มองไม่เห็นมาก่อน:</b> มาตรฐานฝีมือกระจุกในงานช่าง ขณะที่ผู้มีงานทำ 62% อยู่ในหมวดที่ยังไม่มีมาตรฐานเลย โดยเฉพาะเกษตรกรและพนักงานขาย</li>
+  </ol>
+  <div class="prose">
+    <h3>5.2 อภิปรายผล</h3>
+    <p><b>ไม่ต้องสร้างใหม่ แค่ต้องบังคับใช้</b> ผลนี้สอดคล้องกับประสบการณ์ของมาเลเซียและออสเตรเลีย ซึ่งไม่ได้ทิ้งระบบเดิม แต่ผูกทุกอย่างกับ ISCO-08 แล้วจึงแตกรายละเอียดเพิ่ม ไทยมีชิ้นส่วนครบแล้ว คือ ISCO-08 ภาษาไทยของ สสช. ระบบ Labour Big Data และมาตรฐานฝีมือกับคุณวุฒิวิชาชีพที่มีเนื้อหาละเอียด สิ่งที่ขาดคือกติกาที่บังคับให้ทุกระบบบันทึกรหัสแกนกลาง</p>
+    <p><b>ทักษะไม่ใช่อาชีพ</b> การที่มาตรฐาน "พนักงานการใช้คอมพิวเตอร์" จับคู่ได้ยาก ชี้ให้เห็นว่ามาตรฐานไทยปนสองชั้นเข้าด้วยกัน ถ้าแยกให้ชัดว่าอะไรคืออาชีพและอะไรคือทักษะที่ใช้ข้ามอาชีพ การเชื่อมกับ ESCO จะง่ายขึ้นมาก และใบรับรองทักษะดิจิทัลในโจทย์ย่อยที่ 2 จะออกแบบได้ตรงกว่า</p>
+    <p><b>ข้อจำกัดของตารางเทียบ</b> แม้ตารางเทียบ ESCO–O*NET ที่ทำโดยสองหน่วยงานใหญ่ ก็มีคู่ที่ตรงกันพอดีเพียง 12% การเชื่อมระบบไทยก็จะไม่ตรงพอดีเช่นกัน จึงควรระบุระดับการจับคู่ (ตรง ใกล้เคียง กว้าง แคบ) ไว้ในตารางเทียบทุกคู่ แบบที่ ESCO ทำ</p>
+
+    <h3>5.3 ข้อเสนอแนะเชิงนโยบาย: โครงสร้างรหัสแกนกลาง</h3>
+  </div>
+  <div class="spine">
+    <div class="core"><b>แกนกลาง: ISCO-08 4 หลัก</b>ทุกระบบของกระทรวงแรงงานบันทึกรหัสนี้คู่กับรหัสของตัวเอง ใช้คำแปลไทยของ สสช.</div>
+    <div><b>กรมการจัดหางาน</b>ประกาศงานและโปรไฟล์ผู้หางานใน "ไทยมีงานทำ" เปลี่ยนจาก TSCO 2544 เป็น ISCO-08 และเพิ่มช่องทักษะ</div>
+    <div><b>ประกันสังคม</b>เพิ่มช่องอาชีพ (ISCO-08) ในแบบขึ้นทะเบียนผู้ประกันตน ม.33 รายใหม่ ซึ่งเป็นข้อมูลที่โจทย์ย่อยที่ 3 ต้องใช้</div>
+    <div><b>กรมพัฒนาฝีมือแรงงาน และสถาบันคุณวุฒิวิชาชีพ</b>ผูกมาตรฐานทุกสาขากับ ISCO-08 และย้ายมาตรฐานที่เป็นทักษะข้ามอาชีพไปเป็นทักษะแบบ ESCO</div>
+    <div><b>ชั้นทักษะ: ESCO-TH</b>แปลและปรับ ESCO เป็นภาษาไทย เริ่มจากอาชีพที่มีผู้มีงานทำมากที่สุด 50 อาชีพ และเผยแพร่ตารางเทียบเป็นข้อมูลเปิดที่มีเลขรุ่น</div>
+    <div><b>ผู้ดูแล</b>คณะทำงานร่วม สสช.–กระทรวงแรงงาน–สถาบันคุณวุฒิวิชาชีพ ทบทวนตารางเทียบทุกปี และวัดผลด้วยจำนวนหน่วยงานที่เชื่อมผ่าน API (ตอนนี้ 4 จาก 12)</div>
+  </div>
+  <div class="prose">
+    <p><b>ลำดับความสำคัญของมาตรฐานใหม่:</b> เมื่อมีรหัสแกนกลางแล้ว กรมพัฒนาฝีมือแรงงานควรเพิ่มมาตรฐานในหมวดที่มีคนทำงานมากแต่ยังไม่มีมาตรฐาน เช่น เกษตรกรที่ผลิตเพื่อขาย (9.46 ล้านคน) และพนักงานขาย (5.64 ล้านคน)</p>
+    <h3>5.4 ข้อจำกัดของการวิจัย</h3>
+    <ul>
+      <li>การกำหนดรหัส ISCO-08 เป็นวิจารณญาณของผู้วิจัย ไม่ใช่ตารางเทียบทางการ และยังไม่ได้ให้ผู้เชี่ยวชาญคนที่สองตรวจซ้ำ</li>
+      <li>ข้อสรุปว่ากรมการจัดหางานใช้ TSCO 2544 อนุมานจากหมวดในตารางที่เผยแพร่ ไม่พบรายการรหัสภายในของแพลตฟอร์ม และยืนยันไม่ได้ว่าประกันสังคมเก็บข้อมูลอาชีพไว้ภายในหรือไม่</li>
+      <li>หาจำนวนมาตรฐานฝีมือทั้งหมดอย่างเป็นทางการไม่ได้ (พบตัวเลข 87, 129 และ 217 ในเอกสารต่างปี) ตัวเลขบางรายการของเกาหลีและสถาบันคุณวุฒิวิชาชีพมาจากผลค้นหาที่ยังไม่ได้ตรวจกับต้นฉบับ</li>
+      <li>ไม่พบหลักฐานเชิงปริมาณว่ารหัสร่วมช่วยให้การจับคู่งานดีขึ้นเท่าไร หลักฐานด้านประโยชน์ยังเป็นเชิงคุณภาพ</li>
+    </ul>
+    <h3>5.5 ข้อเสนอแนะสำหรับการวิจัยครั้งต่อไป</h3>
+    <ul>
+      <li>ให้ผู้เชี่ยวชาญสองคนกำหนดรหัสมาตรฐานฝีมือและคุณวุฒิวิชาชีพทั้งหมดแยกกัน แล้ววัดความสอดคล้อง (inter-rater agreement)</li>
+      <li>ขอข้อมูลประกาศงานจาก "ไทยมีงานทำ" ชุดตัวอย่าง แล้วทดลองจัดรหัส ISCO-08 และทักษะ ESCO ด้วยโมเดลภาษาร่วมกับการตรวจของคน เพื่อวัดต้นทุนต่อประกาศ</li>
+      <li>ทดลองจับคู่ผู้หางานกับประกาศงานด้วยทักษะ เทียบกับการจับคู่ด้วยวุฒิ ร่วมกับโจทย์ย่อยที่ 2</li>
+    </ul>
+  </div>
+</section>
+
+<section class="chapter" id="refs" style="padding-top:40px">
+  <h2 style="font-size:24px">บรรณานุกรม</h2>
+  <ul class="refs prose">
+    <li>สำนักงานการตรวจเงินแผ่นดิน. (2567). <a href="https://www.audit.go.th/sites/default/files/files/inspection-results/">รายงานการตรวจสอบการพัฒนาการบริหารจัดการด้านแรงงานโดยใช้ระบบดิจิทัล (สำนักงานปลัดกระทรวงแรงงาน)</a>.</li>
+    <li>กระทรวงแรงงาน. (2568). สถิติแรงงานประจำปี 2567.</li>
+    <li>สำนักงานสถิติแห่งชาติ. <a href="https://gdcatalog.go.th/dataset/gdpublish-0210-02-0001">การจัดประเภทอาชีพ ISCO-08 ภาษาไทย</a> และ<a href="https://gdcatalog.go.th/dataset/gdpublish-0210-02-0004">ตารางเทียบ ISCO-08–ISCO-88</a>.</li>
+    <li>กรมพัฒนาฝีมือแรงงาน. <a href="https://opendata.dsd.go.th/">ข้อมูลเปิด: ผลการทดสอบมาตรฐานฝีมือแรงงานแห่งชาติ ปีงบ 2568</a>; สถาบันคุณวุฒิวิชาชีพ. <a href="https://tpqi-net.tpqi.go.th/tpqi-industrialInfo">ฐานข้อมูลมาตรฐานอาชีพ</a>.</li>
+    <li>European Commission. <a href="https://esco.ec.europa.eu/">ESCO v1.2</a>; <a href="https://esco.ec.europa.eu/en/about-esco/data-science-and-esco/crosswalk-between-esco-and-onet">Crosswalk between ESCO and O*NET</a> (2565).</li>
+    <li>US Department of Labor. <a href="https://www.onetcenter.org/">O*NET 31.0</a>.</li>
+    <li>ILO. (2012). International Standard Classification of Occupations: ISCO-08.</li>
+    <li>OECD. (2025). <a href="https://doi.org/10.1787/153a1fe6-en">OECD Skills Strategy Thailand</a>; OECD. (2026). <a href="https://doi.org/10.1787/2e1b85f0-en">A Skills-First Labour Market</a>.</li>
+    <li>Australian Bureau of Statistics. (2567). OSCA – Occupation Standard Classification for Australia; Jobs and Skills Australia. Australian Skills Classification.</li>
+    <li>Department of Statistics Malaysia / Ministry of Human Resources. (2565). MASCO 2020.</li>
+    <li>ILOSTAT. ผู้มีงานทำตามอาชีพ ISCO-08 ประเทศไทย ปี 2568.</li>
+  </ul>
+</section>
+</main>
+
+<footer><div class="wrap">โจทย์วิจัยย่อยที่ 7 จาก 8 · เรื่องอื่น: <a href="q1-underutilization.html">โจทย์ 1</a> · <a href="q2-skills-verification.html">โจทย์ 2</a> · <a href="q3-ai-entry-level.html">โจทย์ 3</a> · <a href="q4-spatial-matching.html">โจทย์ 4</a> · <a href="q5-platform-riders.html">โจทย์ 5</a> · <a href="q6-learning-accounts.html">โจทย์ 6</a> · <a href="q8-skills-partnership.html">โจทย์ 8</a> · กลับไป<a href="index.html">หน้ารวมคำถามวิจัย</a></div></footer>
+
+<script>
+/* Minimal responsive SVG chart kit (no dependencies).
+   Every chart re-renders on container resize, reads colors from CSS custom
+   properties, ships a hover/focus tooltip, and builds a table-view twin. */
+const Viz = (() => {
+  const NS = "http://www.w3.org/2000/svg";
+  const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  const col = (c) => (c && c.startsWith("--") ? css(c) : c);
+  const el = (tag, attrs = {}, parent) => {
+    const n = document.createElementNS(NS, tag);
+    for (const k in attrs) if (attrs[k] !== undefined && attrs[k] !== null) n.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(n);
+    return n;
+  };
+  const fmtNum = (v, d = 1) => v.toLocaleString("th-TH", { minimumFractionDigits: d, maximumFractionDigits: d });
+
+  // ---------- tooltip ----------
+  let tip;
+  function tooltip() {
+    if (tip) return tip;
+    tip = document.createElement("div");
+    tip.className = "viz-tip";
+    tip.setAttribute("role", "status");
+    document.body.appendChild(tip);
+    return tip;
+  }
+  function showTip(evt, html) {
+    const t = tooltip();
+    t.innerHTML = html;
+    t.style.opacity = "1";
+    let x, y;
+    if (evt && evt.clientX !== undefined && evt.type.startsWith("pointer")) { x = evt.clientX; y = evt.clientY; }
+    else { const r = evt.target.getBoundingClientRect(); x = r.left + r.width / 2; y = r.top; }
+    const w = t.offsetWidth, h = t.offsetHeight;
+    let left = x + 14, top = y - h - 12;
+    if (left + w > window.innerWidth - 8) left = x - w - 14;
+    if (left < 8) left = 8;
+    if (top < 8) top = y + 18;
+    t.style.transform = `translate(${left}px, ${top}px)`;
+  }
+  function hideTip() { if (tip) tip.style.opacity = "0"; }
+  function bindTip(node, html) {
+    node.setAttribute("tabindex", "0");
+    node.addEventListener("pointermove", (e) => showTip(e, html));
+    node.addEventListener("pointerleave", hideTip);
+    node.addEventListener("focus", (e) => showTip(e, html));
+    node.addEventListener("blur", hideTip);
+  }
+
+  // ---------- table twin ----------
+  function table(host, head, rows, numericCols = []) {
+    const d = document.createElement("details");
+    d.className = "tbl";
+    d.innerHTML = `<summary>ดูเป็นตาราง</summary>`;
+    const wrap = document.createElement("div");
+    wrap.className = "scroll";
+    const t = document.createElement("table");
+    t.innerHTML = `<thead><tr>${head.map((h, i) => `<th${numericCols.includes(i) ? ' class="num"' : ""}>${h}</th>`).join("")}</tr></thead>
+      <tbody>${rows.map(r => `<tr>${r.map((c, i) => `<td${numericCols.includes(i) ? ' class="num"' : ""}>${c}</td>`).join("")}</tr>`).join("")}</tbody>`;
+    wrap.appendChild(t);
+    d.appendChild(wrap);
+    host.after(d);
+  }
+
+  // ---------- responsive mount ----------
+  const mounts = [];
+  function mount(host, draw) {
+    const render = () => { if (!host.isConnected) return; host.innerHTML = ""; draw(host, Math.max(280, host.clientWidth)); };
+    mounts.push(render);
+    render();
+    if ("ResizeObserver" in window) {
+      let last = host.clientWidth;
+      new ResizeObserver(() => { if (Math.abs(host.clientWidth - last) > 4) { last = host.clientWidth; render(); } }).observe(host);
+    }
+    return render;
+  }
+  // theme changes repaint (colors come from CSS vars at draw time)
+  const rerenderAll = () => mounts.forEach(r => r());
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", rerenderAll);
+  new MutationObserver(rerenderAll).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+
+  // rounded data-end bar path (square at baseline)
+  function hbarPath(x0, y, w, h, r = 4) {
+    if (w <= 0) return "";
+    r = Math.min(r, w, h / 2);
+    return `M${x0},${y}H${x0 + w - r}Q${x0 + w},${y} ${x0 + w},${y + r}V${y + h - r}Q${x0 + w},${y + h} ${x0 + w - r},${y + h}H${x0}Z`;
+  }
+  function vbarPath(x, y0, w, h, r = 4) {
+    if (h <= 0) return "";
+    r = Math.min(r, h, w / 2);
+    return `M${x},${y0}V${y0 - h + r}Q${x},${y0 - h} ${x + r},${y0 - h}H${x + w - r}Q${x + w},${y0 - h} ${x + w},${y0 - h + r}V${y0}Z`;
+  }
+  // choose a round tick step and stretch max to a whole number of steps
+  function niceTicks(maxRaw, n = 4) {
+    const raw = maxRaw / n, p = Math.pow(10, Math.floor(Math.log10(raw)));
+    const m = raw / p, step = (m <= 1 ? 1 : m <= 2 ? 2 : m <= 2.5 ? 2.5 : m <= 5 ? 5 : 10) * p;
+    const count = Math.max(1, Math.ceil(maxRaw / step - 1e-9));
+    return { max: step * count, step, count };
+  }
+  const decOf = (step) => (step >= 1 || Math.abs(step - Math.round(step)) < 1e-9 ? 0 : step >= 0.1 ? (Math.abs(step * 10 - Math.round(step * 10)) < 1e-9 ? 1 : 2) : 2);
+  // wrap an SVG label onto two lines (at the space nearest the middle) when it is wider than maxW
+  function fitLabel(t, maxW) {
+    if (t.getComputedTextLength() <= maxW) return;
+    const txt = t.textContent, x = t.getAttribute("x"), y = +t.getAttribute("y");
+    const sp = [...txt].map((c, i) => (c === " " ? i : -1)).filter(i => i > 0);
+    if (!sp.length) { t.setAttribute("textLength", maxW); t.setAttribute("lengthAdjust", "spacingAndGlyphs"); return; }
+    const cut = sp.reduce((a, b) => (Math.abs(b - txt.length / 2) < Math.abs(a - txt.length / 2) ? b : a));
+    t.textContent = "";
+    [txt.slice(0, cut), txt.slice(cut + 1)].forEach((ln, k) => {
+      const ts = el("tspan", { x, y: y - 7 + k * 14 }, t); ts.textContent = ln;
+      if (ts.getComputedTextLength() > maxW) { ts.setAttribute("textLength", maxW); ts.setAttribute("lengthAdjust", "spacingAndGlyphs"); }
+    });
+  }
+  // widest label (px) in a given class, measured off-screen in a throwaway svg
+  function maxLabelW(host, labels, cls = "lbl") {
+    const svg = el("svg", { width: 10, height: 10, style: "position:absolute;visibility:hidden" }, host);
+    let m = 0;
+    labels.forEach(t => { const n = el("text", { class: cls }, svg); n.textContent = t; m = Math.max(m, n.getComputedTextLength()); });
+    svg.remove();
+    return m;
+  }
+  const niceMax = (v) => {
+    const p = Math.pow(10, Math.floor(Math.log10(v)));
+    const n = v / p;
+    const s = n <= 1 ? 1 : n <= 2 ? 2 : n <= 2.5 ? 2.5 : n <= 5 ? 5 : 10;
+    return s * p;
+  };
+
+  /* Horizontal bars. data: [{label, value, color?, tip?, valueLabel?}] */
+  function hbar(host, data, o = {}) {
+    const unit = o.unit || "", dec = o.decimals ?? 1;
+    mount(host, (h, W) => {
+      const labelW = Math.min(o.labelWidth || 150, W * 0.38);
+      const wraps = maxLabelW(h, data.map(d => d.label)) > labelW - 2;
+      const rowH = Math.max(o.rowH || 34, wraps ? 40 : 0), barH = Math.min(18, rowH - 12);
+      const top = 22, H = top + data.length * rowH + 6 + (o.refLine ? 18 : 0);
+      const nt = niceTicks(o.max || Math.max(...data.map(d => d.value)) * 1.08, Math.max(2, Math.min(o.ticks || 4, Math.floor(W / 110))));
+      const max = nt.max;
+      const x0 = labelW + 8, x1 = W - (o.rightPad ?? 58);
+      const sx = v => x0 + (v / max) * (x1 - x0);
+      const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: "img", "aria-label": o.aria || "" }, h);
+      for (let i = 0; i <= nt.count; i++) {
+        const v = nt.step * i, x = sx(v);
+        el("line", { x1: x, x2: x, y1: top - 6, y2: H - 4, stroke: css(i ? "--grid" : "--axis"), "stroke-width": 1 }, svg);
+        el("text", { x, y: 12, "text-anchor": "middle", class: "tick" }, svg).textContent = fmtNum(v, decOf(nt.step)) + (o.tickUnit ?? "");
+      }
+      if (o.refLine) {
+        const x = sx(o.refLine.value);
+        el("line", { x1: x, x2: x, y1: top - 6, y2: H - 4, stroke: col(o.refLine.color || "--text-secondary"), "stroke-width": 1.5 }, svg);
+        el("text", { x: x + 4, y: H - 4, class: "ref" }, svg).textContent = o.refLine.label;
+      }
+      data.forEach((d, i) => {
+        const y = top + i * rowH + (rowH - barH) / 2;
+        const lt = el("text", { x: labelW, y: y + barH / 2 + 4, "text-anchor": "end", class: "lbl" + (d.bold ? " strong" : "") }, svg);
+        lt.textContent = d.label;
+        fitLabel(lt, labelW - 2);
+        const g = el("g", { class: "hit" }, svg);
+        el("rect", { x: 0, y: top + i * rowH, width: W, height: rowH, fill: "transparent" }, g);
+        el("path", { d: hbarPath(x0, y, sx(d.value) - x0, barH), fill: col(d.color || o.color || "--series-1") }, g);
+        el("text", { x: sx(d.value) + 6, y: y + barH / 2 + 4, class: "val" }, g).textContent = d.valueLabel ?? (fmtNum(d.value, dec) + unit);
+        bindTip(g, d.tip || `<b>${d.label}</b><br>${fmtNum(d.value, dec)}${unit}`);
+      });
+    });
+    if (o.table !== false) table(host, [o.labelHead || "รายการ", o.valueHead || "ค่า"], data.map(d => [d.label, d.valueLabel ?? fmtNum(d.value, dec) + unit]), [1]);
+  }
+
+  /* Stacked horizontal bars. rows: [{label, parts:[...]}], series: [{name,color}] */
+  function stack(host, rows, series, o = {}) {
+    const unit = o.unit || "", dec = o.decimals ?? 1;
+    mount(host, (h, W) => {
+      const labelW = Math.min(o.labelWidth || 130, W * 0.34);
+      const wraps = maxLabelW(h, rows.map(r => r.label)) > labelW - 2;
+      const rowH = Math.max(o.rowH || 36, wraps ? 40 : 0), barH = Math.min(20, rowH - 12);
+      const top = 22, H = top + rows.length * rowH + 6;
+      const tot = rows.map(r => r.parts.reduce((a, b) => a + b, 0));
+      const nt = niceTicks(o.max || Math.max(...tot) * 1.05, Math.max(2, Math.min(o.ticks || 4, Math.floor(W / 110))));
+      const max = nt.max;
+      const x0 = labelW + 8, x1 = W - (o.rightPad ?? 56);
+      const sx = v => x0 + (v / max) * (x1 - x0);
+      const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: "img", "aria-label": o.aria || "" }, h);
+      for (let i = 0; i <= nt.count; i++) {
+        const v = nt.step * i, x = sx(v);
+        el("line", { x1: x, x2: x, y1: top - 6, y2: H - 4, stroke: css(i ? "--grid" : "--axis"), "stroke-width": 1 }, svg);
+        el("text", { x, y: 12, "text-anchor": "middle", class: "tick" }, svg).textContent = fmtNum(v, decOf(nt.step)) + (o.tickUnit ?? "");
+      }
+      rows.forEach((r, i) => {
+        const y = top + i * rowH + (rowH - barH) / 2;
+        const lt = el("text", { x: labelW, y: y + barH / 2 + 4, "text-anchor": "end", class: "lbl" + (r.bold ? " strong" : "") }, svg);
+        lt.textContent = r.label; fitLabel(lt, labelW - 2);
+        let acc = 0;
+        const last = r.parts.reduce((li, v, k) => (v > 0 ? k : li), -1);
+        r.parts.forEach((v, k) => {
+          if (v <= 0) return;
+          const xa = sx(acc) + (acc > 0 ? 1 : 0), xb = sx(acc + v) - (k === last ? 0 : 1);
+          const g = el("g", { class: "hit" }, svg);
+          const path = k === last ? hbarPath(xa, y, xb - xa, barH) : `M${xa},${y}H${xb}V${y + barH}H${xa}Z`;
+          el("path", { d: path, fill: col(series[k].color) }, g);
+          bindTip(g, `<b>${r.label}</b><br><i class="sw" style="background:${col(series[k].color)}"></i>${series[k].name}: ${fmtNum(v, dec)}${unit}`);
+          acc += v;
+        });
+        el("text", { x: sx(tot[i]) + 6, y: y + barH / 2 + 4, class: "val" }, svg).textContent = r.totalLabel ?? (fmtNum(tot[i], dec) + unit);
+      });
+    });
+    legend(host, series);
+    if (o.table !== false) table(host, [o.labelHead || "รายการ", ...series.map(s => s.name), "รวม"],
+      rows.map(r => [r.label, ...r.parts.map(v => fmtNum(v, dec)), fmtNum(r.parts.reduce((a, b) => a + b, 0), dec)]),
+      series.map((_, i) => i + 1).concat([series.length + 1]));
+  }
+
+  function legend(host, series) {
+    const lg = document.createElement("div");
+    lg.className = "legend";
+    lg.innerHTML = series.map(s => `<span><i class="${s.line ? "line" : ""}" style="background:${col(s.color)}"></i>${s.name}</span>`).join("");
+    host.before(lg);
+  }
+
+  /* Line chart. x: labels[], series: [{name,color,values[], dashed?}] */
+  function line(host, x, series, o = {}) {
+    const unit = o.unit || "", dec = o.decimals ?? 2;
+    mount(host, (h, W) => {
+      const H = o.height || 260, L = o.left ?? 46, R = o.right ?? 74, T = 16, B = 34;
+      const all = series.flatMap(s => s.values).filter(v => v != null);
+      const min = o.min ?? 0, nt = niceTicks((o.max ?? Math.max(...all)) - min, o.ticks || 4), max = min + nt.max;
+      const sx = i => L + (i / (x.length - 1)) * (W - L - R);
+      const sy = v => T + (1 - (v - min) / (max - min)) * (H - T - B);
+      const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: "img", "aria-label": o.aria || "" }, h);
+      for (let i = 0; i <= nt.count; i++) {
+        const v = min + nt.step * i, y = sy(v);
+        el("line", { x1: L, x2: W - R + 8, y1: y, y2: y, stroke: css(i ? "--grid" : "--axis"), "stroke-width": 1 }, svg);
+        el("text", { x: L - 6, y: y + 4, "text-anchor": "end", class: "tick" }, svg).textContent = fmtNum(v, decOf(nt.step)) + (o.tickUnit ?? "");
+      }
+      const every = Math.ceil(x.length / Math.max(2, Math.floor((W - L - R) / 64)));
+      x.forEach((lab, i) => {
+        if (i % every && i !== x.length - 1) return;
+        el("text", { x: sx(i), y: H - 12, "text-anchor": "middle", class: "tick" }, svg).textContent = lab;
+      });
+      if (o.vline) {
+        const vx = sx(o.vline.at);
+        el("line", { x1: vx, x2: vx, y1: T, y2: H - B, stroke: col(o.vline.color || "--text-secondary"), "stroke-width": 1.5 }, svg);
+        el("text", { x: vx + 5, y: T + 10, class: "ref" }, svg).textContent = o.vline.label;
+      }
+      const endLabels = [];
+      series.forEach(s => {
+        const pts = s.values.map((v, i) => (v == null ? null : [sx(i), sy(v)]));
+        const d = pts.reduce((acc, p, i) => (p ? acc + (acc && (o.connect || pts[i - 1]) ? "L" : "M") + p[0] + "," + p[1] : acc), "");
+        if (s.area) el("path", { d: d + `L${pts[pts.length - 1][0]},${sy(min)}L${pts.find(Boolean)[0]},${sy(min)}Z`, fill: col(s.color), opacity: 0.1 }, svg);
+        el("path", { d, fill: "none", stroke: col(s.color), "stroke-width": 2, "stroke-linejoin": "round", "stroke-linecap": "round" }, svg);
+        if (o.markers) pts.forEach(p => p && el("circle", { cx: p[0], cy: p[1], r: 4, fill: col(s.color), stroke: css("--surface-1"), "stroke-width": 2 }, svg));
+        const lastI = s.values.length - 1;
+        el("circle", { cx: pts[lastI][0], cy: pts[lastI][1], r: 4.5, fill: col(s.color), stroke: css("--surface-1"), "stroke-width": 2 }, svg);
+        endLabels.push({ x: pts[lastI][0] + 9, y: pts[lastI][1] + 4, t: s.endLabel ?? fmtNum(s.values[lastI], dec) + unit });
+      });
+      endLabels.sort((a, b) => a.y - b.y).forEach((l, i, arr) => { if (i && l.y - arr[i - 1].y < 14) l.y = arr[i - 1].y + 14; });
+      endLabels.forEach(l => { el("text", { x: l.x, y: l.y, class: "val" }, svg).textContent = l.t; });
+      // crosshair hit columns
+      const cross = el("line", { y1: T, y2: H - B, stroke: css("--axis"), "stroke-width": 1, opacity: 0 }, svg);
+      const dots = series.map(s => el("circle", { r: 4.5, fill: col(s.color), stroke: css("--surface-1"), "stroke-width": 2, opacity: 0 }, svg));
+      x.forEach((lab, i) => {
+        const w = (W - L - R) / (x.length - 1);
+        const g = el("g", { class: "hit" }, svg);
+        el("rect", { x: sx(i) - w / 2, y: T, width: w, height: H - T - B, fill: "transparent" }, g);
+        const html = `<b>${lab}</b>` + series.map(s => s.values[i] == null ? "" : `<br><i class="sw" style="background:${col(s.color)}"></i>${s.name}: ${fmtNum(s.values[i], dec)}${unit}`).join("");
+        const on = () => { cross.setAttribute("x1", sx(i)); cross.setAttribute("x2", sx(i)); cross.setAttribute("opacity", 1);
+          series.forEach((s, k) => { if (s.values[i] == null) return; dots[k].setAttribute("cx", sx(i)); dots[k].setAttribute("cy", sy(s.values[i])); dots[k].setAttribute("opacity", 1); }); };
+        const off = () => { cross.setAttribute("opacity", 0); dots.forEach(d => d.setAttribute("opacity", 0)); };
+        bindTip(g, html);
+        g.addEventListener("pointerenter", on); g.addEventListener("focus", on);
+        g.addEventListener("pointerleave", off); g.addEventListener("blur", off);
+      });
+    });
+    if (series.length > 1) legend(host, series.map(s => ({ ...s, line: true })));
+    if (o.table !== false) table(host, [o.xHead || "ช่วงเวลา", ...series.map(s => s.name)],
+      x.map((lab, i) => [lab, ...series.map(s => (s.values[i] == null ? "–" : fmtNum(s.values[i], dec)))]), series.map((_, i) => i + 1));
+  }
+
+  /* Grouped columns. cats: labels[], series: [{name,color,values[]}] */
+  function columns(host, cats, series, o = {}) {
+    const unit = o.unit || "", dec = o.decimals ?? 0;
+    mount(host, (h, W) => {
+      const H = o.height || 270, L = o.left ?? 52, R = 12, T = 22, B = o.bottom ?? 40;
+      const all = series.flatMap(s => s.values);
+      const minV = Math.min(0, ...all);
+      const min = o.min ?? (minV < 0 ? -niceMax(-minV * 1.1) : 0);
+      const nt = niceTicks((o.max || Math.max(...all) * 1.1) - min, o.ticks || 4), max = min + nt.max;
+      const sy = v => T + (1 - (v - min) / (max - min)) * (H - T - B);
+      const band = (W - L - R) / cats.length;
+      const bw = Math.min(24, (band * 0.72) / series.length - 2);
+      const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: "img", "aria-label": o.aria || "" }, h);
+      for (let i = 0; i <= nt.count; i++) {
+        const v = min + nt.step * i, y = sy(v);
+        el("line", { x1: L, x2: W - R, y1: y, y2: y, stroke: css(Math.abs(v) < 1e-9 ? "--axis" : "--grid"), "stroke-width": 1 }, svg);
+        el("text", { x: L - 6, y: y + 4, "text-anchor": "end", class: "tick" }, svg).textContent = fmtNum(v, decOf(nt.step)) + (o.tickUnit ?? "");
+      }
+      if (o.refLine) {
+        const y = sy(o.refLine.value);
+        el("line", { x1: L, x2: W - R, y1: y, y2: y, stroke: col(o.refLine.color || "--text-secondary"), "stroke-width": 1.5 }, svg);
+        el("text", { x: W - R, y: y - 6, "text-anchor": "end", class: "ref" }, svg).textContent = o.refLine.label;
+      }
+      cats.forEach((c, i) => {
+        const cx = L + band * i + band / 2;
+        const lines = String(c).split("\n");
+        lines.forEach((ln, k) => { el("text", { x: cx, y: H - B + 16 + k * 14, "text-anchor": "middle", class: "tick" }, svg).textContent = ln; });
+        const gw = series.length * (bw + 2) - 2;
+        series.forEach((s, k) => {
+          const v = s.values[i];
+          const x = cx - gw / 2 + k * (bw + 2);
+          const g = el("g", { class: "hit" }, svg);
+          el("rect", { x: x - 1, y: T, width: bw + 2, height: H - T - B, fill: "transparent" }, g);
+          const y0 = sy(0);
+          const p = v >= 0 ? vbarPath(x, y0, bw, y0 - sy(v)) : `M${x},${y0}V${sy(v) - 4}Q${x},${sy(v)} ${x + 4},${sy(v)}H${x + bw - 4}Q${x + bw},${sy(v)} ${x + bw},${sy(v) - 4}V${y0}Z`;
+          el("path", { d: p, fill: col(s.color) }, g);
+          if (o.labels !== false && (o.labelSeries == null || o.labelSeries === k))
+            el("text", { x: x + bw / 2, y: v >= 0 ? sy(v) - 5 : sy(v) + 13, "text-anchor": "middle", class: "val sm" }, g).textContent = fmtNum(v, dec);
+          bindTip(g, `<b>${c.replace("\n", " ")}</b><br><i class="sw" style="background:${col(s.color)}"></i>${s.name}: ${fmtNum(v, dec)}${unit}`);
+        });
+      });
+    });
+    if (series.length > 1) legend(host, series);
+    if (o.table !== false) table(host, [o.catHead || "รายการ", ...series.map(s => s.name)],
+      cats.map((c, i) => [c.replace("\n", " "), ...series.map(s => fmtNum(s.values[i], dec))]), series.map((_, i) => i + 1));
+  }
+
+  return { hbar, stack, line, columns, table, legend, bindTip, fmtNum, css, col, el, mount, niceMax, niceTicks, fitLabel, hideTip };
+})();
+
+</script>
+<script>
+(() => {
+  const root = document.documentElement;
+  try { const t = localStorage.getItem("q7-theme"); if (t) root.setAttribute("data-theme", t); } catch (e) {}
+  document.getElementById("themeBtn").addEventListener("click", () => {
+    const dark = root.getAttribute("data-theme") ? root.getAttribute("data-theme") === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+    const next = dark ? "light" : "dark";
+    root.setAttribute("data-theme", next);
+    try { localStorage.setItem("q7-theme", next); } catch (e) {}
+  });
+  const links = [...document.querySelectorAll(".topbar a")];
+  const secs = links.map(a => document.querySelector(a.getAttribute("href")));
+  const bar = document.getElementById("rulerBar");
+  const onScroll = () => {
+    const h = document.documentElement.scrollHeight - innerHeight;
+    bar.style.width = (h > 0 ? (scrollY / h) * 100 : 0) + "%";
+    let cur = 0;
+    secs.forEach((s, i) => { if (s && s.getBoundingClientRect().top < 120) cur = i; });
+    links.forEach((a, i) => a.classList.toggle("on", i === cur && scrollY > 200));
+  };
+  addEventListener("scroll", onScroll, { passive: true }); onScroll();
+  const D = {"emp": {"0": 57.993, "1": 1307.205, "2": 2231.66, "3": 1855.722, "4": 1851.591, "5": 8635.535, "6": 10130.632, "7": 4110.358, "8": 4374.415, "9": 4966.613, "TOTAL": 39624.554, "X": 102.831}, "testers": {"5": 8188, "7": 62407, "3": 12557, "8": 2672, "2": 1397, "1": 129, "4": 16085, "9": 57}, "n": {"5": 7, "7": 45, "3": 14, "8": 8, "2": 3, "1": 1, "4": 8, "9": 1}, "conf": {"high": [47, 74184, 39, 44], "medium": [29, 21054, 11, 22], "low": [11, 8254, 2, 3]}};
+  const f = (v, d = 0) => Viz.fmtNum(v, d);
+
+  Viz.hbar(document.getElementById("c-units"), [
+    { label: "MASCO 2020 (6 หลัก)", value: 6366 }, { label: "ESCO", value: 3039 }, { label: "Skills Framework สิงคโปร์", value: 1900, valueLabel: "~1,900" },
+    { label: "TPQI (อาชีพ)", value: 1270, color: "--series-2", bold: true }, { label: "OSCA 2024", value: 1156 }, { label: "O*NET", value: 1016 },
+    { label: "ISCO-08 (หมู่ย่อย)", value: 436 }, { label: "มาตรฐานฝีมือที่ทดสอบ 2568", value: 87, color: "--series-2", bold: true },
+  ], { decimals: 0, labelWidth: 180, rowH: 30, rightPad: 60, color: "--series-1", labelHead: "ระบบ", valueHead: "หน่วยอาชีพ" });
+  Viz.hbar(document.getElementById("c-xwalk"), [
+    { label: "กว้าง (broad)", value: 2053 }, { label: "ใกล้เคียง (close)", value: 1432 }, { label: "ตรงพอดี (exact)", value: 498, color: "--series-2", bold: true },
+    { label: "แคบ (narrow)", value: 227 }, { label: "เทียบเฉพาะ ISCO", value: 43 },
+  ], { decimals: 0, labelWidth: 140, rowH: 30, rightPad: 56, color: "--series-1", labelHead: "ประเภทการจับคู่", valueHead: "จำนวนคู่" });
+
+  const C = D.conf;
+  Viz.columns(document.getElementById("c-esco"), ["มั่นใจสูง", "ปานกลาง", "ต่ำ"], [
+    { name: "อันดับหนึ่งตรง", color: "--series-1", values: ["high", "medium", "low"].map(k => C[k][2] / C[k][0] * 100) },
+    { name: "อยู่ใน 5 อันดับแรก", color: "--series-3", values: ["high", "medium", "low"].map(k => C[k][3] / C[k][0] * 100) },
+  ], { unit: "%", decimals: 0, max: 100, height: 240, tickUnit: "%", catHead: "ความมั่นใจของผู้เชี่ยวชาญ" });
+  const totS = 87, totT = 103492;
+  Viz.stack(document.getElementById("c-conf"), [
+    { label: "จำนวนสาขา (87)", parts: ["high", "medium", "low"].map(k => C[k][0] / totS * 100), totalLabel: "" },
+    { label: "ผู้เข้าทดสอบ (103,492)", parts: ["high", "medium", "low"].map(k => C[k][1] / totT * 100), totalLabel: "" },
+  ], [{ name: "สูง", color: "--o4" }, { name: "ปานกลาง", color: "--o3" }, { name: "ต่ำ", color: "--o1" }],
+    { unit: "%", decimals: 1, labelWidth: 150, rowH: 40, max: 100, rightPad: 20, tickUnit: "%", labelHead: "นับตาม" });
+
+  const MG = [["1 ผู้จัดการ", "1"], ["2 ผู้เชี่ยวชาญ", "2"], ["3 ช่างเทคนิค", "3"], ["4 เสมียน", "4"], ["5 บริการ/ขาย", "5"], ["6 เกษตรกร", "6"], ["7 ช่างฝีมือ", "7"], ["8 ควบคุมเครื่อง", "8"], ["9 งานพื้นฐาน", "9"]];
+  const empTot = D.emp.TOTAL, tTot = Object.values(D.testers).reduce((a, b) => a + b, 0);
+  Viz.columns(document.getElementById("c-mismatch"), MG.map(m => m[0].replace(" ", "\n")), [
+    { name: "ผู้มีงานทำ", color: "--series-1", values: MG.map(m => D.emp[m[1]] / empTot * 100) },
+    { name: "ผู้เข้าทดสอบมาตรฐานฝีมือ", color: "--series-2", values: MG.map(m => (D.testers[m[1]] || 0) / tTot * 100) },
+  ], { unit: "%", decimals: 1, max: 70, height: 290, bottom: 48, tickUnit: "%", catHead: "หมวด ISCO-08", labelSeries: 1 });
+  Viz.hbar(document.getElementById("c-gaps"), [
+    { label: "61 เกษตรกรที่ผลิตเพื่อขาย", value: 9.46 }, { label: "52 พนักงานขาย", value: 5.64 }, { label: "93 แรงงานเหมือง ก่อสร้าง ขนส่ง", value: 1.61 },
+    { label: "92 แรงงานเกษตร ประมง", value: 1.13 }, { label: "33 ธุรกิจระดับกลาง", value: 1.02 }, { label: "23 ครูและผู้สอน", value: 0.87 }, { label: "96 งานพื้นฐานอื่น ๆ", value: 0.85 },
+  ], { decimals: 2, unit: " ล้าน", labelWidth: 200, rowH: 30, rightPad: 64, color: "--series-1", labelHead: "หมวด ISCO-08", valueHead: "ล้านคน" });
+  Viz.hbar(document.getElementById("c-tpqi"), [
+    { label: "มั่นใจสูง", value: 39, color: "--o4" }, { label: "ปานกลาง", value: 27, color: "--o3" }, { label: "ต่ำ", value: 4, color: "--o1" }, { label: "ไม่ใช่อาชีพ (สมรรถนะร่วม)", value: 2, color: "--series-muted" },
+  ], { decimals: 0, labelWidth: 170, rowH: 32, rightPad: 40, max: 45, labelHead: "ความมั่นใจ", valueHead: "จำนวนกรอบ" });
+})();
+</script>
+</body>
+</html>
